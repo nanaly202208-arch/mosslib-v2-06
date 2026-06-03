@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AeroIntel | 猎户座情报档案 · 浅色研判终端</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'Noto Sans SC', 'sans-serif'] },
+                    colors: {
+                        primary: '#605CE5',
+                        primaryLight: '#E9E8FF',
+                        primaryDark: '#4A46C2',
+                        lightBg: '#F8FAFF',
+                        cardWhite: '#FFFFFF',
+                        softBorder: '#E2E8F0',
+                        textMain: '#1E293B',
+                        textMuted: '#5B6A8C',
+                        accentWeapon: '#E67E22',
+                        accentCompany: '#3B82F6',
+                        accentTech: '#0F7B6E'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #F1F5F9;
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            font-size: 14px;
+            color: #1E293B;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* 确保所有文本不小于12px */
+        .text-xs, .badge-light, .section-title-light, .insight-box, .weapon-card-light .text-muted, .timeline-content p, .timeline-date {
+            font-size: 12px !important;
+            line-height: 1.4;
+        }
+        .text-[10px], .text-\[11px\] { font-size: 12px !important; }
+        .kpi-card-light .text-muted { font-size: 12px !important; }
+        .section-title-light { font-size: 12px !important; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+
+        /* 滚动条 */
+        .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #E9EEF5; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #B9C4D4; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #605CE5; }
+
+        /* 实体标记 */
+        .entity {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 6px;
+            padding: 0 4px;
+            margin: 0 -2px;
+            font-weight: 600;
+            display: inline-block;
+            border-bottom: 1.5px solid transparent;
+        }
+        .entity-weapon { background: rgba(230, 126, 34, 0.08); color: #C2410C; border-bottom-color: #F59E0B; }
+        .entity-company { background: rgba(59, 130, 246, 0.08); color: #2563EB; border-bottom-color: #3B82F6; }
+        .entity-tech { background: rgba(15, 123, 110, 0.08); color: #0F766E; border-bottom-color: #14B8A6; }
+        .entity:hover { filter: brightness(0.96); background-color: rgba(96, 92, 229, 0.12); border-bottom-color: #605CE5; }
+
+        /* KPI卡片 */
+        .kpi-card-light {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 1rem;
+            transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .kpi-card-light:hover { border-color: #605CE5; transform: translateY(-2px); box-shadow: 0 12px 20px -12px rgba(96, 92, 229, 0.2); }
+
+        /* 武器卡片 */
+        .weapon-card-light {
+            background: #FFFFFF;
+            border: 1px solid #E9EDF2;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        .weapon-card-light:hover { border-color: #605CE5; background: #FCFAFF; }
+
+        .badge-light {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #F1F4F9;
+            color: #334155;
+            border: 1px solid #E2E8F0;
+        }
+        .badge-primary { background: #E9E8FF; color: #4A46C2; border-color: #CBC9FF; }
+        .badge-success { background: #E0F2FE; color: #0369A1; border-color: #BAE6FD; }
+        .badge-amber-light { background: #FEF3C7; color: #B45309; border-color: #FDE68A; }
+
+        .section-title-light {
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #64748B;
+        }
+
+        .insight-box {
+            background: #F8FAFE;
+            border-left: 0px solid #605CE5;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2D3A5E;
+        }
+
+        /* 全新时间线样式——圆圈严格在左侧线上，与日期无重叠 */
+        .timeline-container {
+            position: relative;
+            padding-left: 28px;
+        }
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 13px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(to bottom, #CBD5E1, #605CE5, #CBD5E1);
+            border-radius: 2px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+            padding-left: 20px;
+        }
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #605CE5;
+            z-index: 2;
+            transition: all 0.2s;
+        }
+        .timeline-item:hover::before {
+            background: #605CE5;
+            box-shadow: 0 0 0 3px rgba(96, 92, 229, 0.2);
+        }
+        .timeline-card {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 14px 16px;
+            transition: border 0.2s;
+        }
+        .timeline-card:hover {
+            border-color: #605CE5;
+        }
+        .timeline-date {
+            font-weight: 600;
+            color: #605CE5;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+        .timeline-title {
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+        .timeline-desc {
+            color: #5B6A8C;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* 轮播图 */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #F8FAFF;
+            border: 1px solid #E9EDF4;
+        }
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.4s ease-in-out;
+        }
+        .carousel-slide {
+            flex: 0 0 100%;
+            height: 240px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #F1F4FA;
+        }
+        .carousel-nav {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 5;
+        }
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #CBD5E1;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .carousel-dot.active { background-color: #605CE5; width: 20px; border-radius: 10px; }
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(4px);
+            width: 32px;
+            height: 32px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #1E293B;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            transition: 0.2s;
+            z-index: 6;
+            border: 1px solid #E2E8F0;
+        }
+        .carousel-arrow:hover { background: #605CE5; color: white; }
+        .arrow-left { left: 12px; }
+        .arrow-right { right: 12px; }
+
+        /* 右侧面板：宽度520px，整体滚动，无底部固定条 */
+        .detail-panel-light {
+            background: #FFFFFF;
+            border-left: 1px solid #E2E8F0;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.02);
+            width: 520px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden flex flex-col">
+
+    <!-- 顶部栏 -->
+    <header class="h-14 bg-white border-b border-softBorder flex items-center px-6 justify-between shrink-0 z-20 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white font-bold shadow-sm shadow-primary/20">A</div>
+            <div>
+                <span class="font-bold text-lg tracking-tight text-textMain">AeroIntel</span>
+                <span class="text-textMuted text-sm ml-2 font-medium">航空航天情报分析平台 · 浅色研判终端</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-5 text-sm font-medium text-textMuted">
+            <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-accentWeapon"></span> 武器型号</div>
+            <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-accentCompany"></span> 企业/组织</div>
+            <div class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-sm bg-accentTech"></span> 技术术语</div>
+        </div>
+    </header>
+
+    <div class="flex-1 flex overflow-hidden">
+        <!-- 左侧文章区 -->
+        <main class="flex-1 overflow-y-auto custom-scroll">
+            <div class="max-w-3xl mx-auto p-6">
+                <div class="bg-white rounded-2xl border border-softBorder shadow-sm p-6">
+                    <h2 class="text-2xl font-bold text-textMain">最新中东及东欧无人机部署态势与装备一体化研判简报</h2>
+                    <div class="flex gap-4 text-sm text-textMuted mt-2 pb-4 border-b border-softBorder">
+                        <span>发布时间：2026年6月</span><span>分类：综合情报分析</span><span>密级：内部研判</span>
+                    </div>
+                    <div class="mt-5 space-y-4 text-[15px] leading-relaxed text-textMain/90">
+                        <p>近期情报侦察显示，在复杂电磁环境下的无人机作战效能正在被各国重新评估。<span class="entity entity-tech">俄罗斯</span>军方近年来显著加大了对具备侦察与打击一体化能力的无人机平台的依赖。其中，由<span class="entity entity-company">喀琅施塔得（Kronshtadt）</span>公司研发的<span class="entity entity-weapon">Orion（猎户座）</span>无人机系统在执行<span class="entity entity-tech">情报、侦察与监视（ISR）</span>任务时表现出了极高的出勤率。</p>
+                        <p>情报指出，该机型不仅能够携带<span class="entity entity-weapon">KAB-20</span>和<span class="entity entity-weapon">UPAB-50S</span>制导炸弹对地进行精确打击，还具备挂载<span class="entity entity-weapon">X-UAV</span>制导导弹的能力。随着新型卫星通信模块的升级，该系统的远程控制与多用途交战能力得到进一步强化，已成为当前重点关注的战略目标之一。</p>
+                        <div class="bg-primaryLight/30 rounded-xl p-4 text-sm border border-primary/20 text-textMain">
+                            <i class="fas fa-satellite-dish text-primary mr-2"></i> 交叉验证：猎户座在叙利亚实战中验证了24h续航及精确打击链，升级型卫星通讯测试已于2022年完成，作战半径拓展潜力巨大。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 右侧详情面板，宽度520px，整体滚动，无底部固定区 -->
+        <aside class="detail-panel-light custom-scroll">
+            <!-- 头部轮播+标识区（随滚动自然移动） -->
+            <div class="p-5 pb-4 border-b border-softBorder bg-white">
+                <div class="carousel-container mb-5" id="orionCarousel">
+                    <div class="carousel-slides" id="carouselSlides">
+					<div class="carousel-slide">
+    <img src="https://www.deagel.com/library/sm/2021/m02021123100005.jpg" alt="Orion 实机照片" class="w-full h-full object-cover">
+    <div class="absolute bottom-2 right-3 bg-black/50 text-white px-2 rounded-full text-xs" style="padding:3px 8px">实拍</div>
+</div>
+					<div class="carousel-slide">
+    <img src="https://www.deagel.com/library/sm/2021/m02021022500002.jpg" alt="Orion 实机照片" class="w-full h-full object-cover">
+    <div class="absolute bottom-2 right-3 bg-black/50 text-white px-2 rounded-full text-xs" style="padding:3px 8px">实拍</div>
+</div>
+
+                    </div>
+                    <div class="carousel-arrow arrow-left" id="prevBtn"><i class="fas fa-chevron-left text-sm"></i></div>
+                    <div class="carousel-arrow arrow-right" id="nextBtn"><i class="fas fa-chevron-right text-sm"></i></div>
+                    <div class="carousel-nav" id="dotsContainer"></div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <span class="badge-light badge-success"><i class="fas fa-check-circle text-emerald-600"></i> 状态 · 现役</span>
+                    <span class="badge-light badge-primary"><i class="fas fa-flag-checkered"></i> 原产国 · Russia</span>
+                    <span class="badge-light"><i class="far fa-calendar-alt"></i> IOC: 2020-12</span>
+                    <span class="badge-light"><i class="fas fa-plane-departure"></i> 首飞: 2016-05</span>
+                    <span class="badge-light badge-amber-light"><i class="fas fa-chart-line"></i> 总产量: 24架</span>
+                </div>
+                <h1 class="text-3xl font-black text-textMain tracking-tight">Orion <span class="text-textMuted text-xl font-normal">猎户座 / Inokhodets-RU</span></h1>
+                <div class="flex items-center gap-3 text-textMuted text-sm mt-1">
+                    <span><i class="fas fa-building"></i> 承包商: Kronshtadt (原Transas)</span>
+                    <span>|</span>
+                    <span><i class="fas fa-database"></i> 数据源: Deagel 2026 · 情报融合</span>
+                </div>
+            </div>
+
+            <!-- 所有内容区域，无底部固定条 -->
+            <div class="px-5 pb-10 space-y-6" style="padding-top:10px">
+                <!-- KPI 指标 -->
+                <div>
+                    <div class="section-title-light mb-2"><i class="fas fa-chart-simple mr-1"></i> 核心战技指标</div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="kpi-card-light p-4"><div class="text-textMuted font-semibold text-sm">最大续航</div><div class="text-3xl font-black text-primary">24<span class="text-base ml-0.5">hr</span></div><div class="text-textMuted">8,000m 升限持续飞行</div></div>
+                        <div class="kpi-card-light p-4"><div class="text-textMuted font-semibold text-sm">作战半径</div><div class="text-3xl font-black text-primary">300<span class="text-base ml-0.5">km</span></div><div class="text-textMuted">最大航程同步</div></div>
+                        <div class="kpi-card-light p-4"><div class="text-textMuted font-semibold text-sm">最大起飞重量</div><div class="text-3xl font-black text-primary">1,150<span class="text-base ml-0.5">kg</span></div><div class="text-textMuted">有效载荷 250kg</div></div>
+                        <div class="kpi-card-light p-4"><div class="text-textMuted font-semibold text-sm">系统编制</div><div class="text-3xl font-black text-primary">3<span class="text-base ml-0.5">架/套</span></div><div class="text-textMuted">俄国防部订购7套(21架)</div></div>
+                    </div>
+                </div>
+
+                <!-- 系统概述 -->
+                <div>
+                    <div class="section-title-light mb-2"><i class="fas fa-info-circle"></i> 简介</div>
+                    <div class="insight-box" style="font-size:14px">
+                        <span class="text-textMuted mt-2" >Orion（猎户座）</span> 是由 Kronshtadt 公司（原 Transas）根据2015年10月俄国防部合同研制的中高空长航时侦察打击一体化UAS。2016年5月于格罗莫夫飞行研究院启动测试，2020年12月达成初始作战能力，并在叙利亚完成实战验证。该平台集成了光电/红外侦察套件与多种精确制导弹药，具备防区外打击能力，单套系统含<strong>3架飞行器</strong>，滑翔炸弹射程达<strong>30公里</strong>。
+                    </div>
+                </div>
+
+                <!-- 技术规格 -->
+                <div>
+                    <div class="section-title-light mb-2"><i class="fas fa-microchip"></i> 详细技术规格</div>
+                    <div class="bg-white border border-softBorder rounded-2xl p-4 grid grid-cols-2 gap-y-3 gap-x-4">
+                        <div class="flex justify-between border-b border-softBorder/60 pb-1"><span class="text-textMuted">翼展</span><span class="font-mono font-medium">16.3 m</span></div>
+                        <div class="flex justify-between border-b border-softBorder/60 pb-1"><span class="text-textMuted">巡航速度</span><span class="font-mono font-medium">200 km/h</span></div>
+                        <div class="flex justify-between border-b border-softBorder/60 pb-1"><span class="text-textMuted">长度</span><span class="font-mono font-medium">8 m</span></div>
+                        <div class="flex justify-between border-b border-softBorder/60 pb-1"><span class="text-textMuted">升限</span><span class="font-mono font-medium">7,500 m</span></div>
+                        <div class="flex justify-between border-b border-softBorder/60 pb-1"><span class="text-textMuted">高度</span><span class="font-mono font-medium">3.2 m</span></div>
+                        <div class="flex justify-between border-b border-softBorder/60 pb-1"><span class="text-textMuted">最大航程</span><span class="font-mono font-medium">300 km</span></div>
+                        <div class="flex justify-between pt-1"><span class="text-textMuted">有效载荷</span><span class="font-mono font-bold text-primary">250 kg</span></div>
+                        <div class="flex justify-between pt-1"><span class="text-textMuted">滑翔炸弹射程</span><span class="font-mono font-medium">30 km</span></div>
+                    </div>
+                </div>
+
+                <!-- 武器装备矩阵 -->
+                <div>
+                    <div class="section-title-light mb-2"><i class="fas fa-bomb"></i> 挂载武器装备库</div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="weapon-card-light p-3"><div class="flex justify-between"><span class="text-xs font-bold bg-accentWeapon/10 px-2 py-0.5 rounded text-accentWeapon">AAM</span><span class="text-textMuted">×1</span></div><div class="text-accentWeapon font-bold mt-1">Kh-MD</div><div class="text-textMuted">空对空导弹</div></div>
+                        <div class="weapon-card-light p-3"><div class="flex justify-between"><span class="text-xs font-bold bg-accentWeapon/10 px-2 py-0.5 rounded text-accentWeapon">ATGM</span><span class="text-textMuted">×1</span></div><div class="text-accentWeapon font-bold mt-1">Kh-39</div><div class="text-textMuted">反坦克导弹</div></div>
+                        <div class="weapon-card-light p-3"><div class="flex justify-between"><span class="text-xs font-bold bg-accentWeapon/10 px-2 py-0.5 rounded text-accentWeapon">MSL</span><span class="text-textMuted">×1</span></div><div class="text-accentWeapon font-bold mt-1">X-UAV</div><div class="text-textMuted">反坦克/反无人机</div></div>
+                        <div class="weapon-card-light p-3"><div class="flex justify-between"><span class="text-xs font-bold bg-accentWeapon/10 px-2 py-0.5 rounded text-accentWeapon">Bomb</span><span class="text-textMuted">×1</span></div><div class="text-accentWeapon font-bold mt-1">KAB-20</div><div class="text-textMuted">制导炸弹</div></div>
+                        <div class="weapon-card-light p-3"><div class="flex justify-between"><span class="text-xs font-bold bg-accentWeapon/10 px-2 py-0.5 rounded text-accentWeapon">Bomb</span><span class="text-emerald-600">×2</span></div><div class="text-accentWeapon font-bold mt-1">UPAB-50S</div><div class="text-textMuted">双联装制导炸弹</div></div>
+                        <div class="weapon-card-light p-3"><div class="flex justify-between"><span class="text-xs font-bold bg-accentWeapon/10 px-2 py-0.5 rounded text-accentWeapon">SAM</span><span class="text-textMuted">×1</span></div><div class="text-accentWeapon font-bold mt-1">9M133FM-3</div><div class="text-textMuted">防空导弹</div></div>
+                    </div>
+                </div>
+
+                <!-- 部署现状 -->
+				<div>
+				<div class="section-title-light mb-2"><i class="fas fa-bomb"></i> 主要使用方</div>
+                <div class="bg-primaryLight/20 border border-primary/20 rounded-xl p-4">
+                    <div class="flex items-center gap-3"><span class="text-3xl">🇷🇺</span><div><div class="font-bold text-textMain">俄罗斯联邦国防部</div><div class="text-textMuted">现役24架（7套系统），叙利亚实战部署，验证精确打击效能</div></div></div>
+                    <div class="text-textMuted mt-2">初始作战能力2020年12月，升级型号正集成卫星通信与机载雷达，强化协同交战能力。</div>
+                </div>
+				</div>
+
+                <!-- 情报动态时间线 (新样式，圆圈与线严格对齐，无重叠) -->
+                <div>
+                    <div class="section-title-light mb-2"><i class="fas fa-timeline"></i> 关联情报动态</div>
+                    <div class="timeline-container">
+                        <div class="timeline-item">
+                            <div class="timeline-card">
+                                <div class="timeline-date">2025-01-22</div>
+                                <div class="timeline-title">俄罗斯研制“虎鲸”中继无人机</div>
+                                <div class="timeline-desc">Kasatka可在1-2km高度向自杀式四旋翼无人机发送指令，控制距离达50km，加强蜂群协作。</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-card">
+                                <div class="timeline-date">2024-01-22</div>
+                                <div class="timeline-title">俄向出口市场提供“大键琴-1RE”水下无人机</div>
+                                <div class="timeline-desc">声呐探测海底目标，登上“莫斯科”号航母展示，扩展无人作战谱系。</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-card">
+                                <div class="timeline-date">2022-08-09</div>
+                                <div class="timeline-title">改进型Orion将配备卫星通信</div>
+                                <div class="timeline-desc">新型号测试卫星通信模块，大幅提升超视距控制，预计2022年底完成。</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-card">
+                                <div class="timeline-date">2021-12-19</div>
+                                <div class="timeline-title">Orion测试机载雷达系统</div>
+                                <div class="timeline-desc">搭载onboard radar，增强对地面/空中目标侦察能力。</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-card">
+                                <div class="timeline-date">2021-12-18</div>
+                                <div class="timeline-title">X-UAV反坦克/反无人机导弹研制完成</div>
+                                <div class="timeline-desc">基于Kornet-D导弹系统，强化多用途交战能力。</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-card">
+                                <div class="timeline-date">2020-02-14</div>
+                                <div class="timeline-title">新型50kg/100kg制导炸弹</div>
+                                <div class="timeline-desc">战术导弹公司与Kronshtadt、Sukhoi合作为无人机研制精确弹药。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-2"></div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // 轮播逻辑
+        const slidesEl = document.getElementById('carouselSlides');
+        const slideItems = [...document.querySelectorAll('.carousel-slide')];
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsContainer = document.getElementById('dotsContainer');
+        let currentIdx = 0;
+        const total = slideItems.length;
+
+        function updateDotsUI() {
+            const dots = document.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, i) => {
+                if(i === currentIdx) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+        function goToSlide(idx) {
+            if(idx < 0) idx = total - 1;
+            if(idx >= total) idx = 0;
+            currentIdx = idx;
+            slidesEl.style.transform = `translateX(-${currentIdx * 100}%)`;
+            updateDotsUI();
+        }
+        function buildDots() {
+            dotsContainer.innerHTML = '';
+            for(let i=0; i<total; i++) {
+                const dot = document.createElement('button');
+                dot.classList.add('carousel-dot');
+                if(i === currentIdx) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+        prevBtn.addEventListener('click', () => goToSlide(currentIdx - 1));
+        nextBtn.addEventListener('click', () => goToSlide(currentIdx + 1));
+        buildDots();
+        let interval = setInterval(() => goToSlide(currentIdx + 1), 5000);
+        const carousel = document.querySelector('.carousel-container');
+        carousel.addEventListener('mouseenter', () => clearInterval(interval));
+        carousel.addEventListener('mouseleave', () => { interval = setInterval(() => goToSlide(currentIdx + 1), 5000); });
+
+        // 左侧实体点击反馈
+        document.querySelectorAll('.entity').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                const panel = document.querySelector('.detail-panel-light');
+                if(panel) {
+                    panel.style.boxShadow = 'inset 0 0 0 2px #605CE5, 0 0 0 2px rgba(96,92,229,0.2)';
+                    setTimeout(() => panel.style.boxShadow = '', 800);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

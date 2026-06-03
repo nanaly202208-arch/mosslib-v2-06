@@ -1,0 +1,20 @@
+# download files
+*.下载
+
+# PDFs
+*.pdf
+
+# Images
+*.png
+
+# System
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Backup files
+*~
+*.bak
