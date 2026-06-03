@@ -453,15 +453,15 @@ function renderEntityDetail(data) {
   html += '</div></div>';
   // 内容区域
   html += '<div style="padding:14px 30px 20px">';
+  // 简介
+  html += '<div><div class="ed-section-title">简介</div><div class="ed-insight">' + data.intro + '</div></div>';
   // KPI
-  html += '<div><div class="ed-section-title">核心战技指标</div><div class="ed-kpi-grid">';
+  html += '<div style="margin-top:18px"><div class="ed-section-title">核心战技指标</div><div class="ed-kpi-grid">';
   for (var i = 0; i < data.kpis.length; i++) {
     var k = data.kpis[i];
     html += '<div class="ed-kpi-card"><div class="ed-kpi-label">' + k.label + '</div><div class="ed-kpi-value">' + k.value + '<span class="ed-kpi-unit">' + k.unit + '</span></div><div class="ed-kpi-desc">' + k.desc + '</div></div>';
   }
   html += '</div></div>';
-  // 简介
-  html += '<div style="margin-top:18px"><div class="ed-section-title">简介</div><div class="ed-insight">' + data.intro + '</div></div>';
   // 技术规格
   html += '<div style="margin-top:18px"><div class="ed-section-title">技术规格</div><div class="ed-specs-grid">';
   for (var i = 0; i < data.specs.length; i++) {
