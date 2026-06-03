@@ -154,6 +154,12 @@ function showHoverCard(e) {
   card.querySelector('.hc-desc').innerText = desc;
 
   card.style.display = 'block';
+  // 存储匹配的orig名称，供点击打开抽屉时使用
+  if (matchedCard) {
+    card.setAttribute('data-entity-orig', origText);
+  } else {
+    card.removeAttribute('data-entity-orig');
+  }
   if (imgSrc) {
     var bodyEl = card.querySelector('.hc-body');
     var bodyH = bodyEl.offsetHeight;
@@ -194,6 +200,43 @@ function cancelHideCard() {
   }
 }
 
+function findEntityByText(text) {
+  var entityCards = document.querySelectorAll('#entity-list-section .entity-card');
+  for (var i = 0; i < entityCards.length; i++) {
+    var orig = entityCards[i].getAttribute('data-orig') || '';
+    var chn = entityCards[i].getAttribute('data-chn') || '';
+    if (text === orig) return orig;
+    if (text === chn) return orig;
+  }
+  for (var i = 0; i < entityCards.length; i++) {
+    var orig = entityCards[i].getAttribute('data-orig') || '';
+    var chn = entityCards[i].getAttribute('data-chn') || '';
+    if (text.indexOf(orig) !== -1 && orig.length > 0) return orig;
+    if (text.indexOf(chn) !== -1 && chn.length > 0 && chn !== orig) return orig;
+  }
+  return '';
+}
+
+function onEntityClick(e) {
+  var span = e.currentTarget;
+  var text = span.innerText.trim();
+  var orig = findEntityByText(text);
+  if (orig && entityDetails[orig]) {
+    e.preventDefault();
+    openEntityDrawer(orig);
+  } else if (orig) {
+    var chn = '';
+    var entityCards = document.querySelectorAll('#entity-list-section .entity-card');
+    for (var i = 0; i < entityCards.length; i++) {
+      if (entityCards[i].getAttribute('data-orig') === orig) {
+        chn = entityCards[i].getAttribute('data-chn') || '';
+        break;
+      }
+    }
+    highlightEntityInArticle(orig, chn);
+  }
+}
+
 function initEntityHover() {
   buildHoverCard();
   var article = document.querySelector('.info-m-content-view');
@@ -202,6 +245,7 @@ function initEntityHover() {
   for (var i = 0; i < entities.length; i++) {
     entities[i].addEventListener('mouseenter', showHoverCard);
     entities[i].addEventListener('mouseleave', hideHoverCard);
+    entities[i].addEventListener('click', onEntityClick);
   }
   var card = document.getElementById('entity-hover-card');
   if (card) {
@@ -209,6 +253,12 @@ function initEntityHover() {
     card.addEventListener('mouseleave', function() {
       var c = document.getElementById('entity-hover-card');
       if (c) c.style.display = 'none';
+    });
+    card.addEventListener('click', function() {
+      var orig = this.getAttribute('data-entity-orig');
+      if (orig && entityDetails[orig]) {
+        openEntityDrawer(orig);
+      }
     });
   }
 }
