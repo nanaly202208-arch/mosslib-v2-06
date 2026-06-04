@@ -534,11 +534,23 @@ function startEdCarousel() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  // 获取武器装备分组下的第一个Orion（需要排除）
+  var weaponGroup = document.querySelector('#entity-list-section .entity-group:first-child');
+  var firstWeaponCard = weaponGroup ? weaponGroup.querySelector('.entity-card[data-orig="Orion"]') : null;
+  
   var cards = document.querySelectorAll('#entity-list-section .entity-card');
   for (var i = 0; i < cards.length; i++) {
     (function(card) {
       var orig = card.getAttribute('data-orig') || '';
       card.onclick = function(e) {
+        // 排除武器装备第一个Orion（当前已在详情页中展示）
+        if (card === firstWeaponCard && orig === 'Orion') {
+          // 只执行高亮，不打开抽屉
+          var chn = card.getAttribute('data-chn') || '';
+          highlightEntityInArticle(orig, chn);
+          return;
+        }
+        // 其他实体：如果有详情数据则打开抽屉，否则高亮
         if (entityDetails[orig]) {
           e.preventDefault();
           e.stopPropagation();
