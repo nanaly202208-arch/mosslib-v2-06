@@ -363,6 +363,8 @@ var entityDetails = {
     type: 'weapon',
     orig: 'Orion',
     chn: '猎户座 / Inokhodets-RU',
+    contractor: 'Kronshtadt 公司（原 Transas）',
+    alias: 'Inokhodets-RU',
     images: ['https://www.deagel.com/library/sm/2021/m02021123100005.jpg', 'https://www.deagel.com/library/sm/2021/m02021022500002.jpg'],
     badges: ['现役', '原产国 · Russia', 'IOC: 2020-12', '首飞: 2016-05', '总产量: 24架'],
     kpis: [
@@ -379,7 +381,7 @@ var entityDetails = {
       { label: '升限', value: '7,500 m' },
       { label: '高度', value: '3.2 m' },
       { label: '最大航程', value: '300 km' },
-      { label: '有效载荷', value: '250 kg', highlight: true },
+      { label: '有效载荷', value: '250 kg' },
       { label: '滑翔炸弹射程', value: '30 km' }
     ],
     weapons: [
@@ -444,13 +446,26 @@ function renderEntityDetail(data) {
   // Header
   var badgeClasses = ['ed-badge', 'ed-badge-success', 'ed-badge-primary', '', 'ed-badge-amber'];
   html += '<div style="padding:16px 18px 10px;border-bottom:1px solid #E2E8F0">';
-  html += '<h2 style="font-size:24px;font-weight:800;color:#1E293B">' + data.orig + ' <span style="color:#64748B;font-size:16px;font-weight:400">' + data.chn + '</span></h2>';
-  html += '<div class="ed-badges">';
+  // 标签移到标题上方
+  html += '<div class="ed-badges" style="margin-bottom:10px">';
   for (var i = 0; i < data.badges.length; i++) {
     var cls = badgeClasses[Math.min(i, badgeClasses.length - 1)];
     html += '<span class="ed-badge ' + cls + '">' + data.badges[i] + '</span>';
   }
-  html += '</div></div>';
+  html += '</div>';
+  html += '<h2 style="font-size:24px;font-weight:800;color:#1E293B">' + data.orig + ' <span style="color:#64748B;font-size:16px;font-weight:400">' + data.chn + '</span></h2>';
+  // 承包商和别名区域
+  if (data.contractor || data.alias) {
+    html += '<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:#64748B">';
+    if (data.contractor) {
+      html += '<div><span style="color:#94A3B8">承包商 · </span>' + data.contractor + '</div>';
+    }
+    if (data.alias) {
+      html += '<div><span style="color:#94A3B8">别名 · </span>' + data.alias + '</div>';
+    }
+    html += '</div>';
+  }
+  html += '</div>';
   // 内容区域
   html += '<div style="padding:14px 30px 20px">';
   // 简介
@@ -646,15 +661,20 @@ document.addEventListener('DOMContentLoaded', function() {
 .ed-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .ed-kpi-card { background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; padding: 14px; transition: all 0.2s; }
 .ed-kpi-card:hover { border-color: #605CE5; transform: translateY(-2px); box-shadow: 0 12px 20px -12px rgba(96,92,229,0.2); }
-.ed-kpi-label { font-weight: 600; color: #64748B; font-size: 13px; margin-bottom: 4px; }
-.ed-kpi-value { font-size: 28px; font-weight: 800; color: #605CE5; line-height: 1.1; }
+.ed-kpi-label { font-weight: 600; color: #64748B; font-size: 12px; margin-bottom: 4px; }
+.ed-kpi-value { font-size: 24px; font-weight: 800; color: #605CE5; line-height: 1.5; }
 .ed-kpi-value .ed-kpi-unit { font-size: 14px; margin-left: 2px; }
 .ed-kpi-desc { color: #64748B; font-size: 12px; margin-top: 2px; }
 .ed-insight { background: #F8FAFE; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; color: #2D3A5E; }
-.ed-specs-grid { background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; }
+.ed-specs-grid { background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 52px; }
 .ed-spec-row { display: flex; justify-content: space-between; border-bottom: 1px solid #F1F4F9; padding-bottom: 6px; }
-.ed-spec-label { color: #64748B; }
-.ed-spec-value { font-family: monospace; font-weight: 500; }
+.ed-spec-label { color: #64748B; font-size: 12px; }
+.ed-spec-value {
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+    font-weight: 600;
+    color: #3e3e3e;
+    font-size: 14px;
+}
 .ed-spec-value.highlight { color: #605CE5; font-weight: 700; }
 .ed-weapon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .ed-weapon-card { background: #fff; border: 1px solid #E9EDF2; border-radius: 12px; padding: 10px 12px; transition: all 0.2s; }
