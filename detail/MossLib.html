@@ -583,8 +583,10 @@ document.addEventListener('DOMContentLoaded', function() {
 .p-s-source { position: relative; cursor: pointer; font-size: 12px; color: #ABABAB; display: flex; align-items: center; padding: 2px 8px; border-radius: 4px; transition: all 0.2s; }
 .p-s-source:hover { color: #605CE5; background: #F5F3FF; }
 .source-label { white-space: nowrap; }
-.source-hover-card { display: none; position: absolute; top: calc(100% + 8px); right: 0; z-index: 100; min-width: 240px; }
+.source-hover-card { display: none; position: absolute; top: 100%; right: 0; z-index: 100; min-width: 240px; padding-top: 8px; }
 .source-hover-trigger:hover .source-hover-card { display: block; }
+.source-hover-trigger { position: relative; }
+.source-hover-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; }
 .source-card-inner { background: #fff; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.10); }
 .source-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .source-card-avatar { width: 36px; height: 36px; border-radius: 50%; background: #E9E8FF; color: #605CE5; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
@@ -3649,7 +3651,8 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 <span data-v-20b08599="" class="font-size-12px mr-6px">8
 </div>
 <div class="p-s-source source-hover-trigger flex-center ml-auto" title="Fontanka - 圣彼得堡独立新闻媒体">
-  <span class="source-label">来源：Fontanka</span>
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:3px"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+  <span class="source-label">Fontanka</span>
   <div class="source-hover-card">
     <div class="source-card-inner">
       <div class="source-card-header">
