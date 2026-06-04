@@ -362,10 +362,10 @@ var entityDetails = {
     images: ['https://www.deagel.com/library/sm/2021/m02021123100005.jpg', 'https://www.deagel.com/library/sm/2021/m02021022500002.jpg'],
     badges: ['现役', '原产国 · Russia', 'IOC: 2020-12', '首飞: 2016-05', '总产量: 24架'],
     kpis: [
-      { label: '最大续航', value: '24', unit: 'hr', desc: '8,000m 升限持续飞行' },
-      { label: '作战半径', value: '300', unit: 'km', desc: '最大航程同步' },
-      { label: '最大起飞重量', value: '1,150', unit: 'kg', desc: '有效载荷 250kg' },
-      { label: '系统编制', value: '3', unit: '架/套', desc: '俄国防部订购7套(21架)' }
+      { label: '有效载荷', value: '250', unit: 'kg', desc: '最大挂载能力' },
+      { label: '续航时间', value: '30', unit: 'hr', desc: '最大留空时间' },
+      { label: '作战半径', value: '300', unit: 'km', desc: '最大任务半径' },
+      { label: '升限', value: '7,500', unit: 'm', desc: '实用升限高度' }
     ],
     intro: 'Orion（猎户座）是由 Kronshtadt 公司（原 Transas）根据2015年10月俄国防部合同研制的中高空长航时侦察打击一体化UAS。2016年5月于格罗莫夫飞行研究院启动测试，2020年12月达成初始作战能力，并在叙利亚完成实战验证。该平台集成了光电/红外侦察套件与多种精确制导弹药，具备防区外打击能力，单套系统含<strong>3架飞行器</strong>，滑翔炸弹射程达<strong>30公里</strong>。',
     specs: [
@@ -468,7 +468,7 @@ function renderEntityDetail(data) {
   html += '<div style="margin-top:18px"><div class="ed-section-title">核心战技指标</div><div class="ed-kpi-grid">';
   for (var i = 0; i < data.kpis.length; i++) {
     var k = data.kpis[i];
-    html += '<div class="ed-kpi-card"><div class="ed-kpi-label">' + k.label + '</div><div class="ed-kpi-value">' + k.value + '<span class="ed-kpi-unit">' + k.unit + '</span></div><div class="ed-kpi-desc">' + k.desc + '</div></div>';
+    html += '<div class="ed-kpi-card"><div class="ed-kpi-label">' + k.label + '</div><div class="ed-kpi-value">' + k.value + '<span class="ed-kpi-unit">' + k.unit + '</span></div></div>';
   }
   html += '</div></div>';
   // 技术规格
@@ -484,7 +484,7 @@ function renderEntityDetail(data) {
     for (var i = 0; i < data.weapons.length; i++) {
       var w = data.weapons[i];
       var countStyle = w.accent === 'emerald' ? 'color:#059669' : '';
-      html += '<div class="ed-weapon-card"><div style="display:flex;justify-content:space-between"><span class="ed-weapon-tag">' + w.tag + '</span><span class="ed-weapon-count" style="' + countStyle + '">×' + w.count + '</span></div><div class="ed-weapon-name">' + w.name + '</div><div class="ed-weapon-desc">' + w.desc + '</div></div>';
+      html += '<div class="ed-weapon-card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="ed-weapon-name">' + w.name + '</div><span class="ed-weapon-count" style="' + countStyle + '">×' + w.count + '</span></div><div><span class="ed-weapon-tag">' + w.tag + '</span></div><div class="ed-weapon-desc">' + w.desc + '</div></div>';
     }
     html += '</div></div>';
   }
@@ -681,13 +681,12 @@ document.addEventListener('DOMContentLoaded', function() {
 .ed-badge-success { background: #E0F2FE; color: #0369A1; border-color: #BAE6FD; }
 .ed-badge-amber { background: #FEF3C7; color: #B45309; border-color: #FDE68A; }
 .ed-section-title { text-transform: uppercase; font-weight: 700; font-size: 12px; color: #64748B; letter-spacing: 0.05em; margin-bottom: 10px; }
-.ed-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ed-kpi-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
 .ed-kpi-card { background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; padding: 14px; transition: all 0.2s; }
 .ed-kpi-card:hover { border-color: #605CE5; transform: translateY(-2px); box-shadow: 0 12px 20px -12px rgba(96,92,229,0.2); }
 .ed-kpi-label { font-weight: 600; color: #64748B; font-size: 12px; margin-bottom: 4px; }
 .ed-kpi-value { font-size: 24px; font-weight: 800; color: #605CE5; line-height: 1.5; }
 .ed-kpi-value .ed-kpi-unit { font-size: 14px; margin-left: 2px; }
-.ed-kpi-desc { color: #64748B; font-size: 12px; margin-top: 2px; }
 .ed-insight { background: #F8FAFE; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; color: #2D3A5E; }
 .ed-specs-grid { background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 52px; }
 .ed-spec-row { display: flex; justify-content: space-between; border-bottom: 1px solid #F1F4F9; padding-bottom: 6px; }
@@ -704,7 +703,7 @@ document.addEventListener('DOMContentLoaded', function() {
 .ed-weapon-card:hover { border-color: #605CE5; background: #FCFAFF; }
 .ed-weapon-tag { font-size: 10px; font-weight: 700; background: rgba(230,126,34,0.10); padding: 2px 8px; border-radius: 4px; color: #E67E22; }
 .ed-weapon-count { color: #64748B; font-size: 12px; }
-.ed-weapon-name { font-weight: 700; color: #E67E22; margin-top: 4px; font-size: 14px; }
+.ed-weapon-name { font-weight: 700; color: #323232; margin-top: 0; font-size: 14px; }
 .ed-weapon-desc { color: #64748B; font-size: 12px; padding-left: 2px; }
 .ed-timeline-container { position: relative; padding-left: 28px; }
 .ed-timeline-container::before { content: ''; position: absolute; left: 13px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(to bottom, #CBD5E1, #605CE5, #CBD5E1); border-radius: 2px; }
