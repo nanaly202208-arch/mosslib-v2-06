@@ -260,7 +260,7 @@ div[class*="ml-52px"] {
   margin-right: 0 !important;
 }
 
-/* 底部输入框 - 与主页(m.html)保持一致 */
+/* 底部输入框 - 与m.html完全一致 */
 .search-ipt {
   border: none !important;
   border-radius: 0 !important;
@@ -271,90 +271,112 @@ div[class*="ml-52px"] {
   background: transparent !important;
 }
 
-/* 输入框外层容器 - 完全重写 */
 .search-ipt .txt-area {
   height: auto !important;
   position: relative !important;
 }
 
-.search-ipt .txt-area .input-area-wrapper {
-  height: auto !important;
-  padding: 16px 20px 48px 20px !important;
-  margin: 0 !important;
+.search-ipt .input-area-wrapper {
+  padding: 16px 20px 42px 20px !important;
   border-radius: 24px !important;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1) !important;
   border: 1px solid #e8e8e8 !important;
+  position: relative !important;
   min-height: 140px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
   background: #fff !important;
-  position: relative !important;
+  margin: 0 !important;
 }
 
-/* 文本输入框 */
 .search-ipt .input-area {
   font-size: 16px !important;
+  height: auto !important;
   min-height: 80px !important;
-  max-height: 200px !important;
+  align-self: flex-start !important;
+  margin-top: 0 !important;
+  padding-top: 8px !important;
+  line-height: 1.5 !important;
+  resize: none !important;
+  overflow: auto !important;
   border: none !important;
+  outline: none !important;
   background: transparent !important;
   width: 100% !important;
-  outline: none !important;
-  line-height: 1.6 !important;
+  font-family: inherit !important;
   color: #333 !important;
   white-space: pre-wrap !important;
-  overflow-y: auto !important;
+  word-wrap: break-word !important;
 }
 
-/* 占位符 */
 .search-ipt .input-area-placeholder {
   font-size: 16px !important;
   color: #bbb !important;
   position: absolute !important;
-  top: 16px !important;
+  top: 24px !important;
   left: 20px !important;
   pointer-events: none !important;
   z-index: 1 !important;
 }
 
-/* 隐藏输入框下方默认按钮 */
+/* 隐藏默认按钮 */
 .search-ipt .online-web-search-switch,
 .search-ipt [class*="flex-center"][class*="pr-8px"],
 .search-ipt .per-sel-kb,
 .search-ipt [class*="ml-10px"].flex-center,
 .search-ipt .el-input-group__append,
-.search-ipt .input-with-select-v {
+.search-ipt .input-with-select-v,
+.search-ipt .flex-row.items-center.pl-14px {
   display: none !important;
 }
 
-/* 发送按钮 - 紫色圆形，右下角 */
-.search-ipt .cursor-pointer.flex {
+/* 发送按钮 - 右下角圆形 */
+.search-ipt .cursor-pointer.flex,
+.search-ipt .search-btn-wrapper {
   position: absolute !important;
   right: 12px !important;
   bottom: 12px !important;
   z-index: 10 !important;
+}
+
+.search-ipt .cursor-pointer.flex button,
+.search-ipt .search-btn-wrapper button,
+.search-ipt .search-btn-internal {
   width: 36px !important;
   height: 36px !important;
   border-radius: 50% !important;
   background: #605CE5 !important;
+  color: #fff !important;
+  border: none !important;
+  cursor: pointer !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 0 !important;
-  cursor: pointer !important;
-  border: none !important;
+}
+
+.search-ipt .cursor-pointer.flex button svg,
+.search-ipt .search-btn-wrapper button svg,
+.search-ipt .search-btn-internal svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.search-ipt .cursor-pointer.flex button:hover,
+.search-ipt .search-btn-wrapper button:hover {
+  background: #4f4bd4 !important;
 }
 
 .search-ipt .cursor-pointer.flex svg {
-  width: 18px !important;
-  height: 18px !important;
+  width: 20px !important;
+  height: 20px !important;
   display: block !important;
   stroke: #fff !important;
   fill: none !important;
 }
 
-/* 隐藏旧搜索按钮样式覆盖 */
+/* 隐藏旧搜索按钮样式 */
 .search-btn::after {
   display: none !important;
 }
@@ -369,49 +391,112 @@ div[class*="ml-52px"] {
 
 /* 底部操作按钮区域 */
 .search-bottom-actions {
-  position: absolute !important;
-  bottom: 12px !important;
-  left: 16px !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  z-index: 10 !important;
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
   height: 36px !important;
 }
 
-.search-bottom-actions .action-btn {
+.action-btn {
   display: flex;
   align-items: center;
   gap: 4px;
   padding: 6px 10px;
   border-radius: 20px;
   cursor: pointer;
+  transition: all 0.2s ease;
   background: transparent;
   border: none;
   font-size: 14px;
   color: #666;
-  transition: all 0.15s;
-  white-space: nowrap;
+  font-weight: 400;
+  font-family: "Microsoft YaHei", "微软雅黑", system-ui, -apple-system, sans-serif;
 }
 
-.search-bottom-actions .action-btn:hover {
+.action-btn:hover {
   background: #f0f0f0;
   color: #333;
 }
 
-.search-bottom-actions .action-btn.active {
-  background: #605CE5 !important;
-  color: #fff !important;
-  padding: 6px 8px !important;
+.action-btn svg {
+  width: 14px;
+  height: 14px;
+  color: inherit;
+  flex-shrink: 0;
+  margin-top:2px;
 }
 
-/* 翻译模式 - 翻译激活栏 */
+/* 翻译模式 */
 .translate-active-bar {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
   height: 36px !important;
+}
+
+.action-btn.active {
+  background: #605CE5 !important;
+  color: #fff !important;
+  padding: 6px 8px !important;
+}
+
+.action-btn.active svg {
+  color: #fff !important;
+}
+
+.close-in-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+.close-in-btn svg {
+  width: 14px;
+  height: 14px;
+  color: rgba(255,255,255,0.8) !important;
+}
+
+.close-in-btn:hover svg {
+  color: #fff !important;
+}
+
+.translate-options-inline {
+  display: flex;
+  gap: 8px;
+  margin-left: 8px;
+}
+
+.option-btn-small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: none;
+  border-radius:6px;
+  background: transparent;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.option-btn-small svg {
+  width: 14px;
+  height: 14px;
+  margin-top:2px;
+}
+
+.option-btn-small:hover {
+  background: #f5f5f5;
 }
 
 .translate-lang-bar {
@@ -429,16 +514,40 @@ div[class*="ml-52px"] {
   background: transparent;
   cursor: pointer;
   outline: none;
+  font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
-  padding-right: 18px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right center;
+  background-position: right 4px center;
+  padding-right: 18px;
   border-radius: 6px;
+  transition: all 0.2s ease;
 }
 
 .lang-select-small:hover {
+  background-color: #f5f5f5;
+}
+
+.lang-select-small:focus {
+  outline: none;
   background-color: #f0f0f0;
+}
+
+select.lang-select-small option {
+  font-size: 14px !important;
+  color: #333 !important;
+  background-color: #fff !important;
+  padding: 10px 16px !important;
+  font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  line-height: 1.5 !important;
+}
+
+.lang-arrow-small {
+  color: #666;
+  font-size: 14px;
+  font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* 文档信息区域 */
@@ -447,60 +556,92 @@ div[class*="ml-52px"] {
   top: 16px;
   left: 20px;
   right: 20px;
-  background: #f8f9fb;
+  background: #fff;
   border-radius: 8px;
   padding: 10px;
+  border: 0px solid #f0f0f0;
   height: 52px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  box-sizing: border-box;
   z-index: 5;
 }
 
-.document-info-area .doc-icon {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
+.document-info-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+}
+
+.document-icon {
+  width: 38px;
+  height: 38px;
+  background: #f8f8f8;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.document-info-area .doc-info {
+.document-icon svg {
+  width: 38px;
+  height: 38px;
+}
+
+.document-details {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
 }
 
-.document-info-area .doc-name {
-  font-size: 14px;
-  color: #333;
+.document-name {
+  font-size: 13px;
+  color: #323232;
+  font-weight: 500;
+  line-height:18px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.document-info-area .doc-size {
+.document-status {
   font-size: 12px;
   color: #999;
-  margin-top: 2px;
+  font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.document-info-area .doc-delete {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  cursor: pointer;
-  color: #999;
+.document-status.document-size {
+  color: #666;
+  font-size:12px;
+  line-height:14px;
+}
+
+.document-info-area:hover {
+  background: #f5f5f5;
+}
+
+.document-delete-btn {
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: background 0.15s;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  margin-left: auto;
 }
 
-.document-info-area .doc-delete:hover {
-  background: #e8e8e8;
-  color: #333;
+.document-delete-btn:hover {
+  background: #e0e0e0;
+}
+
+.document-delete-btn:hover svg {
+  stroke: #666;
 }
 
 .references-right-panel .panel-header {
@@ -5413,92 +5554,325 @@ html {
     var searchIpt = document.querySelector('.search-ipt');
     if (!searchIpt) return;
     
-    // 查找输入框包装器和发送按钮
     var wrapper = searchIpt.querySelector('.input-area-wrapper');
-    var sendBtn = searchIpt.querySelector('.cursor-pointer.flex');
-    var inputArea = searchIpt.querySelector('.input-area');
-    var placeholder = searchIpt.querySelector('.input-area-placeholder');
-    
     if (!wrapper) return;
     
     // 如果已经有底部操作按钮，说明已经处理过
-    if (searchIpt.querySelector('.search-bottom-actions')) return;
+    if (wrapper.querySelector('.search-bottom-actions')) return;
     
-    // 移除旧的flex布局（发送按钮原始位置）
-    var oldFlexRow = searchIpt.querySelector('.flex-row.items-center.pl-14px');
-    if (oldFlexRow) oldFlexRow.style.display = 'none';
-    var oldInputGroup = searchIpt.querySelector('.el-input-group__append');
-    if (oldInputGroup) oldInputGroup.style.display = 'none';
-    var oldAppend = wrapper.querySelector('.el-input-group__append');
+    // 隐藏默认按钮布局
+    var oldFlex = searchIpt.querySelector('.flex-row.items-center.pl-14px');
+    if (oldFlex) oldFlex.style.display = 'none';
+    var oldAppend = searchIpt.querySelector('.el-input-group__append');
     if (oldAppend) oldAppend.style.display = 'none';
+    var wrapperAppend = wrapper.querySelector('.el-input-group__append');
+    if (wrapperAppend) wrapperAppend.style.display = 'none';
     
-    // 修复输入框样式
-    if (inputArea) {
-      inputArea.style.display = '';
-      inputArea.style.fontSize = '16px';
-      inputArea.style.minHeight = '80px';
-      inputArea.style.border = 'none';
-      inputArea.style.outline = 'none';
-      inputArea.style.width = '100%';
-      inputArea.style.background = 'transparent';
-      inputArea.style.lineHeight = '1.6';
-      inputArea.style.color = '#333';
-    }
+    // 创建搜索按钮容器
+    var btnWrapper = document.createElement('div');
+    btnWrapper.className = 'search-btn-wrapper';
+    btnWrapper.innerHTML = '\
+      <button class="search-btn-internal" onclick="handleSendMessage()" title="发送">\
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>\
+      </button>\
+    ';
+    wrapper.appendChild(btnWrapper);
     
-    if (placeholder) {
-      placeholder.style.position = 'absolute';
-      placeholder.style.top = '16px';
-      placeholder.style.left = '20px';
-      placeholder.style.pointerEvents = 'none';
-      placeholder.style.zIndex = '1';
-    }
+    // 隐藏旧的发送按钮
+    var oldSendBtn = searchIpt.querySelector('.cursor-pointer.flex');
+    if (oldSendBtn) oldSendBtn.style.display = 'none';
     
     // 创建底部操作按钮区域
-    var actionsContainer = document.createElement('div');
-    actionsContainer.className = 'search-bottom-actions';
-    actionsContainer.innerHTML = '\
-      <span class="action-btn" onclick="toggleTranslateMode()">\
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>\
-        象胥翻译\
-      </span>\
-      <span class="action-btn" onclick="alert(\'AI解读\')">🧠 AI解读</span>\
-      <span class="action-btn" onclick="alert(\'简单搜索\')">🔍 简单搜索</span>\
+    var bottomActions = document.createElement('div');
+    bottomActions.className = 'search-bottom-actions';
+    bottomActions.innerHTML = '\
+      <button class="action-btn" onclick="toggleTranslateMode()" title="专业级翻译大模型，支持多种语言">\
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
+          <path d="M5 8l6 6"/>\
+          <path d="M4 14l6-6 3-3"/>\
+          <path d="M2 5h12"/>\
+          <path d="M7 2h1"/>\
+          <path d="M22 22l-5-10-5 10"/>\
+          <path d="M14 18h6"/>\
+        </svg>\
+        <span>象胥翻译</span>\
+      </button>\
+      <button class="action-btn" onclick="alert(\'AI解读\')" title="智能解读论文、报告">\
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>\
+          <path d="M2 17l10 5 10-5"/>\
+          <path d="M2 12l10 5 10-5"/>\
+        </svg>\
+        <span>AI解读</span>\
+      </button>\
+      <button class="action-btn" onclick="alert(\'简单搜索\')" title="输入关键词进行简单快捷检索">\
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
+          <circle cx="11" cy="11" r="8"/>\
+          <path d="M21 21l-4.35-4.35"/>\
+          <line x1="8" y1="11" x2="14" y2="11"/>\
+        </svg>\
+        <span>简单搜索</span>\
+      </button>\
     ';
-    wrapper.appendChild(actionsContainer);
-    
-    // 修复发送按钮
-    if (sendBtn) {
-      sendBtn.style.position = 'absolute';
-      sendBtn.style.right = '12px';
-      sendBtn.style.bottom = '12px';
-      sendBtn.style.zIndex = '10';
-      sendBtn.style.width = '36px';
-      sendBtn.style.height = '36px';
-      sendBtn.style.borderRadius = '50%';
-      sendBtn.style.background = '#605CE5';
-      sendBtn.style.display = 'flex';
-      sendBtn.style.alignItems = 'center';
-      sendBtn.style.justifyContent = 'center';
-      sendBtn.style.padding = '0';
-      sendBtn.style.cursor = 'pointer';
-      sendBtn.style.border = 'none';
-      sendBtn.onclick = handleSendMessage;
-      
-      var svg = sendBtn.querySelector('svg');
-      if (svg) {
-        svg.style.width = '18px';
-        svg.style.height = '18px';
-        svg.style.display = 'block';
-      }
-    }
+    wrapper.appendChild(bottomActions);
     
     // 如果doc-translate模式，自动进入翻译模式
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('mode') === 'doc-translate') {
       setTimeout(function() {
         toggleTranslateMode();
-      }, 100);
+      }, 200);
     }
+  }
+  
+  // 发送消息
+  window.handleSendMessage = function() {
+    var textarea = document.querySelector('.search-ipt textarea.el-input__inner, .search-ipt .input-area');
+    if (!textarea) {
+      textarea = document.querySelector('.search-ipt .input-area');
+    }
+    var text = textarea ? textarea.value || textarea.textContent.trim() : '';
+    if (text) {
+      console.log('发送消息:', text);
+      if (textarea.tagName === 'TEXTAREA') {
+        textarea.value = '';
+      } else {
+        textarea.textContent = '';
+      }
+    }
+  };
+  
+  // 切换翻译模式
+  function toggleTranslateMode() {
+    var searchIpt = document.querySelector('.search-ipt');
+    var wrapper = searchIpt ? searchIpt.querySelector('.input-area-wrapper') : null;
+    var bottomActions = wrapper ? wrapper.querySelector('.search-bottom-actions') : null;
+    if (!searchIpt || !wrapper || !bottomActions) return;
+    
+    // 检查是否已经在翻译模式
+    var activeBar = wrapper.querySelector('.translate-active-bar');
+    if (activeBar) {
+      exitTranslateMode();
+      return;
+    }
+    
+    // 修改placeholder
+    var placeholder = wrapper.querySelector('.input-area-placeholder');
+    if (placeholder) placeholder.textContent = '输入待翻译文本，或点击下方按钮翻译文档/图片';
+    
+    // 在搜索按钮前添加语言选择栏
+    var btnWrapper = wrapper.querySelector('.search-btn-wrapper');
+    if (btnWrapper) {
+      var langBar = document.createElement('div');
+      langBar.className = 'translate-lang-bar';
+      langBar.innerHTML = '\
+        <select class="lang-select-small">\
+          <option>自动识别</option>\
+          <option>中文</option>\
+          <option>英文</option>\
+        </select>\
+        <span class="lang-arrow-small">→</span>\
+        <select class="lang-select-small">\
+          <option>中文</option>\
+          <option>英文</option>\
+          <option>日文</option>\
+        </select>\
+      ';
+      btnWrapper.insertBefore(langBar, btnWrapper.firstChild);
+      
+      var btn = btnWrapper.querySelector('button');
+      if (btn) {
+        btn.setAttribute('onclick', 'handleTranslateSend()');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>';
+      }
+    }
+    
+    // 修改底部按钮区域
+    bottomActions.innerHTML = '\
+      <div class="translate-active-bar">\
+        <button class="action-btn active" onclick="toggleTranslateMode()" title="象胥翻译">\
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
+            <path d="M5 8l6 6"/>\
+            <path d="M4 14l6-6 3-3"/>\
+            <path d="M2 5h12"/>\
+            <path d="M7 2h1"/>\
+            <path d="M22 22l-5-10-5 10"/>\
+            <path d="M14 18h6"/>\
+          </svg>\
+          <span>象胥翻译</span>\
+          <span class="close-in-btn" onclick="event.stopPropagation();exitTranslateMode()">\
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">\
+              <path d="M18 6L6 18M6 6l12 12"/>\
+            </svg>\
+          </span>\
+        </button>\
+        <div class="translate-options-inline">\
+          <button class="option-btn-small" title="文档翻译" onclick="handleDocumentTranslate()">\
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">\
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>\
+              <polyline points="14 2 14 8 20 8"/>\
+            </svg>\
+            文档翻译\
+          </button>\
+          <button class="option-btn-small" title="图片翻译" onclick="alert(\'图片翻译\')">\
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">\
+              <rect x="3" y="3" width="18" height="18" rx="2"/>\
+              <circle cx="8.5" cy="8.5" r="1.5"/>\
+              <path d="M21 15l-5-5L5 21"/>\
+            </svg>\
+            图片翻译\
+          </button>\
+        </div>\
+      </div>\
+    ';
+  }
+  
+  window.toggleTranslateMode = toggleTranslateMode;
+  
+  // 退出翻译模式
+  window.exitTranslateMode = function() {
+    var searchIpt = document.querySelector('.search-ipt');
+    var wrapper = searchIpt ? searchIpt.querySelector('.input-area-wrapper') : null;
+    var bottomActions = wrapper ? wrapper.querySelector('.search-bottom-actions') : null;
+    if (!searchIpt || !wrapper || !bottomActions) return;
+    
+    // 恢复placeholder
+    var placeholder = wrapper.querySelector('.input-area-placeholder');
+    if (placeholder) placeholder.textContent = '请输入问题';
+    
+    // 恢复textarea显示
+    var textarea = wrapper.querySelector('textarea, .input-area');
+    if (textarea) textarea.style.display = '';
+    // 移除文档信息区域
+    var docInfo = wrapper.querySelector('.document-info-area');
+    if (docInfo) docInfo.remove();
+    
+    // 恢复搜索按钮
+    var btnWrapper = wrapper.querySelector('.search-btn-wrapper');
+    if (btnWrapper) {
+      var langBar = btnWrapper.querySelector('.translate-lang-bar');
+      if (langBar) langBar.remove();
+      var btn = btnWrapper.querySelector('button');
+      if (btn) {
+        btn.setAttribute('onclick', 'handleSendMessage()');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>';
+      }
+    }
+    
+    // 恢复原始底部按钮
+    bottomActions.innerHTML = '\
+      <button class="action-btn" onclick="toggleTranslateMode()" title="专业级翻译大模型，支持多种语言">\
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
+          <path d="M5 8l6 6"/>\
+          <path d="M4 14l6-6 3-3"/>\
+          <path d="M2 5h12"/>\
+          <path d="M7 2h1"/>\
+          <path d="M22 22l-5-10-5 10"/>\
+          <path d="M14 18h6"/>\
+        </svg>\
+        <span>象胥翻译</span>\
+      </button>\
+      <button class="action-btn" onclick="alert(\'AI解读\')" title="智能解读论文、报告">\
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>\
+          <path d="M2 17l10 5 10-5"/>\
+          <path d="M2 12l10 5 10-5"/>\
+        </svg>\
+        <span>AI解读</span>\
+      </button>\
+      <button class="action-btn" onclick="alert(\'简单搜索\')" title="输入关键词进行简单快捷检索">\
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
+          <circle cx="11" cy="11" r="8"/>\
+          <path d="M21 21l-4.35-4.35"/>\
+          <line x1="8" y1="11" x2="14" y2="11"/>\
+        </svg>\
+        <span>简单搜索</span>\
+      </button>\
+    ';
+  };
+  
+  // 翻译模式发送
+  window.handleTranslateSend = function() {
+    var wrapper = document.querySelector('.input-area-wrapper');
+    if (!wrapper) return;
+    var docInfo = wrapper.querySelector('.document-info-area');
+    if (docInfo) {
+      var docNameEl = docInfo.querySelector('.document-name');
+      if (docNameEl) {
+        var name = docNameEl.textContent;
+        var sizeEl = docInfo.querySelector('.document-status');
+        var size = sizeEl ? sizeEl.textContent : '';
+        window.location.href = '?mode=doc-translate&docName=' + encodeURIComponent(name) + '&docSize=' + encodeURIComponent(size);
+        return;
+      }
+    }
+    var textarea = wrapper.querySelector('textarea, .input-area');
+    var text = textarea ? (textarea.value || textarea.textContent.trim()) : '';
+    if (text) {
+      alert('翻译文本: ' + text.slice(0, 50) + '...');
+    }
+  };
+  
+  // 文档翻译
+  window.handleDocumentTranslate = function() {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.doc,.docx,.pdf,.txt';
+    input.onchange = function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      showDocumentInfo(file);
+    };
+    input.click();
+  };
+  
+  // 显示文档信息
+  function showDocumentInfo(file) {
+    var wrapper = document.querySelector('.input-area-wrapper');
+    if (!wrapper) return;
+    
+    var textarea = wrapper.querySelector('textarea, .input-area');
+    if (textarea) textarea.style.display = 'none';
+    var placeholder = wrapper.querySelector('.input-area-placeholder');
+    if (placeholder) placeholder.style.display = 'none';
+    
+    var oldDoc = wrapper.querySelector('.document-info-area');
+    if (oldDoc) oldDoc.remove();
+    
+    var docArea = document.createElement('div');
+    docArea.className = 'document-info-area';
+    docArea.innerHTML = '\
+      <div class="document-info-content">\
+        <div class="document-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#605CE5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>\
+        <div class="document-details">\
+          <div class="document-name">' + (file.name || '未知文件') + '</div>\
+          <div class="document-status document-size">' + formatFileSize(file.size) + '</div>\
+        </div>\
+        <div class="document-delete-btn" onclick="deleteDocument()">\
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>\
+        </div>\
+      </div>\
+    ';
+    wrapper.appendChild(docArea);
+  }
+  
+  // 删除文档
+  window.deleteDocument = function() {
+    var wrapper = document.querySelector('.input-area-wrapper');
+    if (!wrapper) return;
+    var docArea = wrapper.querySelector('.document-info-area');
+    if (docArea) docArea.remove();
+    var textarea = wrapper.querySelector('textarea, .input-area');
+    if (textarea) textarea.style.display = '';
+    var placeholder = wrapper.querySelector('.input-area-placeholder');
+    if (placeholder) placeholder.style.display = '';
+  };
+  
+  // 格式化文件大小
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
   
   function runAll() {
@@ -5509,33 +5883,6 @@ html {
     transformInputArea();
     initScrollbar();
     initReferencesPanel();
-    replaceSendButton();
-  }
-  
-  // 替换发送按钮图片为SVG图标
-  function replaceSendButton() {
-    // 处理右侧发送按钮（input区域的img替换）
-    var sendImg = document.querySelector('.search-ipt .cursor-pointer.flex > img[class*="w-30px"]');
-    if (sendImg && sendImg.tagName === 'IMG') {
-      var parent = sendImg.parentNode;
-      if (parent) {
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('viewBox', '0 0 24 24');
-        svg.setAttribute('width', '24');
-        svg.setAttribute('height', '24');
-        svg.setAttribute('fill', 'none');
-        svg.setAttribute('stroke', '#605CE5');
-        svg.setAttribute('stroke-width', '2');
-        svg.setAttribute('stroke-linecap', 'round');
-        svg.setAttribute('stroke-linejoin', 'round');
-        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', 'M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z');
-        svg.appendChild(path);
-        parent.replaceChild(svg, sendImg);
-      }
-    }
-    // 确保搜索按钮点击行为正确
-    updateSearchBtnClick();
   }
   
   // 初始化参考资料面板
