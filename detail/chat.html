@@ -123,7 +123,8 @@
 .session-his.collapsed .session-his-header,
 .session-his.collapsed .his-top-bar,
 .session-his.collapsed .his-view,
-.session-his.collapsed .input-with-select {
+.session-his.collapsed .input-with-select,
+.session-his.collapsed .user-profile-section {
   display: none !important;
 }
 
@@ -177,12 +178,12 @@
 .session-his {
   width: 265px !important;
   min-width: 265px !important;
+  position: relative !important;
 }
 
-/* 历史记录视图区域填充剩余空间，使用户信息置底 */
+/* 历史记录视图区域留出底部空间使用户信息可见 */
 .his-view {
-  flex: 1 !important;
-  min-height: 0 !important;
+  padding-bottom: 60px !important;
 }
 
 /* 历史记录项内容不溢出 */
@@ -1016,11 +1017,15 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   align-items: center;
   padding: 10px 12px;
   border-top: 1px solid #e8e8e8;
-  margin-top: auto;
   flex-shrink: 0;
   cursor: pointer;
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
   transition: background 0.2s;
+  z-index: 10;
 }
 .user-profile-section:hover {
   background: rgba(96, 92, 229, 0.05);
