@@ -67,7 +67,7 @@
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  padding: 10px 10px 10px 0px  !important
+  padding: 10px 10px 10px 14px  !important
   border-bottom: 1px solid transparent !important;
   height: 52px !important;
   box-sizing: border-box !important;
@@ -198,6 +198,11 @@
   overflow: hidden !important;
 }
 
+/* 历史记录卡片间距 */
+.per-session {
+  margin-top: 8px !important;
+}
+
 .session-his .per-session .one-line-text {
   max-width: calc(100% - 80px) !important;
   flex: 1 !important;
@@ -255,85 +260,247 @@ div[class*="ml-52px"] {
   margin-right: 0 !important;
 }
 
-/* 底部输入框 - 与主页保持一致，高度减半 */
+/* 底部输入框 - 与主页(m.html)保持一致 */
 .search-ipt {
-  border: 1px solid #e8e8e8 !important;
-  border-radius: 16px !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   max-width: 760px !important;
   margin-left: auto !important;
   margin-right: auto !important;
+  background: transparent !important;
 }
 
+/* 输入框外层容器 - 完全重写 */
 .search-ipt .txt-area {
-  height: 68px !important;
+  height: auto !important;
+  position: relative !important;
 }
 
 .search-ipt .txt-area .input-area-wrapper {
-  height: 36px !important;
-  padding-top: 6px !important;
-  margin-top: 4px !important;
+  height: auto !important;
+  padding: 16px 20px 48px 20px !important;
+  margin: 0 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e8e8e8 !important;
+  min-height: 140px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  background: #fff !important;
+  position: relative !important;
 }
 
-/* 隐藏输入框下方的按钮 */
-.online-web-search-switch,
+/* 文本输入框 */
+.search-ipt .input-area {
+  font-size: 16px !important;
+  min-height: 80px !important;
+  max-height: 200px !important;
+  border: none !important;
+  background: transparent !important;
+  width: 100% !important;
+  outline: none !important;
+  line-height: 1.6 !important;
+  color: #333 !important;
+  white-space: pre-wrap !important;
+  overflow-y: auto !important;
+}
+
+/* 占位符 */
+.search-ipt .input-area-placeholder {
+  font-size: 16px !important;
+  color: #bbb !important;
+  position: absolute !important;
+  top: 16px !important;
+  left: 20px !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* 隐藏输入框下方默认按钮 */
+.search-ipt .online-web-search-switch,
 .search-ipt [class*="flex-center"][class*="pr-8px"],
-.per-sel-kb,
-.search-ipt [class*="ml-10px"].flex-center {
+.search-ipt .per-sel-kb,
+.search-ipt [class*="ml-10px"].flex-center,
+.search-ipt .el-input-group__append,
+.search-ipt .input-with-select-v {
   display: none !important;
 }
 
-/* 发送按钮 - 垂直居中 */
-.search-ipt .cursor-pointer.flex svg {
-  width: 24px !important;
-  height: 24px !important;
-  cursor: pointer !important;
-  display: block !important;
-}
-
+/* 发送按钮 - 紫色圆形，右下角 */
 .search-ipt .cursor-pointer.flex {
+  position: absolute !important;
+  right: 12px !important;
+  bottom: 12px !important;
+  z-index: 10 !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: #605CE5 !important;
   display: flex !important;
   align-items: center !important;
-  align-self: center !important;
-  padding: 0 !important;
-}
-
-/* 搜索/发送按钮图标样式 - 直接隐藏内部SVG覆盖 */
-.search-btn {
-  position: relative !important;
-  overflow: hidden !important;
-}
-
-.search-btn .el-icon svg {
-  opacity: 0 !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-.search-btn .el-icon {
-  display: inline-flex !important;
-  align-items: center !important;
   justify-content: center !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  border: none !important;
 }
 
-/* 使用背景图覆盖 */
+.search-ipt .cursor-pointer.flex svg {
+  width: 18px !important;
+  height: 18px !important;
+  display: block !important;
+  stroke: #fff !important;
+  fill: none !important;
+}
+
+/* 隐藏旧搜索按钮样式覆盖 */
 .search-btn::after {
-  content: '' !important;
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 20px !important;
-  height: 20px !important;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z'/%3E%3C/svg%3E") !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  pointer-events: none !important;
+  display: none !important;
+}
+.search-btn .el-icon svg {
+  opacity: 1 !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+.search-btn {
+  overflow: visible !important;
 }
 
-body.is-search-mode .search-btn::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23605CE5' d='m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704'/%3E%3C/svg%3E") !important;
+/* 底部操作按钮区域 */
+.search-bottom-actions {
+  position: absolute !important;
+  bottom: 12px !important;
+  left: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  z-index: 10 !important;
+  height: 36px !important;
+}
+
+.search-bottom-actions .action-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.search-bottom-actions .action-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.search-bottom-actions .action-btn.active {
+  background: #605CE5 !important;
+  color: #fff !important;
+  padding: 6px 8px !important;
+}
+
+/* 翻译模式 - 翻译激活栏 */
+.translate-active-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 36px !important;
+}
+
+.translate-lang-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.lang-select-small {
+  padding: 2px 6px;
+  border: none;
+  font-size: 14px;
+  color: #666;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+  padding-right: 18px;
+  background-repeat: no-repeat;
+  background-position: right center;
+  border-radius: 6px;
+}
+
+.lang-select-small:hover {
+  background-color: #f0f0f0;
+}
+
+/* 文档信息区域 */
+.document-info-area {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  right: 20px;
+  background: #f8f9fb;
+  border-radius: 8px;
+  padding: 10px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 5;
+}
+
+.document-info-area .doc-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.document-info-area .doc-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.document-info-area .doc-name {
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.document-info-area .doc-size {
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.document-info-area .doc-delete {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+
+.document-info-area .doc-delete:hover {
+  background: #e8e8e8;
+  color: #333;
 }
 
 .references-right-panel .panel-header {
@@ -5077,6 +5244,7 @@ html {
     
     var header = document.createElement('div');
     header.className = 'session-his-header';
+    header.style.paddingLeft = '14px';
     header.innerHTML = '\
       <div class="header-logo" onclick="window.location.href=\'./m.html\'">\
         <img src="./chat_files/logo_mosslib.png" alt="MossLib">\
@@ -5156,7 +5324,7 @@ html {
     
     var profileSection = document.createElement('div');
     profileSection.className = 'user-profile-section';
-    profileSection.style.cssText = 'display:flex;flex-direction:row;align-items:center;padding:10px 0;border-top:1px solid #e8e8e8;flex-shrink:0;cursor:pointer;position:absolute;bottom:0;left:0;right:0;background:#fff;transition:background 0.2s;z-index:10;box-sizing:border-box;opacity:1!important;';
+    profileSection.style.cssText = 'display:flex;flex-direction:row;align-items:center;padding:10px 0;flex-shrink:0;cursor:pointer;position:absolute;bottom:0;left:0;right:0;background:#fff;transition:background 0.2s;z-index:10;box-sizing:border-box;opacity:1!important;';
     profileSection.innerHTML = '\
       <div class="user-profile-avatar" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;background:#605CE5;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:600;overflow:hidden;margin-left:12px;">\
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">\
@@ -5165,8 +5333,7 @@ html {
         </svg>\
       </div>\
       <div class="user-profile-info" style="flex:1;margin-left:10px;min-width:0;">\
-        <div class="user-profile-name" style="font-size:14px;color:#333;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">新译用户</div>\
-        <div class="user-profile-email" style="font-size:12px;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;">user@newtranx.com</div>\
+        <div class="user-profile-name" style="font-size:14px;color:#333;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">小明</div>\
       </div>\
       <svg class="user-profile-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#bbb" stroke-width="2" style="flex-shrink:0;margin-right:12px;transition:transform 0.2s;">\
         <polyline points="6 9 12 15 18 9"/>\
@@ -5241,15 +5408,108 @@ html {
     });
   }
   
+  // 改造输入区域为m.html风格
+  function transformInputArea() {
+    var searchIpt = document.querySelector('.search-ipt');
+    if (!searchIpt) return;
+    
+    // 查找输入框包装器和发送按钮
+    var wrapper = searchIpt.querySelector('.input-area-wrapper');
+    var sendBtn = searchIpt.querySelector('.cursor-pointer.flex');
+    var inputArea = searchIpt.querySelector('.input-area');
+    var placeholder = searchIpt.querySelector('.input-area-placeholder');
+    
+    if (!wrapper) return;
+    
+    // 如果已经有底部操作按钮，说明已经处理过
+    if (searchIpt.querySelector('.search-bottom-actions')) return;
+    
+    // 移除旧的flex布局（发送按钮原始位置）
+    var oldFlexRow = searchIpt.querySelector('.flex-row.items-center.pl-14px');
+    if (oldFlexRow) oldFlexRow.style.display = 'none';
+    var oldInputGroup = searchIpt.querySelector('.el-input-group__append');
+    if (oldInputGroup) oldInputGroup.style.display = 'none';
+    var oldAppend = wrapper.querySelector('.el-input-group__append');
+    if (oldAppend) oldAppend.style.display = 'none';
+    
+    // 修复输入框样式
+    if (inputArea) {
+      inputArea.style.display = '';
+      inputArea.style.fontSize = '16px';
+      inputArea.style.minHeight = '80px';
+      inputArea.style.border = 'none';
+      inputArea.style.outline = 'none';
+      inputArea.style.width = '100%';
+      inputArea.style.background = 'transparent';
+      inputArea.style.lineHeight = '1.6';
+      inputArea.style.color = '#333';
+    }
+    
+    if (placeholder) {
+      placeholder.style.position = 'absolute';
+      placeholder.style.top = '16px';
+      placeholder.style.left = '20px';
+      placeholder.style.pointerEvents = 'none';
+      placeholder.style.zIndex = '1';
+    }
+    
+    // 创建底部操作按钮区域
+    var actionsContainer = document.createElement('div');
+    actionsContainer.className = 'search-bottom-actions';
+    actionsContainer.innerHTML = '\
+      <span class="action-btn" onclick="toggleTranslateMode()">\
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>\
+        象胥翻译\
+      </span>\
+      <span class="action-btn" onclick="alert(\'AI解读\')">🧠 AI解读</span>\
+      <span class="action-btn" onclick="alert(\'简单搜索\')">🔍 简单搜索</span>\
+    ';
+    wrapper.appendChild(actionsContainer);
+    
+    // 修复发送按钮
+    if (sendBtn) {
+      sendBtn.style.position = 'absolute';
+      sendBtn.style.right = '12px';
+      sendBtn.style.bottom = '12px';
+      sendBtn.style.zIndex = '10';
+      sendBtn.style.width = '36px';
+      sendBtn.style.height = '36px';
+      sendBtn.style.borderRadius = '50%';
+      sendBtn.style.background = '#605CE5';
+      sendBtn.style.display = 'flex';
+      sendBtn.style.alignItems = 'center';
+      sendBtn.style.justifyContent = 'center';
+      sendBtn.style.padding = '0';
+      sendBtn.style.cursor = 'pointer';
+      sendBtn.style.border = 'none';
+      sendBtn.onclick = handleSendMessage;
+      
+      var svg = sendBtn.querySelector('svg');
+      if (svg) {
+        svg.style.width = '18px';
+        svg.style.height = '18px';
+        svg.style.display = 'block';
+      }
+    }
+    
+    // 如果doc-translate模式，自动进入翻译模式
+    var urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mode') === 'doc-translate') {
+      setTimeout(function() {
+        toggleTranslateMode();
+      }, 100);
+    }
+  }
+  
   function runAll() {
     fixMargin();
     addSessionHeader();
     addCollapsedToolbar();
     addUserProfile();
+    transformInputArea();
     initScrollbar();
     initReferencesPanel();
     replaceSendButton();
-    updateSearchBtnClick();
   }
   
   // 替换发送按钮图片为SVG图标
@@ -5277,33 +5537,6 @@ html {
     // 确保搜索按钮点击行为正确
     updateSearchBtnClick();
   }
-  
-  // 简单搜索模式状态
-  var isSimpleSearchMode = false;
-  
-  // 切换简单搜索模式
-  window.toggleSimpleSearchMode = function() {
-    isSimpleSearchMode = !isSimpleSearchMode;
-    document.body.classList.toggle('is-search-mode', isSimpleSearchMode);
-    updateSearchBtnClick();
-  };
-  
-  // 更新搜索按钮点击行为
-  function updateSearchBtnClick() {
-    var searchBtn = document.querySelector('.search-btn');
-    if (!searchBtn) return;
-    searchBtn.setAttribute('onclick', isSimpleSearchMode ? 'handleSearch()' : 'handleSendMessage()');
-  }
-  
-  // 发送消息
-  window.handleSendMessage = function() {
-    var inputArea = document.querySelector('.input-area');
-    var text = inputArea ? inputArea.textContent.trim() : '';
-    if (text) {
-      console.log('发送消息:', text);
-      inputArea.textContent = '';
-    }
-  };
   
   // 初始化参考资料面板
   function initReferencesPanel() {
@@ -5470,37 +5703,202 @@ html {
     });
   }
   
+  // 发送消息
+  window.handleSendMessage = function() {
+    var inputArea = document.querySelector('.input-area');
+    var text = inputArea ? inputArea.textContent.trim() : '';
+    if (text) {
+      console.log('发送消息:', text);
+      inputArea.textContent = '';
+      if (inputArea.nextElementSibling && inputArea.nextElementSibling.classList.contains('input-area-placeholder')) {
+        inputArea.nextElementSibling.style.display = '';
+      }
+    }
+  };
+  
+  // 切换翻译模式
+  var isTranslateMode = false;
+  
+  window.toggleTranslateMode = function() {
+    isTranslateMode = !isTranslateMode;
+    var ipt = document.querySelector('.search-ipt');
+    if (!ipt) return;
+    var wrapper = ipt.querySelector('.input-area-wrapper');
+    var placeholder = ipt.querySelector('.input-area-placeholder');
+    var inputArea = ipt.querySelector('.input-area');
+    var actionsContainer = ipt.querySelector('.search-bottom-actions');
+    var sendBtn = ipt.querySelector('.cursor-pointer.flex');
+    
+    if (isTranslateMode) {
+      // 进入翻译模式
+      if (placeholder) placeholder.textContent = '输入待翻译文本，或点击下方按钮翻译文档/图片';
+      
+      // 添加翻译语言栏到发送按钮容器
+      if (sendBtn) {
+        var langBar = sendBtn.querySelector('.translate-lang-bar');
+        if (!langBar) {
+          langBar = document.createElement('div');
+          langBar.className = 'translate-lang-bar';
+          langBar.innerHTML = '\
+            <select class="lang-select-small" id="srcLang"><option value="auto">自动检测</option><option value="en">英语</option><option value="zh">中文</option><option value="ja">日语</option></select>\
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 7 12 14 19 7"/></svg>\
+            <select class="lang-select-small" id="tgtLang"><option value="zh">中文</option><option value="en">英语</option><option value="ja">日语</option></select>\
+          ';
+          sendBtn.parentNode.insertBefore(langBar, sendBtn);
+        }
+      }
+      
+      // 替换底部按钮为翻译模式按钮
+      if (actionsContainer) {
+        actionsContainer.innerHTML = '\
+          <div class="translate-active-bar">\
+            <div class="action-btn active" onclick="exitTranslateMode()">\
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>\
+              <span>象胥翻译</span>\
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="cursor:pointer;" onclick="event.stopPropagation();exitTranslateMode()"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>\
+            </div>\
+            <span class="action-btn" onclick="handleDocumentTranslate()">📄 文档翻译</span>\
+            <span class="action-btn" onclick="alert(\'图片翻译\')">🖼 图片翻译</span>\
+          </div>\
+        ';
+      }
+      
+      // 修改发送按钮点击
+      sendBtn.onclick = handleTranslateSend;
+    } else {
+      exitTranslateMode();
+    }
+  };
+  
+  // 退出翻译模式
+  window.exitTranslateMode = function() {
+    isTranslateMode = false;
+    var ipt = document.querySelector('.search-ipt');
+    if (!ipt) return;
+    var placeholder = ipt.querySelector('.input-area-placeholder');
+    var inputArea = ipt.querySelector('.input-area');
+    var actionsContainer = ipt.querySelector('.search-bottom-actions');
+    var langBar = ipt.querySelector('.translate-lang-bar');
+    var docArea = ipt.querySelector('.document-info-area');
+    var sendBtn = ipt.querySelector('.cursor-pointer.flex');
+    
+    if (placeholder) placeholder.textContent = '请输入问题';
+    if (langBar) langBar.remove();
+    if (docArea) docArea.remove();
+    
+    if (inputArea) inputArea.style.display = '';
+    
+    // 恢复底部按钮
+    if (actionsContainer) {
+      actionsContainer.innerHTML = '\
+        <span class="action-btn" onclick="toggleTranslateMode()">\
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>\
+          象胥翻译\
+        </span>\
+        <span class="action-btn" onclick="alert(\'AI解读\')">🧠 AI解读</span>\
+        <span class="action-btn" onclick="alert(\'简单搜索\')">🔍 简单搜索</span>\
+      ';
+    }
+    
+    if (sendBtn) sendBtn.onclick = handleSendMessage;
+  };
+  
+  // 翻译模式发送
+  window.handleTranslateSend = function() {
+    var docInfo = document.querySelector('.document-info-area');
+    if (docInfo) {
+      var docName = docInfo.querySelector('.doc-name');
+      var docSize = docInfo.querySelector('.doc-size');
+      if (docName) {
+        var name = docName.textContent;
+        var size = docSize ? docSize.textContent : '';
+        window.location.href = '?mode=doc-translate&docName=' + encodeURIComponent(name) + '&docSize=' + encodeURIComponent(size);
+        return;
+      }
+    }
+    var textArea = document.querySelector('.input-area');
+    var text = textArea ? textArea.textContent.trim() : '';
+    if (text) {
+      alert('翻译文本: ' + text.slice(0, 50) + '...');
+    }
+  };
+  
+  // 文档翻译
+  window.handleDocumentTranslate = function() {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.doc,.docx';
+    input.onchange = function(e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      showDocumentInfo(file);
+    };
+    input.click();
+  };
+  
+  // 显示文档信息
+  function showDocumentInfo(file) {
+    var wrapper = document.querySelector('.input-area-wrapper');
+    var inputArea = wrapper ? wrapper.querySelector('.input-area') : null;
+    if (!wrapper) return;
+    
+    // 隐藏输入框
+    if (inputArea) inputArea.style.display = 'none';
+    
+    // 隐藏占位符
+    var placeholder = wrapper.querySelector('.input-area-placeholder');
+    if (placeholder) placeholder.style.display = 'none';
+    
+    // 删除已有文档信息区域
+    var oldDoc = wrapper.querySelector('.document-info-area');
+    if (oldDoc) oldDoc.remove();
+    
+    var docArea = document.createElement('div');
+    docArea.className = 'document-info-area';
+    docArea.innerHTML = '\
+      <div class="doc-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#605CE5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>\
+      <div class="doc-info">\
+        <div class="doc-name">' + file.name + '</div>\
+        <div class="doc-size">' + formatFileSize(file.size) + '</div>\
+      </div>\
+      <div class="doc-delete" onclick="deleteDocument()">\
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>\
+      </div>\
+    ';
+    wrapper.appendChild(docArea);
+  }
+  
+  // 删除文档
+  window.deleteDocument = function() {
+    var wrapper = document.querySelector('.input-area-wrapper');
+    if (!wrapper) return;
+    var docArea = wrapper.querySelector('.document-info-area');
+    if (docArea) docArea.remove();
+    var inputArea = wrapper.querySelector('.input-area');
+    if (inputArea) inputArea.style.display = '';
+    var placeholder = wrapper.querySelector('.input-area-placeholder');
+    if (placeholder) placeholder.style.display = '';
+  };
+  
+  // 格式化文件大小
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+  
   // 延迟执行，确保Vue已渲染
   setTimeout(runAll, 500);
   setTimeout(runAll, 1000);
   setTimeout(runAll, 2000);
   setTimeout(runAll, 3000);
-  // MutationObserver监听
+  
+  // MutationObserver监听DOM变化
   var observer = new MutationObserver(function() {
     setTimeout(runAll, 100);
-    // 持续确保搜索按钮行为正确
-    updateSearchBtnClick();
   });
   observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
   
-  // 专门监听搜索按钮的变化 - 检测DOM变化时立即修复
-  var searchBtnObserver = new MutationObserver(function() {
-    forceSearchBtnFix();
-  });
-  searchBtnObserver.observe(document.body, { childList: true, subtree: true });
-
-  // 同时定时轮询保险
-  setInterval(forceSearchBtnFix, 300);
-  
-  function forceSearchBtnFix() {
-    var btn = document.querySelector('.search-btn');
-    if (!btn) return;
-    // 修复点击行为
-    var expectedHandler = isSimpleSearchMode ? 'handleSearch()' : 'handleSendMessage()';
-    if (btn.getAttribute('onclick') !== expectedHandler) {
-      btn.setAttribute('onclick', expectedHandler);
-    }
-  }
 })();
 </script>
 </html>
