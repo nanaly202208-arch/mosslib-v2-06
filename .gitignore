@@ -1,8 +1,8 @@
 # PDFs
 *.pdf
 
-# Images
-*.png
+# Images (only root-level screenshots/snapshots)
+/*.png
 
 # System
 Thumbs.db
