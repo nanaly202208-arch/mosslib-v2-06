@@ -1496,74 +1496,67 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   }
   
   function insertDocTranslateMessage(docName, docSize) {
-    // 保留原有页面布局，只隐藏旧消息内容
-    // 1. 隐藏所有旧消息
+    var sessionHis = document.querySelector('.session-his');
+    if (!sessionHis) return;
+    
+    // 隐藏旧消息
     var oldUserMsgs = document.querySelectorAll('body > div.w-full.flex.flex-col.items-end');
     oldUserMsgs.forEach(function(el) { el.style.display = 'none'; });
     var oldAssistantMsgs = document.querySelectorAll('body > div.assistant-msg-v');
     oldAssistantMsgs.forEach(function(el) { el.style.display = 'none'; });
     
-    // 查找插入位置：在 .session-his 之后，第一条消息之前
-    var sessionHis = document.querySelector('.session-his');
-    var insertAfter = sessionHis ? sessionHis : document.body.firstChild;
-    var insertBeforeEl = insertAfter.nextElementSibling;
+    var docNameAttr = (docName || '').replace(/'/g, '\\\'');
+    var escapedDocName = docNameAttr;
+    var baseName = escapedDocName.replace(/\.[^/.]+$/, '');
     
-    // 跳过已经隐藏的元素，找到第一个可见的兄弟元素或 null
-    while (insertBeforeEl && insertBeforeEl.style.display === 'none') {
-      insertBeforeEl = insertBeforeEl.nextElementSibling;
-    }
+    var html = '\
+      <div class="w-full flex flex-col items-end" style="margin-bottom:20px;">\
+        <div class="flex flex-row items-center">\
+          <div class="bg-[#fff] p-10px pl-16px pr-16px border-rd-4px ml-52px w-[calc(100%-104px)]" style="background: rgba(96, 92, 229, 0.08) !important;">\
+            <div class="color-[#333] font-size-16px max-w-768px line-height-28px whitespace-pre-wrap">请将文档翻译成中文</div>\
+            <div class="doc-translate-info">\
+              <div class="doc-translate-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>\
+              <div class="doc-translate-details">\
+                <div class="doc-translate-name" title="' + docNameAttr + '">' + escapedDocName + '</div>\
+                <div class="doc-translate-size">' + (docSize || '') + '</div>\
+              </div>\
+            </div>\
+          </div>\
+          <span class="el-avatar el-avatar--circle ml-12px !w-40px !h-40px self-start"><img src="./chat_files/file.png" style="object-fit: cover;"></span>\
+        </div>\
+      </div>\
+      <div class="assistant-msg-v flex flex-col max-w-[calc(100% - 36px)] mb-20px" style="margin-bottom:20px;">\
+        <div class="flex flex-row mr-50px">\
+          <div class="pr-12px"><img class="w-40px h-40px" src="./chat_files/logo_mosslib.png"></div>\
+          <div class="flex flex-col" style="min-width: 300px;">\
+            <div class="bg-[#fff] border-rounded-8px pl-20px pr-20px pt-8px pb-8px max-w-full">\
+              <div style="min-width: 200px;">\
+                <div class="thinking-section" onclick="toggleThinking(this)">\
+                  <div class="thinking-header">\
+                    <div class="thinking-spinner"></div>\
+                    <span>思考中</span>\
+                    <svg class="thinking-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>\
+                  </div>\
+                  <div class="thinking-content">正在分析文档内容，提取关键信息并进行翻译...</div>\
+                </div>\
+                <div class="translated-doc-section" id="translatedDocSection" style="display: none;">\
+                  <div class="translated-doc-header">翻译完成</div>\
+                  <div class="translated-doc-item" onclick="downloadTranslatedDoc(\'' + docNameAttr + '\')">\
+                    <div class="translated-doc-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>\
+                    <div class="translated-doc-info">\
+                      <div class="translated-doc-name">' + baseName + '_中文翻译.docx</div>\
+                      <div class="translated-doc-meta">点击下载翻译后的文档</div>\
+                    </div>\
+                    <div class="translated-doc-download"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>\
+                  </div>\
+                </div>\
+              </div>\
+            </div>\
+          </div>\
+        </div>\
+      </div>';
     
-    // 2. 创建用户消息并插入
-    var userMsg = document.createElement('div');
-    userMsg.className = 'w-full flex flex-col items-end';
-    userMsg.style.marginBottom = '20px';
-    userMsg.innerHTML = '<div class="flex flex-row items-center">'
-      + '<div class="bg-[#fff] p-10px pl-16px pr-16px border-rd-4px ml-52px w-[calc(100%-104px)]" style="background: rgba(96, 92, 229, 0.08) !important;">'
-      + '<div class="color-[#333] font-size-16px max-w-768px line-height-28px whitespace-pre-wrap">请将文档翻译成中文</div>'
-      + '<div class="doc-translate-info">'
-      + '<div class="doc-translate-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>'
-      + '<div class="doc-translate-details">'
-      + '<div class="doc-translate-name" title="' + docName + '">' + docName + '</div>'
-      + '<div class="doc-translate-size">' + docSize + '</div>'
-      + '</div></div></div>'
-      + '<span class="el-avatar el-avatar--circle ml-12px !w-40px !h-40px self-start"><img src="./chat_files/file.png" style="object-fit: cover;"></span>'
-      + '</div></div>';
-    
-    if (insertBeforeEl) {
-      document.body.insertBefore(userMsg, insertBeforeEl);
-    } else {
-      document.body.appendChild(userMsg);
-    }
-    
-    // 3. 创建助手消息并插入（在用户消息之后）
-    var assistantMsg = document.createElement('div');
-    assistantMsg.className = 'assistant-msg-v flex flex-col max-w-[calc(100% - 36px)] mb-20px';
-    assistantMsg.style.marginBottom = '20px';
-    assistantMsg.innerHTML = '<div class="flex flex-row mr-50px">'
-      + '<div class="pr-12px"><img class="w-40px h-40px" src="./chat_files/logo_mosslib.png"></div>'
-      + '<div class="flex flex-col" style="min-width: 300px;">'
-      + '<div class="bg-[#fff] border-rounded-8px pl-20px pr-20px pt-8px pb-8px max-w-full">'
-      + '<div style="min-width: 200px;">'
-      + '<div class="thinking-section" onclick="toggleThinking(this)">'
-      + '<div class="thinking-header">'
-      + '<div class="thinking-spinner"></div>'
-      + '<span>思考中</span>'
-      + '<svg class="thinking-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>'
-      + '</div>'
-      + '<div class="thinking-content">正在分析文档内容，提取关键信息并进行翻译...</div>'
-      + '</div>'
-      + '<div class="translated-doc-section" id="translatedDocSection" style="display: none;">'
-      + '<div class="translated-doc-header">翻译完成</div>'
-      + '<div class="translated-doc-item" onclick="downloadTranslatedDoc(\'' + docName + '\')">'
-      + '<div class="translated-doc-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>'
-      + '<div class="translated-doc-info">'
-      + '<div class="translated-doc-name">' + docName.replace(/\.[^/.]+$/, '') + '_中文翻译.docx</div>'
-      + '<div class="translated-doc-meta">点击下载翻译后的文档</div>'
-      + '</div>'
-      + '<div class="translated-doc-download"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>'
-      + '</div></div></div></div></div></div></div>';
-    
-    document.body.insertBefore(assistantMsg, userMsg.nextSibling);
+    sessionHis.insertAdjacentHTML('afterend', html);
     
     // 4. 在左侧"更多记录"中添加一条翻译记录
     var hisView = document.querySelector('.his-view');
@@ -1596,64 +1589,49 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     }, 3000);
   }
   
-  // 文本翻译消息插入
+  // 文本翻译消息插入（返回true表示成功，false表示需要重试）
   function insertTranslateMessage(text) {
-    // 1. 隐藏所有旧消息
-    var oldUserMsgs = document.querySelectorAll('body > div.w-full.flex.flex-col.items-end');
-    oldUserMsgs.forEach(function(el) { el.style.display = 'none'; });
-    var oldAssistantMsgs = document.querySelectorAll('body > div.assistant-msg-v');
-    oldAssistantMsgs.forEach(function(el) { el.style.display = 'none'; });
-    
-    // 查找插入位置
     var sessionHis = document.querySelector('.session-his');
-    var insertAfter = sessionHis ? sessionHis : document.body.firstChild;
-    var insertBeforeEl = insertAfter.nextElementSibling;
-    while (insertBeforeEl && insertBeforeEl.style.display === 'none') {
-      insertBeforeEl = insertBeforeEl.nextElementSibling;
-    }
+    if (!sessionHis) return false;
+    if (!text) return false;
     
-    // 2. 创建用户消息
-    var userMsg = document.createElement('div');
-    userMsg.className = 'w-full flex flex-col items-end';
-    userMsg.style.marginBottom = '20px';
-    userMsg.innerHTML = '<div class="flex flex-row items-center">'
-      + '<div class="bg-[#fff] p-10px pl-16px pr-16px border-rd-4px ml-52px w-[calc(100%-104px)]" style="background: rgba(96, 92, 229, 0.08) !important;">'
-      + '<div class="color-[#333] font-size-15px max-w-768px line-height-28px" style="font-weight:500;">请将以下文本翻译成中文</div>'
-      + '<div class="color-[#555] font-size-14px max-w-768px line-height-24px mt-4px whitespace-pre-wrap" style="background:#f8f9fa;border-radius:6px;padding:8px 10px;border-left:3px solid #605CE5;">' + escapeHtml(text) + '</div>'
-      + '</div>'
-      + '<span class="el-avatar el-avatar--circle ml-12px !w-40px !h-40px self-start"><img src="./chat_files/file.png" style="object-fit: cover;"></span>'
-      + '</div>';
+    // 使用 afterend 定位在 session-his 之后
+    var html = '\
+      <div class="w-full flex flex-col items-end" style="margin-bottom:20px;">\
+        <div class="flex flex-row items-center">\
+          <div class="bg-[#fff] p-10px pl-16px pr-16px border-rd-4px ml-52px w-[calc(100%-104px)]" style="background: rgba(96, 92, 229, 0.08) !important;">\
+            <div class="color-[#333] font-size-15px max-w-768px line-height-28px" style="font-weight:500;">请将以下文本翻译成中文</div>\
+            <div class="color-[#555] font-size-14px max-w-768px line-height-24px mt-4px whitespace-pre-wrap" style="background:#f8f9fa;border-radius:6px;padding:8px 10px;border-left:3px solid #605CE5;">' + escapeHtml(text) + '</div>\
+          </div>\
+          <span class="el-avatar el-avatar--circle ml-12px !w-40px !h-40px self-start"><img src="./chat_files/file.png" style="object-fit: cover;"></span>\
+        </div>\
+      </div>\
+      <div class="assistant-msg-v flex flex-col max-w-[calc(100% - 36px)] mb-20px" style="margin-bottom:20px;">\
+        <div class="flex flex-row mr-50px">\
+          <div class="pr-12px"><img class="w-40px h-40px" src="./chat_files/logo_mosslib.png"></div>\
+          <div class="flex flex-col" style="min-width: 300px;">\
+            <div class="bg-[#fff] border-rounded-8px pl-20px pr-20px pt-8px pb-8px max-w-full">\
+              <div style="min-width: 200px;">\
+                <div class="thinking-section" onclick="toggleThinking(this)">\
+                  <div class="thinking-header">\
+                    <div class="thinking-spinner"></div>\
+                    <span>翻译中</span>\
+                    <svg class="thinking-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>\
+                  </div>\
+                  <div class="thinking-content">正在分析文本内容并进行翻译...</div>\
+                </div>\
+                <div class="translated-doc-section" id="translateResultSection" style="display: none;">\
+                  <div class="color-[#333] font-size-15px line-height-26px whitespace-pre-wrap" id="translateResultText"></div>\
+                </div>\
+              </div>\
+            </div>\
+          </div>\
+        </div>\
+      </div>';
     
-    if (insertBeforeEl) {
-      document.body.insertBefore(userMsg, insertBeforeEl);
-    } else {
-      document.body.appendChild(userMsg);
-    }
+    sessionHis.insertAdjacentHTML('afterend', html);
     
-    // 3. 创建助手翻译回复
-    var assistantMsg = document.createElement('div');
-    assistantMsg.className = 'assistant-msg-v flex flex-col max-w-[calc(100% - 36px)] mb-20px';
-    assistantMsg.style.marginBottom = '20px';
-    assistantMsg.innerHTML = '<div class="flex flex-row mr-50px">'
-      + '<div class="pr-12px"><img class="w-40px h-40px" src="./chat_files/logo_mosslib.png"></div>'
-      + '<div class="flex flex-col" style="min-width: 300px;">'
-      + '<div class="bg-[#fff] border-rounded-8px pl-20px pr-20px pt-8px pb-8px max-w-full">'
-      + '<div style="min-width: 200px;">'
-      + '<div class="thinking-section" onclick="toggleThinking(this)">'
-      + '<div class="thinking-header">'
-      + '<div class="thinking-spinner"></div>'
-      + '<span>翻译中</span>'
-      + '<svg class="thinking-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>'
-      + '</div>'
-      + '<div class="thinking-content">正在分析文本内容并进行翻译...</div>'
-      + '</div>'
-      + '<div class="translated-doc-section" id="translateResultSection" style="display: none;">'
-      + '<div class="color-[#333] font-size-15px line-height-26px whitespace-pre-wrap" id="translateResultText"></div>'
-      + '</div></div></div></div></div></div>';
-    
-    document.body.insertBefore(assistantMsg, userMsg.nextSibling);
-    
-    // 4. 添加历史记录
+    // 更新历史记录
     var hisView = document.querySelector('.his-view');
     if (hisView) {
       var existingSession = hisView.querySelector('.per-session');
@@ -1676,10 +1654,12 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
       el.title = '请将以下文本翻译成中文';
     });
     
-    // 5. 3秒后模拟翻译完成
+    // 3秒后模拟翻译完成
     setTimeout(function() {
       completeTranslateText(text);
     }, 3000);
+    
+    return true;
   }
   
   // 模拟翻译完成
@@ -6015,23 +5995,20 @@ html {
     handleUrlParams();
   }
   
-  // 处理URL参数（翻译/文档翻译模式），需等待Vue渲染完成后执行
+  // 处理URL参数（翻译/文档翻译模式），持续重试直到成功
   function handleUrlParams() {
     var urlParams = new URLSearchParams(window.location.search);
     var mode = urlParams.get('mode');
     if (!mode) return;
     
     var sessionHis = document.querySelector('.session-his');
-    if (!sessionHis) return; // Vue还没渲染，等下次重试
-    
-    // 标记已处理，防止重复
-    if (sessionHis.dataset.urlParamsHandled === '1') return;
-    sessionHis.dataset.urlParamsHandled = '1';
+    if (!sessionHis) { setTimeout(handleUrlParams, 500); return; }
     
     if (mode === 'translate') {
       var text = urlParams.get('text') || '';
       if (text && window.insertTranslateMessage) {
-        window.insertTranslateMessage(text);
+        var ok = window.insertTranslateMessage(text);
+        if (!ok) { setTimeout(handleUrlParams, 500); return; }
       }
     } else if (mode === 'doc-translate') {
       var docName = urlParams.get('docName') || '';
