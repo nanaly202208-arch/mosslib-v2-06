@@ -1664,7 +1664,9 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   
   // 模拟翻译完成
   function completeTranslateText(originalText) {
-    var thinkingSection = document.querySelector('.thinking-section');
+    // 找到最后一条消息中的thinking-section和resultSection
+    var allSections = document.querySelectorAll('.thinking-section');
+    var thinkingSection = allSections[allSections.length - 1];
     var resultSection = document.getElementById('translateResultSection');
     
     if (thinkingSection) {
@@ -1710,7 +1712,8 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   
   // 思考完成
   function completeThinking() {
-    var thinkingSection = document.querySelector('.thinking-section');
+    var allSections = document.querySelectorAll('.thinking-section');
+    var thinkingSection = allSections[allSections.length - 1];
     var translatedSection = document.getElementById('translatedDocSection');
     
     if (thinkingSection) {
@@ -6004,6 +6007,9 @@ html {
     var sessionHis = document.querySelector('.session-his');
     if (!sessionHis) { setTimeout(handleUrlParams, 500); return; }
     
+    // 去重：已经处理过则跳过
+    if (sessionHis.dataset.urlHandled === '1') return;
+    
     if (mode === 'translate') {
       var text = urlParams.get('text') || '';
       if (text && window.insertTranslateMessage) {
@@ -6017,6 +6023,9 @@ html {
         window.insertDocTranslateMessage(docName, docSize);
       }
     }
+    
+    // 标记已处理
+    sessionHis.dataset.urlHandled = '1';
   }
   
   // 初始化参考资料面板
@@ -6368,17 +6377,32 @@ html {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
   
-  // 延迟执行，确保Vue已渲染
-  setTimeout(runAll, 500);
-  setTimeout(runAll, 1000);
-  setTimeout(runAll, 2000);
-  setTimeout(runAll, 3000);
+  // 延迟执行，确保DOM准备完成
+  var _runCount = 0;
+  var _running = false;
+  function safeRunAll() {
+    if (_running) return;
+    _running = true;
+    _runCount++;
+    runAll();
+    if (_runCount >= 4) {
+      window._pageReady = true;
+    }
+    _running = false;
+  }
   
-  // MutationObserver监听DOM变化
+  setTimeout(safeRunAll, 500);
+  setTimeout(safeRunAll, 1000);
+  setTimeout(safeRunAll, 2000);
+  setTimeout(safeRunAll, 3000);
+  
+  // MutationObserver - 只在页面就绪前触发，防止循环重绘
   var observer = new MutationObserver(function() {
-    setTimeout(runAll, 100);
+    if (!window._pageReady) {
+      setTimeout(safeRunAll, 100);
+    }
   });
-  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+  observer.observe(document.body, { childList: true, subtree: true });
   
 })();
 </script>
