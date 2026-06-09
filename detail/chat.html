@@ -335,6 +335,9 @@ div[class*="ml-52px"] {
   right: 12px !important;
   bottom: 12px !important;
   z-index: 10 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px;
 }
 
 .search-ipt .cursor-pointer.flex button,
@@ -500,7 +503,6 @@ div[class*="ml-52px"] {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-left: auto;
 }
 
 .lang-select-small {
@@ -1142,7 +1144,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   font-family: MJXTEX-VB;
   src: url("https://mosslib.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Vector-Bold.woff") format("woff");
 }
-</style><link}
+</style><style>
 
 /* 文档翻译样式 */
 .doc-translate-info {
@@ -1186,14 +1188,71 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   margin-top: 2px;
 }
 
-/* 思考中样式 */
-.thinking-section {
-  background: #f8f9fa;
-  border-radius: 8px;
+/* 文档翻译进度区 */
+.doc-translate-progress {
   padding: 12px 16px;
-  margin: 8px 0;
-  cursor: pointer;
-  transition: all 0.2s ease;
+}
+
+.doc-translate-progress-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.doc-translate-progress-header .translate-loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #605CE5;
+  border-radius: 50%;
+  animation: thinking-spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.doc-translate-status-text {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+}
+
+@keyframes thinking-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.doc-translate-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: #e8e8e8;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.doc-translate-progress-fill {
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg, #605CE5, #8f8cec);
+  border-radius: 2px;
+  animation: progress-move 2s ease-in-out infinite;
+}
+
+@keyframes progress-move {
+  0% { transform: translateX(-100%); width: 30%; }
+  50% { width: 60%; }
+  100% { transform: translateX(300%); width: 30%; }
+}
+
+.doc-preview-area {
+  padding: 0 16px 12px;
+}
+
+.doc-preview-card {
+  margin: 0 !important;
+}
+
+.doc-translate-original-tag {
+  color: #999 !important;
 }
 
 .thinking-section:hover {
@@ -1217,10 +1276,6 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   animation: thinking-spin 1s linear infinite;
 }
 
-@keyframes thinking-spin {
-  to { transform: rotate(360deg); }
-}
-
 .thinking-content {
   margin-top: 12px;
   padding-top: 12px;
@@ -1242,6 +1297,179 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 
 .thinking-arrow.expanded {
   transform: rotate(180deg);
+}
+
+/* 翻译模式 - 原文文本（位于问题气泡内，标题下方） */
+.translate-text-source-wrapper {
+  position: relative;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.translate-text-source {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  text-align: left;
+}
+
+.translate-text-source.collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.translate-text-source.expanded {
+  display: block;
+}
+
+.translate-source-toggle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  border-radius: 4px;
+  padding: 2px 4px;
+  cursor: pointer;
+  color: #605CE5;
+  line-height: 1;
+  transition: color 0.2s, background 0.2s;
+}
+
+.translate-source-toggle:hover {
+  color: #4f4bd4;
+  background: #fff;
+}
+
+.translate-source-toggle .toggle-arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.translate-source-toggle.expanded .toggle-arrow {
+  transform: rotate(180deg);
+}
+
+/* 翻译模式 - 答案区 */
+.translate-answer {
+  position: relative;
+  margin-right: 50px;
+  text-indent: 0 !important;
+}
+
+.translate-loading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+  padding: 4px 0;
+}
+
+.translate-loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e0e0e0;
+  border-top-color: #605CE5;
+  border-radius: 50%;
+  animation: thinking-spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+.translate-result {
+  color: #333 !important;
+  font-size: 16px !important;
+  line-height: 28px !important;
+  white-space: pre-line;
+  word-break: break-word;
+  min-height: 24px;
+  box-sizing: border-box;
+  text-indent: 0 !important;
+}
+
+.translate-result-text {
+  display: inline;
+  color: #333 !important;
+  font-size: 16px !important;
+  line-height: 28px !important;
+  text-indent: 0 !important;
+}
+
+/* 翻译模式 - 复制按钮（位于气泡左下方，仅含图标） */
+.translate-copy-btn {
+  margin-top: 4px;
+  margin-left: auto;
+  margin-right:50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  font-size: 12px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-family: inherit;
+  user-select: none;
+  line-height: 1;
+}
+
+.translate-copy-btn:hover {
+  color: #605CE5;
+}
+
+.translate-copy-btn:active {
+  transform: scale(0.94);
+}
+
+.translate-copy-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+/* 问题气泡复制按钮（右下角） */
+.question-copy-btn {
+  margin-top: 8px;
+  margin-right: 52px;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  font-size: 12px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  font-family: inherit;
+  user-select: none;
+  line-height: 1;
+}
+
+.question-copy-btn:hover {
+  color: #605CE5;
+}
+
+.question-copy-btn:active {
+  transform: scale(0.94);
+}
+
+.question-copy-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
 }
 
 /* 翻译完成文档样式 */
@@ -1495,25 +1723,130 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     }
   }
   
-  function insertDocTranslateMessage(docName, docSize) {
-    var sessionHis = document.querySelector('.session-his');
-    if (!sessionHis) return;
+  // 找到正确的消息容器（kb-chat-section > flex-grow-1）
+  function findMessagesContainer() {
+    var kbChat = document.querySelector('.kb-chat');
+    if (!kbChat) return null;
+    var kbChatSection = kbChat.querySelector('.kb-chat-section');
+    if (!kbChatSection) return null;
+    var messagesContainer = kbChatSection.querySelector('.flex-grow-1');
+    if (!messagesContainer) return null;
+    return messagesContainer;
+  }
+  
+  // 隐藏旧消息（使用正确的kb-chat选择器）
+  function hideOldMessages() {
+    var oldUserMsgs = document.querySelectorAll('.kb-chat .w-full.flex.flex-col.items-end');
+    oldUserMsgs.forEach(function(el) { el.style.display = 'none'; });
+    var oldAssistantMsgs = document.querySelectorAll('.kb-chat .assistant-msg-v');
+    oldAssistantMsgs.forEach(function(el) { el.style.display = 'none'; });
+  }
+  
+  // 在历史记录中新增一条会话记录，并取消其他记录的选中状态
+  function addSessionToHistory(newSession) {
+    var hisView = document.querySelector('.his-view');
+    if (!hisView || !newSession) return;
+    
+    // 1. 取消所有其他 per-session 的 sel 和 edit 状态
+    var allSessions = hisView.querySelectorAll('.per-session');
+    allSessions.forEach(function(s) {
+      s.classList.remove('sel', 'edit');
+      // 把可能处于编辑态的 contenteditable 还原为 false
+      var editable = s.querySelector('[contenteditable="true"]');
+      if (editable) editable.setAttribute('contenteditable', 'false');
+    });
+    
+    // 2. 标记新 session 为选中状态
+    newSession.classList.add('sel');
+    newSession.classList.remove('edit');
+    var newEditable = newSession.querySelector('[contenteditable="true"]');
+    if (newEditable) newEditable.setAttribute('contenteditable', 'false');
+    
+    // 3. 插入到第一个 per-session 之前
+    var firstSession = hisView.querySelector('.per-session');
+    if (firstSession && firstSession.parentNode) {
+      firstSession.parentNode.insertBefore(newSession, firstSession);
+    }
+  }
+  
+  // 更新聊天区顶部标题（终极方案：替换整个 chat-title-view 元素）
+  function updateChatTitle(newTitle) {
+    if (!newTitle) return;
+    
+    function doUpdate() {
+      var titleViews = document.querySelectorAll('.chat-title-view');
+      if (titleViews.length === 0) return;
+      
+      titleViews.forEach(function(oldTv) {
+        // 检查是否已经更新过
+        if (oldTv.dataset.translatedTitle === newTitle) return;
+        
+        // 创建新的 chat-title-view 元素
+        var newTv = document.createElement('div');
+        newTv.className = oldTv.className;
+        newTv.setAttribute('data-translated-title', newTitle);
+        newTv.innerHTML = '<div class="flex flex-row color-[#333] justify-between items-center max-w-400px">' +
+          '<div class="flex flex-row items-center font-size-16px s-border">' +
+            '<div class="ml-8px w-180px mr-8px one-line-text" contenteditable="false" title="' + newTitle.replace(/"/g, '&quot;') + '">' + newTitle + '</div>' +
+          '</div>' +
+          '<div class="w-60px flex-center"><!----></div>' +
+        '</div>';
+        // 复制 data-v 属性
+        Array.from(oldTv.attributes).forEach(function(attr) {
+          if (attr.name.startsWith('data-') && attr.name !== 'data-translated-title') {
+            newTv.setAttribute(attr.name, attr.value);
+          }
+        });
+        // 替换
+        oldTv.parentNode.replaceChild(newTv, oldTv);
+      });
+    }
+    
+    // 立即执行
+    try { doUpdate(); } catch(e) { console.error('updateChatTitle error:', e); }
+    
+    // 多次延迟重试（防止被其他代码覆盖）
+    [50, 200, 500, 1000, 2000].forEach(function(delay) {
+      setTimeout(function() {
+        try { doUpdate(); } catch(e) { console.error('updateChatTitle retry error:', e); }
+      }, delay);
+    });
+    
+    // 最终兜底：2.5秒后如果还存在包含原文的 chat-title-view，直接隐藏
+    setTimeout(function() {
+      var leftover = document.querySelectorAll('.chat-title-view');
+      leftover.forEach(function(tv) {
+        var text = (tv.textContent || '').trim();
+        if (text && text !== newTitle) {
+          // 文本不匹配，直接隐藏
+          tv.style.display = 'none';
+        }
+      });
+    }, 2500);
+  }
+  
+  function insertDocTranslateMessage(docName, docSize, targetLang) {
+    var messagesContainer = findMessagesContainer();
+    if (!messagesContainer) return;
     
     // 隐藏旧消息
-    var oldUserMsgs = document.querySelectorAll('body > div.w-full.flex.flex-col.items-end');
-    oldUserMsgs.forEach(function(el) { el.style.display = 'none'; });
-    var oldAssistantMsgs = document.querySelectorAll('body > div.assistant-msg-v');
-    oldAssistantMsgs.forEach(function(el) { el.style.display = 'none'; });
+    hideOldMessages();
+    
+    // 默认目标语言
+    targetLang = targetLang || '中文';
     
     var docNameAttr = (docName || '').replace(/'/g, '\\\'');
     var escapedDocName = docNameAttr;
     var baseName = escapedDocName.replace(/\.[^/.]+$/, '');
     
+    var docTitle = '请将文档翻译成' + targetLang;
+    var translatedDocName = baseName + '_中文翻译.docx';
+    
     var html = '\
       <div class="w-full flex flex-col items-end" style="margin-bottom:20px;">\
         <div class="flex flex-row items-center">\
           <div class="bg-[#fff] p-10px pl-16px pr-16px border-rd-4px ml-52px w-[calc(100%-104px)]" style="background: rgba(96, 92, 229, 0.08) !important;">\
-            <div class="color-[#333] font-size-16px max-w-768px line-height-28px whitespace-pre-wrap">请将文档翻译成中文</div>\
+            <div class="color-[#333] font-size-16px max-w-768px line-height-28px" style="font-weight:500;">' + docTitle + '</div>\
             <div class="doc-translate-info">\
               <div class="doc-translate-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>\
               <div class="doc-translate-details">\
@@ -1524,31 +1857,47 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
           </div>\
           <span class="el-avatar el-avatar--circle ml-12px !w-40px !h-40px self-start"><img src="./chat_files/file.png" style="object-fit: cover;"></span>\
         </div>\
+        <button class="question-copy-btn" type="button" onclick="copyQuestionText(this)">\
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="14" height="14">\
+            <path fill="currentColor" d="M128 320v576h576V320zm-32-64h640a32 32 0 0 1 32 32v640a32 32 0 0 1-32 32H96a32 32 0 0 1-32-32V288a32 32 0 0 1 32-32M960 96v704a32 32 0 0 1-32 32h-96v-64h64V128H384v64h-64V96a32 32 0 0 1 32-32h576a32 32 0 0 1 32 32M256 672h320v64H256zm0-192h320v64H256z"></path>\
+          </svg>\
+        </button>\
       </div>\
-      <div class="assistant-msg-v flex flex-col max-w-[calc(100% - 36px)] mb-20px" style="margin-bottom:20px;">\
+      <div class="assistant-msg-v flex flex-col mb-20px" style="max-width: calc(100% - 52px); margin-bottom:20px;">\
         <div class="flex flex-row mr-50px">\
           <div class="pr-12px"><img class="w-40px h-40px" src="./chat_files/logo_mosslib.png"></div>\
-          <div class="flex flex-col" style="min-width: 300px;">\
-            <div class="bg-[#fff] border-rounded-8px pl-20px pr-20px pt-8px pb-8px max-w-full">\
-              <div style="min-width: 200px;">\
-                <div class="thinking-section" onclick="toggleThinking(this)">\
-                  <div class="thinking-header">\
-                    <div class="thinking-spinner"></div>\
-                    <span>思考中</span>\
-                    <svg class="thinking-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>\
-                  </div>\
-                  <div class="thinking-content">正在分析文档内容，提取关键信息并进行翻译...</div>\
+          <div class="flex flex-col" style="min-width: 0; width: fit-content;">\
+            <div class="bg-[#fff] border-rounded-8px max-w-full" style="width: fit-content; min-width: 240px;">\
+              <div class="doc-translate-progress">\
+                <div class="doc-translate-progress-header">\
+                  <div class="translate-loading-spinner"></div>\
+                  <span class="doc-translate-status-text">正在翻译...</span>\
                 </div>\
-                <div class="translated-doc-section" id="translatedDocSection" style="display: none;">\
-                  <div class="translated-doc-header">翻译完成</div>\
-                  <div class="translated-doc-item" onclick="downloadTranslatedDoc(\'' + docNameAttr + '\')">\
-                    <div class="translated-doc-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>\
-                    <div class="translated-doc-info">\
-                      <div class="translated-doc-name">' + baseName + '_中文翻译.docx</div>\
-                      <div class="translated-doc-meta">点击下载翻译后的文档</div>\
-                    </div>\
-                    <div class="translated-doc-download"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>\
+                <div class="doc-translate-progress-bar">\
+                  <div class="doc-translate-progress-fill"></div>\
+                </div>\
+              </div>\
+              <div class="doc-preview-area">\
+                <div class="doc-translate-info doc-preview-card">\
+                  <div class="doc-translate-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>\
+                  <div class="doc-translate-details">\
+                    <div class="doc-translate-name" title="' + docNameAttr + '">' + escapedDocName + '</div>\
+                    <div class="doc-translate-size doc-translate-original-tag">原文 · ' + (docSize || '') + '</div>\
                   </div>\
+                </div>\
+              </div>\
+              <div class="translated-doc-section" id="translatedDocSection_' + Date.now() + '" style="display: none;">\
+                <div class="translated-doc-header">\
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#68cd52" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>\
+                  <span style="color:#68cd52;font-weight:500;">翻译完成，请点击下载</span>\
+                </div>\
+                <div class="translated-doc-item" onclick="downloadTranslatedDoc(\'' + docNameAttr + '\')">\
+                  <div class="translated-doc-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>\
+                  <div class="translated-doc-info">\
+                    <div class="translated-doc-name">' + translatedDocName + '</div>\
+                    <div class="translated-doc-meta">点击下载翻译后的文档</div>\
+                  </div>\
+                  <div class="translated-doc-download"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>\
                 </div>\
               </div>\
             </div>\
@@ -1556,80 +1905,109 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
         </div>\
       </div>';
     
-    sessionHis.insertAdjacentHTML('afterend', html);
+    messagesContainer.insertAdjacentHTML('beforeend', html);
     
-    // 4. 在左侧"更多记录"中添加一条翻译记录
+    // 在左侧"更多记录"中添加一条翻译记录，并自动选中
     var hisView = document.querySelector('.his-view');
     if (hisView) {
       var existingSession = hisView.querySelector('.per-session');
       if (existingSession) {
         var newSession = existingSession.cloneNode(true);
+        newSession.classList.remove('sel', 'edit');
         var titleEl = newSession.querySelector('.one-line-text');
         if (titleEl) {
-          titleEl.textContent = '请将文档翻译成中文';
-          titleEl.title = '请将文档翻译成中文';
+          titleEl.textContent = docTitle;
+          titleEl.title = docTitle;
+          titleEl.setAttribute('contenteditable', 'false');
         }
-        var firstSession = hisView.querySelector('.per-session');
-        if (firstSession) {
-          hisView.insertBefore(newSession, firstSession);
-        }
+        addSessionToHistory(newSession);
       }
     }
     
-    // 5. 修改会话标题
-    var titleEls = document.querySelectorAll('.session-his .one-line-text');
-    titleEls.forEach(function(el) {
-      el.textContent = '请将文档翻译成中文';
-      el.title = '请将文档翻译成中文';
-    });
+    // 更新聊天区顶部标题
+    updateChatTitle(docTitle);
     
-    // 6. 3秒后模拟思考完成
+    // 3秒后模拟翻译完成
     setTimeout(function() {
-      completeThinking();
+      completeDocTranslate(docNameAttr);
     }, 3000);
   }
   
   // 文本翻译消息插入（返回true表示成功，false表示需要重试）
-  function insertTranslateMessage(text) {
-    var sessionHis = document.querySelector('.session-his');
-    if (!sessionHis) return false;
+  function insertTranslateMessage(text, targetLang) {
+    var messagesContainer = findMessagesContainer();
+    if (!messagesContainer) return false;
     if (!text) return false;
     
-    // 使用 afterend 定位在 session-his 之后
+    // 隐藏旧消息（使用正确选择器）
+    hideOldMessages();
+    
+    // 默认目标语言
+    targetLang = targetLang || '中文';
+    var textTitle = '请将文本翻译成' + targetLang;
+    
+    // 使用 beforeend 定位在 messagesContainer 末尾
     var html = '\
       <div class="w-full flex flex-col items-end" style="margin-bottom:20px;">\
         <div class="flex flex-row items-center">\
           <div class="bg-[#fff] p-10px pl-16px pr-16px border-rd-4px ml-52px w-[calc(100%-104px)]" style="background: rgba(96, 92, 229, 0.08) !important;">\
-            <div class="color-[#333] font-size-15px max-w-768px line-height-28px" style="font-weight:500;">请将以下文本翻译成中文</div>\
-            <div class="color-[#555] font-size-14px max-w-768px line-height-24px mt-4px whitespace-pre-wrap" style="background:#f8f9fa;border-radius:6px;padding:8px 10px;border-left:3px solid #605CE5;">' + escapeHtml(text) + '</div>\
+            <div class="color-[#333] font-size-16px max-w-768px line-height-28px" style="font-weight:500;">' + textTitle + '</div>\
+            <div class="translate-text-source-wrapper">\
+              <div class="translate-text-source collapsed" id="translateTextContent_' + Date.now() + '">' + escapeHtml(text) + '</div>\
+              <button class="translate-source-toggle" type="button" onclick="toggleSourceText(this)">\
+                <svg class="toggle-arrow" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"></polyline></svg>\
+              </button>\
+            </div>\
           </div>\
           <span class="el-avatar el-avatar--circle ml-12px !w-40px !h-40px self-start"><img src="./chat_files/file.png" style="object-fit: cover;"></span>\
         </div>\
+        <button class="question-copy-btn" type="button" onclick="copyQuestionText(this)">\
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="14" height="14">\
+            <path fill="currentColor" d="M128 320v576h576V320zm-32-64h640a32 32 0 0 1 32 32v640a32 32 0 0 1-32 32H96a32 32 0 0 1-32-32V288a32 32 0 0 1 32-32M960 96v704a32 32 0 0 1-32 32h-96v-64h64V128H384v64h-64V96a32 32 0 0 1 32-32h576a32 32 0 0 1 32 32M256 672h320v64H256zm0-192h320v64H256z"></path>\
+          </svg>\
+        </button>\
       </div>\
-      <div class="assistant-msg-v flex flex-col max-w-[calc(100% - 36px)] mb-20px" style="margin-bottom:20px;">\
+      <div class="assistant-msg-v flex flex-col mb-20px" style="max-width: calc(100% - 52px); margin-bottom:20px;">\
         <div class="flex flex-row mr-50px">\
           <div class="pr-12px"><img class="w-40px h-40px" src="./chat_files/logo_mosslib.png"></div>\
-          <div class="flex flex-col" style="min-width: 300px;">\
-            <div class="bg-[#fff] border-rounded-8px pl-20px pr-20px pt-8px pb-8px max-w-full">\
-              <div style="min-width: 200px;">\
-                <div class="thinking-section" onclick="toggleThinking(this)">\
-                  <div class="thinking-header">\
-                    <div class="thinking-spinner"></div>\
-                    <span>翻译中</span>\
-                    <svg class="thinking-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>\
-                  </div>\
-                  <div class="thinking-content">正在分析文本内容并进行翻译...</div>\
+          <div class="flex flex-col" style="min-width: 0; width: fit-content;">\
+            <div class="bg-[#fff] border-rounded-8px max-w-full translate-answer" style="width: fit-content;" data-translate-id="t_' + Date.now() + '">\
+              <div class="translate-answer-inner" style="min-width: 200px; padding: 10px 16px;">\
+                <div class="translate-loading">\
+                  <div class="translate-loading-spinner"></div>\
+                  <span>正在翻译</span>\
                 </div>\
-                <div class="translated-doc-section" id="translateResultSection" style="display: none;">\
-                  <div class="color-[#333] font-size-15px line-height-26px whitespace-pre-wrap" id="translateResultText"></div>\
+                <div class="translate-result" style="display: none;">\
+                  <span class="translate-result-text" style="color:#333;font-size:16px;line-height:28px;text-indent:0;"></span>\
                 </div>\
               </div>\
             </div>\
+            <button class="translate-copy-btn" style="display: none;" onclick="copyTranslateResult(this)">\
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="14" height="14">\
+                <path fill="currentColor" d="M128 320v576h576V320zm-32-64h640a32 32 0 0 1 32 32v640a32 32 0 0 1-32 32H96a32 32 0 0 1-32-32V288a32 32 0 0 1 32-32M960 96v704a32 32 0 0 1-32 32h-96v-64h64V128H384v64h-64V96a32 32 0 0 1 32-32h576a32 32 0 0 1 32 32M256 672h320v64H256zm0-192h320v64H256z"></path>\
+              </svg>\
+            </button>\
           </div>\
         </div>\
       </div>';
     
-    sessionHis.insertAdjacentHTML('afterend', html);
+    messagesContainer.insertAdjacentHTML('beforeend', html);
+    
+    // 检测原文是否超过 2 行，未超过则隐藏展开按钮
+    setTimeout(function() {
+      var sourceText = document.getElementById('translateTextContent_' + Date.now());
+      if (!sourceText) {
+        // fallback: 找最新的 .translate-text-source
+        var allSources = document.querySelectorAll('.translate-text-source');
+        sourceText = allSources.length > 0 ? allSources[allSources.length - 1] : null;
+      }
+      if (sourceText) {
+        var toggle = sourceText.parentElement.querySelector('.translate-source-toggle');
+        if (toggle && sourceText.scrollHeight <= sourceText.clientHeight + 2) {
+          toggle.style.display = 'none';
+        }
+      }
+    }, 0);
     
     // 更新历史记录
     var hisView = document.querySelector('.his-view');
@@ -1637,63 +2015,199 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
       var existingSession = hisView.querySelector('.per-session');
       if (existingSession) {
         var newSession = existingSession.cloneNode(true);
+        // 清除克隆节点中可能存在的旧状态
+        newSession.classList.remove('sel', 'edit');
         var titleEl = newSession.querySelector('.one-line-text');
         if (titleEl) {
-          titleEl.textContent = '请将以下文本翻译成中文';
-          titleEl.title = '请将以下文本翻译成中文';
+          titleEl.textContent = textTitle;
+          titleEl.title = textTitle;
+          titleEl.setAttribute('contenteditable', 'false');
         }
-        var firstSession = hisView.querySelector('.per-session');
-        if (firstSession) {
-          hisView.insertBefore(newSession, firstSession);
-        }
+        addSessionToHistory(newSession);
       }
     }
-    var titleEls = document.querySelectorAll('.session-his .one-line-text');
-    titleEls.forEach(function(el) {
-      el.textContent = '请将以下文本翻译成中文';
-      el.title = '请将以下文本翻译成中文';
-    });
+    // 更新聊天区顶部标题
+    updateChatTitle(textTitle);
     
-    // 3秒后模拟翻译完成
+    // 3秒后模拟翻译流式输出
     setTimeout(function() {
-      completeTranslateText(text);
+      completeTranslateText(text, targetLang);
     }, 3000);
     
     return true;
   }
   
-  // 模拟翻译完成
-  function completeTranslateText(originalText) {
-    // 找到最后一条消息中的thinking-section和resultSection
-    var allSections = document.querySelectorAll('.thinking-section');
-    var thinkingSection = allSections[allSections.length - 1];
-    var resultSection = document.getElementById('translateResultSection');
+  // 问答消息插入（m页问答模式进入 chat.html?q=...）
+  function insertQAMessage(text) {
+    var messagesContainer = findMessagesContainer();
+    if (!messagesContainer) return false;
+    if (!text) return false;
     
-    if (thinkingSection) {
-      var spinner = thinkingSection.querySelector('.thinking-spinner');
-      if (spinner) {
-        spinner.style.animation = 'none';
-        spinner.style.borderColor = '#68cd52';
-        spinner.style.borderTopColor = '#68cd52';
-      }
-      var headerText = thinkingSection.querySelector('.thinking-header span');
-      if (headerText) {
-        headerText.textContent = '翻译完成';
-        headerText.style.color = '#68cd52';
-      }
-      var content = thinkingSection.querySelector('.thinking-content');
-      if (content) {
-        content.innerHTML = '已完成文本翻译，原文约' + originalText.length + '字。';
+    // 隐藏旧消息
+    hideOldMessages();
+    
+    // 标题 = 用户输入内容（截断过长文本）
+    var qaTitle = text.length > 30 ? text.slice(0, 30) + '...' : text;
+    
+    // 1. 插入用户问题
+    var userHtml = '\
+      <div class="w-full flex flex-col items-end" style="margin-bottom:20px;">\
+        <div class="flex flex-row items-center">\
+          <div class="bg-[#fff] p-10px pl-16px pr-16px border-rd-4px ml-52px w-[calc(100%-104px)]" style="background: rgba(96, 92, 229, 0.08) !important;">\
+            <div class="color-[#333] font-size-16px max-w-768px line-height-28px whitespace-pre-wrap" style="font-weight:500;">' + escapeHtml(text) + '</div>\
+          </div>\
+          <span class="el-avatar el-avatar--circle ml-12px !w-40px !h-40px self-start"><img src="./chat_files/file.png" style="object-fit: cover;"></span>\
+        </div>\
+      </div>';
+    messagesContainer.insertAdjacentHTML('beforeend', userHtml);
+    
+    // 2. 插入 AI 思考中占位
+    var aiHtml = '\
+      <div class="assistant-msg-v flex flex-col mb-20px" style="max-width: calc(100% - 52px); margin-bottom:20px;">\
+        <div class="flex flex-row mr-50px">\
+          <div class="pr-12px"><img class="w-40px h-40px" src="./chat_files/logo_mosslib.png"></div>\
+          <div class="flex flex-col" style="min-width: 0; width: fit-content;">\
+            <div class="bg-[#fff] border-rounded-8px pl-20px pr-20px pt-8px pb-8px max-w-full" style="width: fit-content;">\
+              <div style="min-width: 200px;">\
+                <div class="thinking-section">\
+                  <div class="thinking-header">\
+                    <div class="thinking-spinner"></div>\
+                    <span>思考中</span>\
+                  </div>\
+                  <div class="thinking-content">正在分析问题...</div>\
+                </div>\
+              </div>\
+            </div>\
+          </div>\
+        </div>\
+      </div>';
+    messagesContainer.insertAdjacentHTML('beforeend', aiHtml);
+    
+    // 3. 在历史记录中新增一条记录，并自动选中
+    var hisView = document.querySelector('.his-view');
+    if (hisView) {
+      var existingSession = hisView.querySelector('.per-session');
+      if (existingSession) {
+        var newSession = existingSession.cloneNode(true);
+        newSession.classList.remove('sel', 'edit');
+        var titleEl = newSession.querySelector('.one-line-text');
+        if (titleEl) {
+          titleEl.textContent = qaTitle;
+          titleEl.title = qaTitle;
+          titleEl.setAttribute('contenteditable', 'false');
+        }
+        addSessionToHistory(newSession);
       }
     }
-    if (resultSection) {
-      resultSection.style.display = 'block';
-      var resultText = resultSection.querySelector('#translateResultText');
-      if (resultText) {
-        resultText.textContent = '[翻译结果] ' + originalText;
-      }
-    }
+    
+    // 4. 更新聊天区顶部标题
+    updateChatTitle(qaTitle);
+    
+    return true;
   }
+  
+  // 模拟翻译流式输出
+  function completeTranslateText(originalText, targetLang) {
+    // 找到当前正在翻译的 answer 区（最后一次出现的）
+    var answers = document.querySelectorAll('.translate-answer');
+    var answer = answers.length > 0 ? answers[answers.length - 1] : null;
+    if (!answer) return;
+    
+    var loading = answer.querySelector('.translate-loading');
+    var resultSection = answer.querySelector('.translate-result');
+    var resultText = answer.querySelector('.translate-result-text');
+    var copyBtn = answer.parentElement ? answer.parentElement.querySelector('.translate-copy-btn') : null;
+    
+    if (!resultSection || !resultText) return;
+    
+    // 1. 隐藏 loading
+    if (loading) loading.style.display = 'none';
+    
+    // 2. 显示 result 区
+    resultSection.style.display = 'block';
+    
+    // 3. 模拟翻译结果（这里简单地把原文包一层【译文】做演示）
+    // 真实场景下应来自后端流式接口
+    var fullText = originalText;
+    
+    // 4. 流式输出：每次追加 1~3 个字符
+    var idx = 0;
+    var kbChatSection = document.querySelector('.kb-chat-section');
+    
+    function appendNext() {
+      if (idx >= fullText.length) {
+        // 输出完成：显示复制按钮
+        if (copyBtn) {
+          copyBtn.style.display = 'inline-flex';
+        }
+        return;
+      }
+      // 每次追加 1~3 个字符
+      var chunkSize = Math.min(fullText.length - idx, 1 + Math.floor(Math.random() * 3));
+      idx += chunkSize;
+      
+      // 设置当前已输出的文本
+      resultText.textContent = fullText.substring(0, idx);
+      
+      // 自动滚动到底部
+      try {
+        if (kbChatSection) {
+          kbChatSection.scrollTop = kbChatSection.scrollHeight;
+        }
+      } catch (e) {}
+      
+      // 下一段
+      setTimeout(appendNext, 25 + Math.floor(Math.random() * 35));
+    }
+    
+    // 延迟一下，模拟"开始收到数据"
+    setTimeout(appendNext, 200);
+  }
+  
+  // 通用降级复制函数
+  window.copyFallback = function(t, cb) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = t;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (ok) cb();
+    } catch (e) {
+      console.error('复制失败:', e);
+    }
+  };
+  
+  // 复制翻译结果
+  window.copyTranslateResult = function(btn) {
+    var wrapper = btn.parentElement;
+    var resultText = wrapper ? wrapper.querySelector('.translate-result-text') : null;
+    if (!resultText) return;
+    
+    var text = resultText.textContent || '';
+    if (!text) return;
+    
+    function showCopied() {
+      var svg = btn.querySelector('svg');
+      var origColor = svg ? svg.getAttribute('fill') || 'currentColor' : '';
+      if (svg) svg.setAttribute('fill', '#68cd52');
+      setTimeout(function() {
+        if (svg) svg.setAttribute('fill', origColor);
+      }, 1000);
+    }
+    
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(showCopied).catch(function() {
+        window.copyFallback(text, showCopied);
+      });
+    } else {
+      window.copyFallback(text, showCopied);
+    }
+  };
   
   // HTML转义
   function escapeHtml(str) {
@@ -1710,27 +2224,33 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     if (arrow) arrow.classList.toggle('expanded');
   };
   
-  // 思考完成
-  function completeThinking() {
-    var allSections = document.querySelectorAll('.thinking-section');
-    var thinkingSection = allSections[allSections.length - 1];
-    var translatedSection = document.getElementById('translatedDocSection');
+  // 文档翻译完成
+  function completeDocTranslate(originalName) {
+    var allProgress = document.querySelectorAll('.doc-translate-progress');
+    var progress = allProgress.length > 0 ? allProgress[allProgress.length - 1] : null;
+    var allTranslated = document.querySelectorAll('[id^="translatedDocSection_"]');
+    var translatedSection = allTranslated.length > 0 ? allTranslated[allTranslated.length - 1] : null;
     
-    if (thinkingSection) {
-      var spinner = thinkingSection.querySelector('.thinking-spinner');
+    if (progress) {
+      var spinner = progress.querySelector('.translate-loading-spinner');
       if (spinner) {
         spinner.style.animation = 'none';
         spinner.style.borderColor = '#68cd52';
         spinner.style.borderTopColor = '#68cd52';
       }
-      var headerText = thinkingSection.querySelector('.thinking-header span');
-      if (headerText) {
-        headerText.textContent = '思考完成';
-        headerText.style.color = '#68cd52';
+      var statusText = progress.querySelector('.doc-translate-status-text');
+      if (statusText) {
+        statusText.textContent = '翻译完成';
+        statusText.style.color = '#68cd52';
       }
-      var content = thinkingSection.querySelector('.thinking-content');
-      if (content) {
-        content.innerHTML = '已完成文档分析，识别出文档类型为Word文档，内容共约5000字。翻译过程中保持了原文格式，专业术语已准确翻译。';
+      var bar = progress.querySelector('.doc-translate-progress-bar');
+      if (bar) {
+        var fill = bar.querySelector('.doc-translate-progress-fill');
+        if (fill) {
+          fill.style.animation = 'none';
+          fill.style.width = '100%';
+          fill.style.background = '#68cd52';
+        }
       }
     }
     if (translatedSection) {
@@ -1744,9 +2264,56 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     alert('开始下载：' + translatedName);
   };
   
+  // 复制问题气泡中的原文
+  window.copyQuestionText = function(btn) {
+    var bubble = btn.parentElement;
+    if (!bubble) return;
+    // 优先取 .translate-text-source 中的原文
+    var sourceEl = bubble.querySelector('.translate-text-source, .doc-translate-name');
+    if (!sourceEl) return;
+    var text = sourceEl.textContent || '';
+    if (!text) return;
+    
+    function copied() {
+      var svg = btn.querySelector('svg');
+      var origColor = svg ? svg.getAttribute('fill') || 'currentColor' : '';
+      if (svg) svg.setAttribute('fill', '#68cd52');
+      setTimeout(function() {
+        if (svg) svg.setAttribute('fill', origColor);
+      }, 1000);
+    }
+    
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(copied).catch(function() {
+        window.copyFallback(text, copied);
+      });
+    } else {
+      window.copyFallback(text, copied);
+    }
+  };
+
+  // 切换原文展开/收起
+  window.toggleSourceText = function(btn) {
+    var wrapper = btn.parentElement;
+    if (!wrapper) return;
+    var textEl = wrapper.querySelector('.translate-text-source');
+    if (!textEl) return;
+    
+    if (textEl.classList.contains('collapsed')) {
+      textEl.classList.remove('collapsed');
+      textEl.classList.add('expanded');
+      btn.classList.add('expanded');
+    } else {
+      textEl.classList.add('collapsed');
+      textEl.classList.remove('expanded');
+      btn.classList.remove('expanded');
+    }
+  };
+  
   // 将插入函数暴露到全局，供后续脚本使用
   window.insertTranslateMessage = insertTranslateMessage;
   window.insertDocTranslateMessage = insertDocTranslateMessage;
+  window.insertQAMessage = insertQAMessage;
 })();
 </script>
 
@@ -5909,10 +6476,10 @@ html {
     if (!wrapper) return;
     var docInfo = wrapper.querySelector('.document-info-area');
     if (docInfo) {
-      var docNameEl = docInfo.querySelector('.document-name');
+      var docNameEl = docInfo.querySelector('.doc-name');
       if (docNameEl) {
         var name = docNameEl.textContent;
-        var sizeEl = docInfo.querySelector('.document-status');
+        var sizeEl = docInfo.querySelector('.doc-size');
         var size = sizeEl ? sizeEl.textContent : '';
         window.location.href = '?mode=doc-translate&docName=' + encodeURIComponent(name) + '&docSize=' + encodeURIComponent(size);
         return;
@@ -5995,14 +6562,65 @@ html {
     transformInputArea();
     initScrollbar();
     initReferencesPanel();
+    fixChatLayout();
     handleUrlParams();
   }
   
-  // 处理URL参数（翻译/文档翻译模式），持续重试直到成功
+  // 修复聊天区域布局，确保输入区置底
+  function fixChatLayout() {
+    // 找到聊天内容区（kb-chat 下的非 sidebar 子元素）
+    var kbChat = document.querySelector('.kb-chat');
+    if (!kbChat) return;
+    var chatContent = kbChat.querySelector('.session-his + div');
+    if (!chatContent) {
+      // 备选：找到 w-[calc(100%-...)] 那个
+      var kids = kbChat.children;
+      for (var i = 0; i < kids.length; i++) {
+        if (!kids[i].classList.contains('session-his')) {
+          chatContent = kids[i];
+          break;
+        }
+      }
+    }
+    if (!chatContent) return;
+    
+    // 设置聊天内容区为 flex column
+    chatContent.style.display = 'flex';
+    chatContent.style.flexDirection = 'column';
+    chatContent.style.minHeight = '0';
+    
+    // 找到内部 wrapper（flex h-full flex-col）
+    var innerWrappers = chatContent.querySelectorAll(':scope > div');
+    innerWrappers.forEach(function(w) {
+      if (w.classList.contains('z-2') || w.className.indexOf('flex-col') >= 0) {
+        w.style.display = 'flex';
+        w.style.flexDirection = 'column';
+        w.style.minHeight = '0';
+        w.style.flex = '1';
+      }
+    });
+    
+    // 让 kb-chat-section 占满剩余空间
+    var kbChatSection = chatContent.querySelector('.kb-chat-section');
+    if (kbChatSection) {
+      kbChatSection.style.flex = '1 1 0';
+      kbChatSection.style.minHeight = '0';
+      kbChatSection.style.overflowY = 'auto';
+    }
+    
+    // 输入区、footer、滚动按钮不收缩
+    var noShrinkEls = chatContent.querySelectorAll('.search-ipt, .text-center, .scroll-2-bottom');
+    noShrinkEls.forEach(function(el) {
+      el.style.flexShrink = '0';
+    });
+  }
+  
+  // 处理URL参数（翻译/文档翻译/问答模式），持续重试直到成功
   function handleUrlParams() {
     var urlParams = new URLSearchParams(window.location.search);
     var mode = urlParams.get('mode');
-    if (!mode) return;
+    var q = urlParams.get('q');
+    if (!mode && !q) return;
     
     var sessionHis = document.querySelector('.session-his');
     if (!sessionHis) { setTimeout(handleUrlParams, 500); return; }
@@ -6010,22 +6628,87 @@ html {
     // 去重：已经处理过则跳过
     if (sessionHis.dataset.urlHandled === '1') return;
     
+    // 读取目标语言（默认中文）
+    var targetLang = urlParams.get('targetLang') || '中文';
+    
     if (mode === 'translate') {
       var text = urlParams.get('text') || '';
       if (text && window.insertTranslateMessage) {
-        var ok = window.insertTranslateMessage(text);
+        var ok = window.insertTranslateMessage(text, targetLang);
         if (!ok) { setTimeout(handleUrlParams, 500); return; }
       }
+      // 激活输入区的翻译模式
+      activateTranslateInputMode(targetLang);
     } else if (mode === 'doc-translate') {
       var docName = urlParams.get('docName') || '';
       var docSize = urlParams.get('docSize') || '';
       if (window.insertDocTranslateMessage) {
-        window.insertDocTranslateMessage(docName, docSize);
+        window.insertDocTranslateMessage(docName, docSize, targetLang);
+      }
+      // 激活输入区的翻译模式
+      activateTranslateInputMode(targetLang);
+    } else if (q) {
+      // 问答模式：m 页直接传 q 进来
+      if (window.insertQAMessage) {
+        var ok2 = window.insertQAMessage(q);
+        if (!ok2) { setTimeout(handleUrlParams, 500); return; }
       }
     }
     
     // 标记已处理
     sessionHis.dataset.urlHandled = '1';
+  }
+  
+  // 激活输入区的翻译模式
+  function activateTranslateInputMode(targetLang) {
+    function tryActivate(retryCount) {
+      var wrapper = document.querySelector('.input-area-wrapper');
+      // 必须等 transformInputArea 跑完，search-bottom-actions 存在
+      var bottomActions = wrapper ? wrapper.querySelector('.search-bottom-actions') : null;
+      
+      if (!wrapper || !bottomActions) {
+        if (retryCount > 0) setTimeout(function() { tryActivate(retryCount - 1); }, 200);
+        return;
+      }
+      if (wrapper.querySelector('.translate-active-bar')) {
+        // 已经在翻译模式，只同步目标语言
+        if (targetLang) {
+          var langSelects = document.querySelectorAll('.input-area-wrapper .lang-select-small');
+          if (langSelects.length >= 2) {
+            langSelects[1].value = targetLang;
+          }
+        }
+        return;
+      }
+      
+      // 调用已有的 toggleTranslateMode
+      if (window.toggleTranslateMode) {
+        try {
+          window.toggleTranslateMode();
+        } catch (e) {
+          console.error('toggleTranslateMode error:', e);
+        }
+      } else if (retryCount > 0) {
+        setTimeout(function() { tryActivate(retryCount - 1); }, 200);
+        return;
+      }
+      
+      // 设置目标语言（toggleTranslateMode 后再设一次）
+      function setTargetLang() {
+        if (targetLang) {
+          var langSelects = document.querySelectorAll('.input-area-wrapper .lang-select-small');
+          if (langSelects.length >= 2) {
+            langSelects[1].value = targetLang;
+          }
+        }
+      }
+      setTargetLang();
+      setTimeout(setTargetLang, 100);
+      setTimeout(setTargetLang, 300);
+      setTimeout(setTargetLang, 600);
+    }
+    
+    tryActivate(15);
   }
   
   // 初始化参考资料面板
@@ -6204,126 +6887,6 @@ html {
         inputArea.nextElementSibling.style.display = '';
       }
     }
-  };
-  
-  // 切换翻译模式
-  var isTranslateMode = false;
-  
-  window.toggleTranslateMode = function() {
-    isTranslateMode = !isTranslateMode;
-    var ipt = document.querySelector('.search-ipt');
-    if (!ipt) return;
-    var wrapper = ipt.querySelector('.input-area-wrapper');
-    var placeholder = ipt.querySelector('.input-area-placeholder');
-    var inputArea = ipt.querySelector('.input-area');
-    var actionsContainer = ipt.querySelector('.search-bottom-actions');
-    var sendBtn = ipt.querySelector('.cursor-pointer.flex');
-    
-    if (isTranslateMode) {
-      // 进入翻译模式
-      if (placeholder) placeholder.textContent = '输入待翻译文本，或点击下方按钮翻译文档/图片';
-      
-      // 添加翻译语言栏到发送按钮容器
-      if (sendBtn) {
-        var langBar = sendBtn.querySelector('.translate-lang-bar');
-        if (!langBar) {
-          langBar = document.createElement('div');
-          langBar.className = 'translate-lang-bar';
-          langBar.innerHTML = '\
-            <select class="lang-select-small" id="srcLang"><option value="auto">自动检测</option><option value="en">英语</option><option value="zh">中文</option><option value="ja">日语</option></select>\
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 7 12 14 19 7"/></svg>\
-            <select class="lang-select-small" id="tgtLang"><option value="zh">中文</option><option value="en">英语</option><option value="ja">日语</option></select>\
-          ';
-          sendBtn.parentNode.insertBefore(langBar, sendBtn);
-        }
-      }
-      
-      // 替换底部按钮为翻译模式按钮
-      if (actionsContainer) {
-        actionsContainer.innerHTML = '\
-          <div class="translate-active-bar">\
-            <div class="action-btn active" onclick="exitTranslateMode()">\
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>\
-              <span>象胥翻译</span>\
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="cursor:pointer;" onclick="event.stopPropagation();exitTranslateMode()"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>\
-            </div>\
-            <span class="action-btn" onclick="handleDocumentTranslate()">📄 文档翻译</span>\
-            <span class="action-btn" onclick="alert(\'图片翻译\')">🖼 图片翻译</span>\
-          </div>\
-        ';
-      }
-      
-      // 修改发送按钮点击
-      sendBtn.onclick = handleTranslateSend;
-    } else {
-      exitTranslateMode();
-    }
-  };
-  
-  // 退出翻译模式
-  window.exitTranslateMode = function() {
-    isTranslateMode = false;
-    var ipt = document.querySelector('.search-ipt');
-    if (!ipt) return;
-    var placeholder = ipt.querySelector('.input-area-placeholder');
-    var inputArea = ipt.querySelector('.input-area');
-    var actionsContainer = ipt.querySelector('.search-bottom-actions');
-    var langBar = ipt.querySelector('.translate-lang-bar');
-    var docArea = ipt.querySelector('.document-info-area');
-    var sendBtn = ipt.querySelector('.cursor-pointer.flex');
-    
-    if (placeholder) placeholder.textContent = '请输入问题';
-    if (langBar) langBar.remove();
-    if (docArea) docArea.remove();
-    
-    if (inputArea) inputArea.style.display = '';
-    
-    // 恢复底部按钮
-    if (actionsContainer) {
-      actionsContainer.innerHTML = '\
-        <span class="action-btn" onclick="toggleTranslateMode()">\
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>\
-          象胥翻译\
-        </span>\
-        <span class="action-btn" onclick="alert(\'AI解读\')">🧠 AI解读</span>\
-        <span class="action-btn" onclick="alert(\'简单搜索\')">🔍 简单搜索</span>\
-      ';
-    }
-    
-    if (sendBtn) sendBtn.onclick = handleSendMessage;
-  };
-  
-  // 翻译模式发送
-  window.handleTranslateSend = function() {
-    var docInfo = document.querySelector('.document-info-area');
-    if (docInfo) {
-      var docName = docInfo.querySelector('.doc-name');
-      var docSize = docInfo.querySelector('.doc-size');
-      if (docName) {
-        var name = docName.textContent;
-        var size = docSize ? docSize.textContent : '';
-        window.location.href = '?mode=doc-translate&docName=' + encodeURIComponent(name) + '&docSize=' + encodeURIComponent(size);
-        return;
-      }
-    }
-    var textArea = document.querySelector('.input-area');
-    var text = textArea ? textArea.textContent.trim() : '';
-    if (text) {
-      alert('翻译文本: ' + text.slice(0, 50) + '...');
-    }
-  };
-  
-  // 文档翻译
-  window.handleDocumentTranslate = function() {
-    var input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.doc,.docx';
-    input.onchange = function(e) {
-      var file = e.target.files[0];
-      if (!file) return;
-      showDocumentInfo(file);
-    };
-    input.click();
   };
   
   // 显示文档信息

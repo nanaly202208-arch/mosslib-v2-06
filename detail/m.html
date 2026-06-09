@@ -1430,6 +1430,13 @@ select.lang-select-small {
   window.handleTranslateSend = function() {
     console.log('翻译发送 clicked');
     
+    // 获取目标语言（第二个 lang-select-small）
+    var langSelects = document.querySelectorAll('.search-entry-container.translate-mode .lang-select-small');
+    var targetLang = '中文';
+    if (langSelects.length >= 2) {
+      targetLang = langSelects[1].value || '中文';
+    }
+    
     // 检查是否有文档上传
     const docInfoArea = document.querySelector('.document-info-area');
     if (docInfoArea) {
@@ -1442,6 +1449,7 @@ select.lang-select-small {
       params.set('mode', 'doc-translate');
       params.set('docName', docName);
       params.set('docSize', docSize);
+      params.set('targetLang', targetLang);
       
       window.location.href = './chat.html?' + params.toString();
       return;
@@ -1462,6 +1470,7 @@ select.lang-select-small {
       var params = new URLSearchParams();
       params.set('mode', 'translate');
       params.set('text', text);
+      params.set('targetLang', targetLang);
       window.location.href = './chat.html?' + params.toString();
     } else {
       alert('请输入要翻译的文本');
