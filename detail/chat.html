@@ -1766,12 +1766,9 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     alert('开始下载：' + translatedName);
   };
   
-  // 页面加载完成后初始化
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDocTranslate);
-  } else {
-    initDocTranslate();
-  }
+  // 将插入函数暴露到全局，供后续脚本使用
+  window.insertTranslateMessage = insertTranslateMessage;
+  window.insertDocTranslateMessage = insertDocTranslateMessage;
 })();
 </script>
 
@@ -6020,6 +6017,34 @@ html {
     transformInputArea();
     initScrollbar();
     initReferencesPanel();
+    handleUrlParams();
+  }
+  
+  // 处理URL参数（翻译/文档翻译模式），需等待Vue渲染完成后执行
+  function handleUrlParams() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var mode = urlParams.get('mode');
+    if (!mode) return;
+    
+    var sessionHis = document.querySelector('.session-his');
+    if (!sessionHis) return; // Vue还没渲染，等下次重试
+    
+    // 标记已处理，防止重复
+    if (sessionHis.dataset.urlParamsHandled === '1') return;
+    sessionHis.dataset.urlParamsHandled = '1';
+    
+    if (mode === 'translate') {
+      var text = urlParams.get('text') || '';
+      if (text && window.insertTranslateMessage) {
+        window.insertTranslateMessage(text);
+      }
+    } else if (mode === 'doc-translate') {
+      var docName = urlParams.get('docName') || '';
+      var docSize = urlParams.get('docSize') || '';
+      if (window.insertDocTranslateMessage) {
+        window.insertDocTranslateMessage(docName, docSize);
+      }
+    }
   }
   
   // 初始化参考资料面板
