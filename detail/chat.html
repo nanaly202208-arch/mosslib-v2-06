@@ -1446,7 +1446,18 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     var urlParams = new URLSearchParams(window.location.search);
     var mode = urlParams.get('mode');
     
-    if (mode === 'doc-translate') {
+    if (mode === 'translate') {
+      var text = urlParams.get('text') || '';
+      if (text) {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', function() {
+            insertTranslateMessage(text);
+          });
+        } else {
+          insertTranslateMessage(text);
+        }
+      }
+    } else if (mode === 'doc-translate') {
       var docName = urlParams.get('docName') || '';
       var docSize = urlParams.get('docSize') || '';
       
@@ -1588,6 +1599,130 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     setTimeout(function() {
       completeThinking();
     }, 3000);
+  }
+  
+  // 文本翻译消息插入
+  function insertTranslateMessage(text) {
+    // 1. 隐藏所有旧消息
+    var oldUserMsgs = document.querySelectorAll('body > div.w-full.flex.flex-col.items-end');
+    oldUserMsgs.forEach(function(el) { el.style.display = 'none'; });
+    var oldAssistantMsgs = document.querySelectorAll('body > div.assistant-msg-v');
+    oldAssistantMsgs.forEach(function(el) { el.style.display = 'none'; });
+    
+    // 查找插入位置
+    var sessionHis = document.querySelector('.session-his');
+    var insertAfter = sessionHis ? sessionHis : document.body.firstChild;
+    var insertBeforeEl = insertAfter.nextElementSibling;
+    while (insertBeforeEl && insertBeforeEl.style.display === 'none') {
+      insertBeforeEl = insertBeforeEl.nextElementSibling;
+    }
+    
+    // 2. 创建用户消息
+    var userMsg = document.createElement('div');
+    userMsg.className = 'w-full flex flex-col items-end';
+    userMsg.style.marginBottom = '20px';
+    userMsg.innerHTML = '<div class="flex flex-row items-center">'
+      + '<div class="bg-[#fff] p-10px pl-16px pr-16px border-rd-4px ml-52px w-[calc(100%-104px)]" style="background: rgba(96, 92, 229, 0.08) !important;">'
+      + '<div class="color-[#333] font-size-15px max-w-768px line-height-28px" style="font-weight:500;">请将以下文本翻译成中文</div>'
+      + '<div class="color-[#555] font-size-14px max-w-768px line-height-24px mt-4px whitespace-pre-wrap" style="background:#f8f9fa;border-radius:6px;padding:8px 10px;border-left:3px solid #605CE5;">' + escapeHtml(text) + '</div>'
+      + '</div>'
+      + '<span class="el-avatar el-avatar--circle ml-12px !w-40px !h-40px self-start"><img src="./chat_files/file.png" style="object-fit: cover;"></span>'
+      + '</div>';
+    
+    if (insertBeforeEl) {
+      document.body.insertBefore(userMsg, insertBeforeEl);
+    } else {
+      document.body.appendChild(userMsg);
+    }
+    
+    // 3. 创建助手翻译回复
+    var assistantMsg = document.createElement('div');
+    assistantMsg.className = 'assistant-msg-v flex flex-col max-w-[calc(100% - 36px)] mb-20px';
+    assistantMsg.style.marginBottom = '20px';
+    assistantMsg.innerHTML = '<div class="flex flex-row mr-50px">'
+      + '<div class="pr-12px"><img class="w-40px h-40px" src="./chat_files/logo_mosslib.png"></div>'
+      + '<div class="flex flex-col" style="min-width: 300px;">'
+      + '<div class="bg-[#fff] border-rounded-8px pl-20px pr-20px pt-8px pb-8px max-w-full">'
+      + '<div style="min-width: 200px;">'
+      + '<div class="thinking-section" onclick="toggleThinking(this)">'
+      + '<div class="thinking-header">'
+      + '<div class="thinking-spinner"></div>'
+      + '<span>翻译中</span>'
+      + '<svg class="thinking-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>'
+      + '</div>'
+      + '<div class="thinking-content">正在分析文本内容并进行翻译...</div>'
+      + '</div>'
+      + '<div class="translated-doc-section" id="translateResultSection" style="display: none;">'
+      + '<div class="color-[#333] font-size-15px line-height-26px whitespace-pre-wrap" id="translateResultText"></div>'
+      + '</div></div></div></div></div></div>';
+    
+    document.body.insertBefore(assistantMsg, userMsg.nextSibling);
+    
+    // 4. 添加历史记录
+    var hisView = document.querySelector('.his-view');
+    if (hisView) {
+      var existingSession = hisView.querySelector('.per-session');
+      if (existingSession) {
+        var newSession = existingSession.cloneNode(true);
+        var titleEl = newSession.querySelector('.one-line-text');
+        if (titleEl) {
+          titleEl.textContent = '请将以下文本翻译成中文';
+          titleEl.title = '请将以下文本翻译成中文';
+        }
+        var firstSession = hisView.querySelector('.per-session');
+        if (firstSession) {
+          hisView.insertBefore(newSession, firstSession);
+        }
+      }
+    }
+    var titleEls = document.querySelectorAll('.session-his .one-line-text');
+    titleEls.forEach(function(el) {
+      el.textContent = '请将以下文本翻译成中文';
+      el.title = '请将以下文本翻译成中文';
+    });
+    
+    // 5. 3秒后模拟翻译完成
+    setTimeout(function() {
+      completeTranslateText(text);
+    }, 3000);
+  }
+  
+  // 模拟翻译完成
+  function completeTranslateText(originalText) {
+    var thinkingSection = document.querySelector('.thinking-section');
+    var resultSection = document.getElementById('translateResultSection');
+    
+    if (thinkingSection) {
+      var spinner = thinkingSection.querySelector('.thinking-spinner');
+      if (spinner) {
+        spinner.style.animation = 'none';
+        spinner.style.borderColor = '#68cd52';
+        spinner.style.borderTopColor = '#68cd52';
+      }
+      var headerText = thinkingSection.querySelector('.thinking-header span');
+      if (headerText) {
+        headerText.textContent = '翻译完成';
+        headerText.style.color = '#68cd52';
+      }
+      var content = thinkingSection.querySelector('.thinking-content');
+      if (content) {
+        content.innerHTML = '已完成文本翻译，原文约' + originalText.length + '字。';
+      }
+    }
+    if (resultSection) {
+      resultSection.style.display = 'block';
+      var resultText = resultSection.querySelector('#translateResultText');
+      if (resultText) {
+        resultText.textContent = '[翻译结果] ' + originalText;
+      }
+    }
+  }
+  
+  // HTML转义
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
   }
   
   // 切换思考内容展开/收起

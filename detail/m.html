@@ -1448,10 +1448,21 @@ select.lang-select-small {
     }
     
     // 普通文本翻译
-    const textarea = document.querySelector('.translate-textarea');
-    const text = textarea ? textarea.value : '';
+    var textarea = document.querySelector('.search-entry-container textarea');
+    var text = textarea ? textarea.value.trim() : '';
+    if (!text) {
+      textarea = document.querySelector('.translate-textarea');
+      text = textarea ? textarea.value.trim() : '';
+    }
+    if (!text) {
+      var inputArea = document.querySelector('.el-input__inner');
+      text = inputArea ? inputArea.value.trim() : '';
+    }
     if (text) {
-      alert('翻译：' + text);
+      var params = new URLSearchParams();
+      params.set('mode', 'translate');
+      params.set('text', text);
+      window.location.href = './chat.html?' + params.toString();
     } else {
       alert('请输入要翻译的文本');
     }
