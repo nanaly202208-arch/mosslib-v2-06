@@ -563,7 +563,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   left: 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   z-index: 10;
   height: 36px !important;
 }
@@ -596,6 +596,42 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   color: inherit;
   flex-shrink: 0;
   margin-top:2px;
+}
+
+/* 历史记录按钮 - 独立样式，仅 icon，不影响 action-btn */
+.history-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 6px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+  color: #666;
+}
+
+.history-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.history-btn svg {
+  width: 16px;
+  height: 16px;
+  margin-top:2px;
+  color: inherit;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .history-btn {
+  color: #999;
+}
+
+[data-theme="dark"] .history-btn:hover {
+  background: #3a3a3a;
+  color: #e0e0e0;
 }
 
 /* 翻译模式 - 搜索按钮改为发送按钮 */
@@ -1058,7 +1094,13 @@ select.lang-select-small {
     const bottomActions = document.createElement('div');
     bottomActions.className = 'search-bottom-actions';
     bottomActions.innerHTML = `
-      <button class="action-btn" onclick="handleTranslate()" title="专业级翻译大模型，支持多种语言">
+      <button class="history-btn" onclick="location.href='./chat.html?mode=last-session'" title="历史记录">
+        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor">
+          <path d="M729.6 499.2c127.488 0 230.4 102.912 230.4 230.4s-102.912 230.4-230.4 230.4-230.4-102.912-230.4-230.4 102.912-230.4 230.4-230.4z m0 409.6c98.816 0 179.2-80.384 179.2-179.2s-80.384-179.2-179.2-179.2-179.2 80.384-179.2 179.2 80.384 179.2 179.2 179.2z m87.04-204.8c8.704 0 15.36 7.168 15.36 15.36v19.968c0 8.704-7.168 15.36-15.36 15.36h-96.768c-8.704 0-15.36-7.168-15.36-15.36v-122.368c0-8.704 7.168-15.36 15.36-15.36h19.968c8.704 0 15.36 7.168 15.36 15.36v87.04h61.44z"></path>
+          <path d="M924.672 506.88l10.24 0.512c13.312 1.024 25.088-9.728 25.088-23.04 0-201.216-200.704-364.032-448-364.032s-448 163.328-447.488 363.52c0 83.456 34.816 159.744 92.672 221.184-26.112 68.608-80.384 127.488-81.408 128-11.776 12.288-14.848 29.696-8.192 45.568 6.656 15.872 22.016 25.6 38.912 25.6 107.52 0 192.512-45.056 243.2-80.896 22.016 7.168 45.568 12.8 69.12 16.896 13.824 2.56 27.648-6.656 29.696-20.992l1.024-4.608c2.56-13.824-7.168-26.624-20.992-29.184-20.992-3.584-41.472-8.704-61.952-15.36l-26.624-8.192-22.528 15.872c-40.448 28.16-102.4 61.44-179.712 69.12 20.992-26.624 51.712-70.656 71.168-121.856l12.288-32.768-24.064-25.6c-50.688-53.248-77.312-116.736-77.312-182.272 0-169.472 176.128-307.712 392.192-307.712s392.192 138.752 392.192 308.224c0 11.776 8.704 21.504 20.48 22.016z"></path>
+        </svg>
+      </button>
+      <button class="action-btn" onclick="handleTranslate()" title="专家级翻译智能体，支持多种语言">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 8l6 6"/>
           <path d="M4 14l6-6 3-3"/>
@@ -1068,14 +1110,6 @@ select.lang-select-small {
           <path d="M14 18h6"/>
         </svg>
         <span>象胥翻译</span>
-      </button>
-      <button class="action-btn" onclick="handleExtractTerms()" title="智能解读论文、报告">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-          <path d="M2 17l10 5 10-5"/>
-          <path d="M2 12l10 5 10-5"/>
-        </svg>
-        <span>AI解读</span>
       </button>
       <button class="action-btn" onclick="toggleSimpleSearchMode()" title="输入关键词进行简单快捷检索">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1272,6 +1306,12 @@ select.lang-select-small {
     
     // 恢复原始按钮
     bottomActions.innerHTML = `
+      <button class="history-btn" onclick="location.href='./chat.html?mode=last-session'" title="历史记录">
+        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor">
+          <path d="M729.6 499.2c127.488 0 230.4 102.912 230.4 230.4s-102.912 230.4-230.4 230.4-230.4-102.912-230.4-230.4 102.912-230.4 230.4-230.4z m0 409.6c98.816 0 179.2-80.384 179.2-179.2s-80.384-179.2-179.2-179.2-179.2 80.384-179.2 179.2 80.384 179.2 179.2 179.2z m87.04-204.8c8.704 0 15.36 7.168 15.36 15.36v19.968c0 8.704-7.168 15.36-15.36 15.36h-96.768c-8.704 0-15.36-7.168-15.36-15.36v-122.368c0-8.704 7.168-15.36 15.36-15.36h19.968c8.704 0 15.36 7.168 15.36 15.36v87.04h61.44z"></path>
+          <path d="M924.672 506.88l10.24 0.512c13.312 1.024 25.088-9.728 25.088-23.04 0-201.216-200.704-364.032-448-364.032s-448 163.328-447.488 363.52c0 83.456 34.816 159.744 92.672 221.184-26.112 68.608-80.384 127.488-81.408 128-11.776 12.288-14.848 29.696-8.192 45.568 6.656 15.872 22.016 25.6 38.912 25.6 107.52 0 192.512-45.056 243.2-80.896 22.016 7.168 45.568 12.8 69.12 16.896 13.824 2.56 27.648-6.656 29.696-20.992l1.024-4.608c2.56-13.824-7.168-26.624-20.992-29.184-20.992-3.584-41.472-8.704-61.952-15.36l-26.624-8.192-22.528 15.872c-40.448 28.16-102.4 61.44-179.712 69.12 20.992-26.624 51.712-70.656 71.168-121.856l12.288-32.768-24.064-25.6c-50.688-53.248-77.312-116.736-77.312-182.272 0-169.472 176.128-307.712 392.192-307.712s392.192 138.752 392.192 308.224c0 11.776 8.704 21.504 20.48 22.016z"></path>
+        </svg>
+      </button>
       <button class="action-btn" onclick="handleTranslate()" title="象胥翻译">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 8l6 6"/>
@@ -1283,14 +1323,6 @@ select.lang-select-small {
         </svg>
         <span>象胥翻译</span>
       </button>
-      <button class="action-btn" onclick="handleExtractTerms()" title="AI解读">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-          <path d="M2 17l10 5 10-5"/>
-          <path d="M2 12l10 5 10-5"/>
-        </svg>
-        <span>AI解读</span>
-      </button>
       <button class="action-btn" onclick="toggleSimpleSearchMode()" title="简单搜索">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="11" cy="11" r="8"/>
@@ -1300,17 +1332,6 @@ select.lang-select-small {
         <span>简单搜索</span>
       </button>
     `;
-  };
-  
-  window.handleExtractTerms = function() {
-    console.log('提取术语 clicked');
-    const input = document.querySelector('.search-entry-container input, .el-input__inner');
-    const text = input ? input.value : '';
-    if (text) {
-      alert('提取术语：' + text);
-    } else {
-      alert('请输入要提取术语的内容');
-    }
   };
   
   window.handleSimpleSearch = function() {
@@ -1341,7 +1362,7 @@ select.lang-select-small {
       }
       // 修改placeholder
       if (searchInput) {
-        searchInput.placeholder = '请输入关键字';
+        searchInput.placeholder = '输入关键词进行简单快捷检索';
       }
       // 修改底部按钮区域 - 只显示简单搜索按钮
       if (bottomActions) {
@@ -1390,6 +1411,12 @@ select.lang-select-small {
     // 恢复底部按钮区域
     if (bottomActions) {
       bottomActions.innerHTML = `
+        <button class="history-btn" onclick="location.href='./chat.html?mode=last-session'" title="历史记录">
+          <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor">
+            <path d="M729.6 499.2c127.488 0 230.4 102.912 230.4 230.4s-102.912 230.4-230.4 230.4-230.4-102.912-230.4-230.4 102.912-230.4 230.4-230.4z m0 409.6c98.816 0 179.2-80.384 179.2-179.2s-80.384-179.2-179.2-179.2-179.2 80.384-179.2 179.2 80.384 179.2 179.2 179.2z m87.04-204.8c8.704 0 15.36 7.168 15.36 15.36v19.968c0 8.704-7.168 15.36-15.36 15.36h-96.768c-8.704 0-15.36-7.168-15.36-15.36v-122.368c0-8.704 7.168-15.36 15.36-15.36h19.968c8.704 0 15.36 7.168 15.36 15.36v87.04h61.44z"></path>
+            <path d="M924.672 506.88l10.24 0.512c13.312 1.024 25.088-9.728 25.088-23.04 0-201.216-200.704-364.032-448-364.032s-448 163.328-447.488 363.52c0 83.456 34.816 159.744 92.672 221.184-26.112 68.608-80.384 127.488-81.408 128-11.776 12.288-14.848 29.696-8.192 45.568 6.656 15.872 22.016 25.6 38.912 25.6 107.52 0 192.512-45.056 243.2-80.896 22.016 7.168 45.568 12.8 69.12 16.896 13.824 2.56 27.648-6.656 29.696-20.992l1.024-4.608c2.56-13.824-7.168-26.624-20.992-29.184-20.992-3.584-41.472-8.704-61.952-15.36l-26.624-8.192-22.528 15.872c-40.448 28.16-102.4 61.44-179.712 69.12 20.992-26.624 51.712-70.656 71.168-121.856l12.288-32.768-24.064-25.6c-50.688-53.248-77.312-116.736-77.312-182.272 0-169.472 176.128-307.712 392.192-307.712s392.192 138.752 392.192 308.224c0 11.776 8.704 21.504 20.48 22.016z"></path>
+          </svg>
+        </button>
         <button class="action-btn" onclick="handleTranslate()" title="专业级翻译大模型，支持多种语言">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M5 8l6 6"/>
@@ -1400,14 +1427,6 @@ select.lang-select-small {
             <path d="M14 18h6"/>
           </svg>
           <span>象胥翻译</span>
-        </button>
-        <button class="action-btn" onclick="handleExtractTerms()" title="智能解读论文、报告">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-            <path d="M2 17l10 5 10-5"/>
-            <path d="M2 12l10 5 10-5"/>
-          </svg>
-          <span>AI解读</span>
         </button>
         <button class="action-btn" onclick="toggleSimpleSearchMode()" title="输入关键词进行简单快捷检索">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">

@@ -1664,6 +1664,20 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     var urlParams = new URLSearchParams(window.location.search);
     var mode = urlParams.get('mode');
     
+    if (mode === 'last-session') {
+      // 定位到最近一条会话（倒序排列，第一条即最新）
+      var hisView = document.querySelector('.his-view');
+      if (hisView) {
+        var sessions = hisView.querySelectorAll('.per-session');
+        if (sessions.length > 0) {
+          sessions[0].click();
+        }
+      }
+      // 标记已处理（无实际内容处理）
+      sessionHis.dataset.urlHandled = '1';
+      return;
+    }
+    
     if (mode === 'translate') {
       var text = urlParams.get('text') || '';
       if (text) {
@@ -6278,14 +6292,6 @@ html {
         </svg>\
         <span>象胥翻译</span>\
       </button>\
-      <button class="action-btn" onclick="alert(\'AI解读\')" title="智能解读论文、报告">\
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/>\
-          <path d="M2 17l10 5 10-5"/>\
-          <path d="M2 12l10 5 10-5"/>\
-        </svg>\
-        <span>AI解读</span>\
-      </button>\
       <button class="action-btn" onclick="alert(\'简单搜索\')" title="输入关键词进行简单快捷检索">\
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
           <circle cx="11" cy="11" r="8"/>\
@@ -6453,14 +6459,6 @@ html {
           <path d="M14 18h6"/>\
         </svg>\
         <span>象胥翻译</span>\
-      </button>\
-      <button class="action-btn" onclick="alert(\'AI解读\')" title="智能解读论文、报告">\
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
-          <path d="M12 2L2 7l10 5 10-5-10-5z"/>\
-          <path d="M2 17l10 5 10-5"/>\
-          <path d="M2 12l10 5 10-5"/>\
-        </svg>\
-        <span>AI解读</span>\
       </button>\
       <button class="action-btn" onclick="alert(\'简单搜索\')" title="输入关键词进行简单快捷检索">\
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">\
@@ -6769,6 +6767,19 @@ html {
     var sessionHis = document.querySelector('.session-his');
     if (!sessionHis) { setTimeout(handleUrlParams, 500); return; }
     
+    if (mode === 'last-session') {
+      // 定位到最近一条会话（倒序排列，第一条即最新）
+      var hisView = document.querySelector('.his-view');
+      if (hisView) {
+        var sessions = hisView.querySelectorAll('.per-session');
+        if (sessions.length > 0) {
+          sessions[0].click();
+        }
+      }
+      sessionHis.dataset.urlHandled = '1';
+      return;
+    }
+    
     // 去重：已经处理过则跳过
     if (sessionHis.dataset.urlHandled === '1') return;
     
@@ -6939,12 +6950,6 @@ html {
       };
     }
   }
-  
-  // 切换到AI解读模式
-  window.handleAIAnalyze = function() {
-    console.log('AI解读 clicked');
-    alert('AI解读功能');
-  };
   
   // 切换参考资料面板
   window.toggleReferencesPanel = function() {
