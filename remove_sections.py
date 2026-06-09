@@ -1,4 +1,4 @@
-filepath = r'D:\Work\新译\项目\Mosslib 2.0\分析模块\原型\0601\mosslib-v2-0602\detail\MossLib.html'
+filepath = r'D:\Work\新译\项目\Mosslib 2.0\分析模块\原型\0601\mosslib-v2-0602\detail\detail.html'
 
 with open(filepath, 'r', encoding='utf-8') as f:
     content = f.read()

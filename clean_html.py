@@ -1,4 +1,4 @@
-with open('detail/MossLib.html', 'r', encoding='utf-8') as f:
+with open('detail/detail.html', 'r', encoding='utf-8') as f:
     lines = f.readlines()
 
 # Find key line numbers
@@ -54,7 +54,7 @@ style_start = content.find('</script>\n\n<style>')
 style_end = content.find('</style>', style_start)
 custom_css = content[style_start+len('</script>\n\n<style>'):style_end]
 
-# CSS links (in detail/MossLib.html they point to ./MossLib_files/ which is detail/MossLib_files/)
+# CSS links (in detail/detail.html they point to ./detail_files/ which is detail/detail_files/)
 css_links = re.findall(r'<link rel="stylesheet" href="\./MossLib_files/[^"]*\.css">', content)
 # Keep path as ./MossLib_files/ since we have a copy at root too
 

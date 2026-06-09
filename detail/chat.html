@@ -333,7 +333,7 @@ div[class*="ml-52px"] {
 .search-ipt .search-btn-wrapper {
   position: absolute !important;
   right: 12px !important;
-  bottom: 12px !important;
+  bottom: 6px !important;
   z-index: 10 !important;
   display: flex !important;
   align-items: center !important;
@@ -1197,7 +1197,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 .doc-translate-progress-header .translate-loading-spinner {
@@ -1211,36 +1211,15 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 }
 
 .doc-translate-status-text {
-  font-size: 15px;
+  font-size: 16px;
   color: #333;
+  line-height: 28px;
   font-weight: 500;
 }
 
 @keyframes thinking-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-.doc-translate-progress-bar {
-  width: 100%;
-  height: 4px;
-  background: #e8e8e8;
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.doc-translate-progress-fill {
-  height: 100%;
-  width: 30%;
-  background: linear-gradient(90deg, #605CE5, #8f8cec);
-  border-radius: 2px;
-  animation: progress-move 2s ease-in-out infinite;
-}
-
-@keyframes progress-move {
-  0% { transform: translateX(-100%); width: 30%; }
-  50% { width: 60%; }
-  100% { transform: translateX(300%); width: 30%; }
 }
 
 .doc-preview-area {
@@ -1255,6 +1234,22 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   color: #999 !important;
 }
 
+.doc-preview-download {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.doc-preview-download:hover {
+  background: #f0f0f5;
+}
+
+/* 翻译完成文档样式 */
 .thinking-section:hover {
   background: #f0f1f2;
 }
@@ -1689,7 +1684,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
       style.id = 'doc-translate-style';
       style.textContent = ''
         + '.doc-translate-info { display: flex; flex-direction: row; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.06); }'
-        + '.doc-translate-icon { width: 24px; height: 24px; flex-shrink: 0; }'
+        + '.doc-translate-icon { width: 38px; height: 38px; flex-shrink: 0; }'
         + '.doc-translate-details { flex: 1; margin-left: 10px; min-width: 0; }'
         + '.doc-translate-name { font-size: 14px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }'
         + '.doc-translate-size { font-size: 12px; color: #999; margin-top: 2px; }'
@@ -1827,7 +1822,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   
   function insertDocTranslateMessage(docName, docSize, targetLang) {
     var messagesContainer = findMessagesContainer();
-    if (!messagesContainer) return;
+    if (!messagesContainer) return false;
     
     // 隐藏旧消息
     hideOldMessages();
@@ -1837,18 +1832,17 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     
     var docNameAttr = (docName || '').replace(/'/g, '\\\'');
     var escapedDocName = docNameAttr;
-    var baseName = escapedDocName.replace(/\.[^/.]+$/, '');
     
-    var docTitle = '请将文档翻译成' + targetLang;
-    var translatedDocName = baseName + '_中文翻译.docx';
+    var docTitle = '请将文档翻译成' + targetLang + '：';
     
     var html = '\
       <div class="w-full flex flex-col items-end" style="margin-bottom:20px;">\
         <div class="flex flex-row items-center">\
           <div class="bg-[#fff] p-10px pl-16px pr-16px border-rd-4px ml-52px w-[calc(100%-104px)]" style="background: rgba(96, 92, 229, 0.08) !important;">\
             <div class="color-[#333] font-size-16px max-w-768px line-height-28px" style="font-weight:500;">' + docTitle + '</div>\
-            <div class="doc-translate-info">\
-              <div class="doc-translate-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>\
+            <div style="height:1px;background:#e8e8e8;margin:8px 0 0 0;"></div>\
+            <div class="doc-translate-info" style="margin-top:8px;">\
+              <div class="doc-translate-icon"><svg viewBox="0 0 1024 1024" width="38" height="38" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z m-547.68 298.6h40.28l26.04 93.58h5.7l29.16-93.58h34.45l29.02 93.71h6.24l26.18-93.71h40.41l-40.41 133.72H384.1l-19.53-70.25h-5.43l-19.26 69.98h-55.74l-39.88-133.45zM817.45 793.5c-0.01 14.09-11.42 25.5-25.51 25.51H332.48c-14.09-0.01-25.5-11.43-25.51-25.51v-76.54h204.21c28.15 0 51.03-22.88 51.03-51.03V614.9H740.9c14.09-0.01 25.51-11.43 25.52-25.52-0.02-14.09-11.43-25.5-25.52-25.51H562.21v-51.03H740.9c14.09-0.01 25.51-11.43 25.52-25.52-0.01-14.09-11.43-25.5-25.52-25.52H562.21v-51.03H740.9c14.09-0.01 25.51-11.43 25.52-25.51-0.01-14.09-11.43-25.51-25.52-25.52H562.21c0-28.16-22.89-51.03-51.03-51.03H306.97v-76.54c0.01-14.09 11.43-25.5 25.51-25.52h459.46c14.08 0.01 25.5 11.43 25.51 25.52V793.5z" fill="#54A0FF"/></svg></div>\
               <div class="doc-translate-details">\
                 <div class="doc-translate-name" title="' + docNameAttr + '">' + escapedDocName + '</div>\
                 <div class="doc-translate-size">' + (docSize || '') + '</div>\
@@ -1871,33 +1865,16 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
               <div class="doc-translate-progress">\
                 <div class="doc-translate-progress-header">\
                   <div class="translate-loading-spinner"></div>\
-                  <span class="doc-translate-status-text">正在翻译...</span>\
-                </div>\
-                <div class="doc-translate-progress-bar">\
-                  <div class="doc-translate-progress-fill"></div>\
+                  <span class="doc-translate-status-text" style="font-size:14px;">正在翻译...</span>\
                 </div>\
               </div>\
               <div class="doc-preview-area">\
-                <div class="doc-translate-info doc-preview-card">\
-                  <div class="doc-translate-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>\
+                <div class="doc-translate-info doc-preview-card" id="docPreviewCard_' + Date.now() + '">\
+                  <div class="doc-translate-icon"><svg viewBox="0 0 1024 1024" width="38" height="38" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z m-547.68 298.6h40.28l26.04 93.58h5.7l29.16-93.58h34.45l29.02 93.71h6.24l26.18-93.71h40.41l-40.41 133.72H384.1l-19.53-70.25h-5.43l-19.26 69.98h-55.74l-39.88-133.45zM817.45 793.5c-0.01 14.09-11.42 25.5-25.51 25.51H332.48c-14.09-0.01-25.5-11.43-25.51-25.51v-76.54h204.21c28.15 0 51.03-22.88 51.03-51.03V614.9H740.9c14.09-0.01 25.51-11.43 25.52-25.52-0.02-14.09-11.43-25.5-25.52-25.51H562.21v-51.03H740.9c14.09-0.01 25.51-11.43 25.52-25.52-0.01-14.09-11.43-25.5-25.52-25.52H562.21v-51.03H740.9c14.09-0.01 25.51-11.43 25.52-25.51-0.01-14.09-11.43-25.51-25.52-25.52H562.21c0-28.16-22.89-51.03-51.03-51.03H306.97v-76.54c0.01-14.09 11.43-25.5 25.51-25.52h459.46c14.08 0.01 25.5 11.43 25.51 25.52V793.5z" fill="#54A0FF"/></svg></div>\
                   <div class="doc-translate-details">\
                     <div class="doc-translate-name" title="' + docNameAttr + '">' + escapedDocName + '</div>\
-                    <div class="doc-translate-size doc-translate-original-tag">原文 · ' + (docSize || '') + '</div>\
+                    <div class="doc-translate-size doc-translate-original-tag">译文 · ' + (docSize || '') + '</div>\
                   </div>\
-                </div>\
-              </div>\
-              <div class="translated-doc-section" id="translatedDocSection_' + Date.now() + '" style="display: none;">\
-                <div class="translated-doc-header">\
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#68cd52" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>\
-                  <span style="color:#68cd52;font-weight:500;">翻译完成，请点击下载</span>\
-                </div>\
-                <div class="translated-doc-item" onclick="downloadTranslatedDoc(\'' + docNameAttr + '\')">\
-                  <div class="translated-doc-icon"><svg viewBox="0 0 1024 1024" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z" fill="#54A0FF"/></svg></div>\
-                  <div class="translated-doc-info">\
-                    <div class="translated-doc-name">' + translatedDocName + '</div>\
-                    <div class="translated-doc-meta">点击下载翻译后的文档</div>\
-                  </div>\
-                  <div class="translated-doc-download"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></div>\
                 </div>\
               </div>\
             </div>\
@@ -1928,23 +1905,25 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     updateChatTitle(docTitle);
     
     // 3秒后模拟翻译完成
-    setTimeout(function() {
+    window._docTranslateTimer = setTimeout(function() {
       completeDocTranslate(docNameAttr);
     }, 3000);
+    
+    return true;
   }
   
   // 文本翻译消息插入（返回true表示成功，false表示需要重试）
-  function insertTranslateMessage(text, targetLang) {
+  function insertTranslateMessage(text, targetLang, skipHideOld) {
     var messagesContainer = findMessagesContainer();
     if (!messagesContainer) return false;
     if (!text) return false;
     
-    // 隐藏旧消息（使用正确选择器）
-    hideOldMessages();
+    // 隐藏旧消息（仅首次进入时）
+    if (!skipHideOld) hideOldMessages();
     
     // 默认目标语言
     targetLang = targetLang || '中文';
-    var textTitle = '请将文本翻译成' + targetLang;
+    var textTitle = '请将文本翻译成' + targetLang + '：';
     
     // 使用 beforeend 定位在 messagesContainer 末尾
     var html = '\
@@ -2030,7 +2009,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     updateChatTitle(textTitle);
     
     // 3秒后模拟翻译流式输出
-    setTimeout(function() {
+    window._translateStreamTimer = setTimeout(function() {
       completeTranslateText(text, targetLang);
     }, 3000);
     
@@ -2136,10 +2115,14 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     
     function appendNext() {
       if (idx >= fullText.length) {
-        // 输出完成：显示复制按钮
+        // 输出完成：显示复制按钮，重置发送按钮
         if (copyBtn) {
           copyBtn.style.display = 'inline-flex';
         }
+        window._isGenerating = false;
+        window._translateStreamTimer = null;
+        setButtonMode('send');
+        updateSendButtonState();
         return;
       }
       // 每次追加 1~3 个字符
@@ -2157,11 +2140,11 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
       } catch (e) {}
       
       // 下一段
-      setTimeout(appendNext, 25 + Math.floor(Math.random() * 35));
+      window._translateStreamTimer = setTimeout(appendNext, 25 + Math.floor(Math.random() * 35));
     }
     
     // 延迟一下，模拟"开始收到数据"
-    setTimeout(appendNext, 200);
+    window._translateStreamTimer = setTimeout(appendNext, 200);
   }
   
   // 通用降级复制函数
@@ -2226,36 +2209,55 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   
   // 文档翻译完成
   function completeDocTranslate(originalName) {
+    window._isGenerating = false;
+    window._docTranslateTimer = null;
+    
     var allProgress = document.querySelectorAll('.doc-translate-progress');
     var progress = allProgress.length > 0 ? allProgress[allProgress.length - 1] : null;
-    var allTranslated = document.querySelectorAll('[id^="translatedDocSection_"]');
-    var translatedSection = allTranslated.length > 0 ? allTranslated[allTranslated.length - 1] : null;
+    var allCards = document.querySelectorAll('[id^="docPreviewCard_"]');
+    var previewCard = allCards.length > 0 ? allCards[allCards.length - 1] : null;
     
     if (progress) {
       var spinner = progress.querySelector('.translate-loading-spinner');
       if (spinner) {
-        spinner.style.animation = 'none';
-        spinner.style.borderColor = '#68cd52';
-        spinner.style.borderTopColor = '#68cd52';
+        spinner.style.display = 'none';
       }
       var statusText = progress.querySelector('.doc-translate-status-text');
       if (statusText) {
-        statusText.textContent = '翻译完成';
-        statusText.style.color = '#68cd52';
-      }
-      var bar = progress.querySelector('.doc-translate-progress-bar');
-      if (bar) {
-        var fill = bar.querySelector('.doc-translate-progress-fill');
-        if (fill) {
-          fill.style.animation = 'none';
-          fill.style.width = '100%';
-          fill.style.background = '#68cd52';
-        }
+        statusText.style.fontSize = '16px';
+        // 流式输出完成文案
+        var fullText = '翻译完成，请点击下载。';
+        statusText.textContent = '';
+        var charIndex = 0;
+        var streamTimer = setInterval(function() {
+          if (charIndex < fullText.length) {
+            statusText.textContent += fullText.charAt(charIndex);
+            charIndex++;
+          } else {
+            clearInterval(streamTimer);
+          }
+        }, 50);
       }
     }
-    if (translatedSection) {
-      translatedSection.style.display = 'block';
+    if (previewCard) {
+      previewCard.style.cursor = 'pointer';
+      previewCard.onclick = function(e) {
+        downloadTranslatedDoc(originalName);
+      };
+      var downloadBtn = document.createElement('div');
+      downloadBtn.className = 'doc-preview-download';
+      downloadBtn.innerHTML = '\
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#605CE5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">\
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>\
+          <polyline points="7 10 12 15 17 10"></polyline>\
+          <line x1="12" y1="15" x2="12" y2="3"></line>\
+        </svg>\
+      ';
+      downloadBtn.title = '下载翻译后的文档';
+      previewCard.appendChild(downloadBtn);
     }
+    setButtonMode('send');
+    updateSendButtonState();
   }
   
   // 下载翻译后的文档
@@ -6294,25 +6296,19 @@ html {
       </button>\
     ';
     wrapper.appendChild(bottomActions);
-    
-    // 如果doc-translate模式，自动进入翻译模式
-    var urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('mode') === 'doc-translate') {
-      setTimeout(function() {
-        toggleTranslateMode();
-      }, 200);
-    }
   }
   
-  // 发送消息
+  // 发送消息（第二个 script 块会覆盖此函数）
   window.handleSendMessage = function() {
+    if (window._isGenerating) return;
     var textarea = document.querySelector('.search-ipt textarea.el-input__inner, .search-ipt .input-area');
     if (!textarea) {
       textarea = document.querySelector('.search-ipt .input-area');
     }
     var text = textarea ? textarea.value || textarea.textContent.trim() : '';
     if (text) {
-      console.log('发送消息:', text);
+      window._isGenerating = true;
+      setButtonMode('stop');
       if (textarea.tagName === 'TEXTAREA') {
         textarea.value = '';
       } else {
@@ -6358,12 +6354,7 @@ html {
         </select>\
       ';
       btnWrapper.insertBefore(langBar, btnWrapper.firstChild);
-      
-      var btn = btnWrapper.querySelector('button');
-      if (btn) {
-        btn.setAttribute('onclick', 'handleTranslateSend()');
-        btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>';
-      }
+      updateSendButtonState();
     }
     
     // 修改底部按钮区域
@@ -6410,6 +6401,12 @@ html {
   
   // 退出翻译模式
   window.exitTranslateMode = function() {
+    // 停止轮询恢复
+    if (window._translateRestoreTimer) {
+      clearInterval(window._translateRestoreTimer);
+      window._translateRestoreTimer = null;
+    }
+    
     var searchIpt = document.querySelector('.search-ipt');
     var wrapper = searchIpt ? searchIpt.querySelector('.input-area-wrapper') : null;
     var bottomActions = wrapper ? wrapper.querySelector('.search-bottom-actions') : null;
@@ -6434,8 +6431,14 @@ html {
       var btn = btnWrapper.querySelector('button');
       if (btn) {
         btn.setAttribute('onclick', 'handleSendMessage()');
-        btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>';
+        btn.title = '发送';
+        btn.style.opacity = '';
+        btn.style.cursor = '';
+        btn.innerHTML = '\
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>\
+        ';
       }
+      updateSendButtonState();
     }
     
     // 恢复原始底部按钮
@@ -6474,6 +6477,7 @@ html {
   window.handleTranslateSend = function() {
     var wrapper = document.querySelector('.input-area-wrapper');
     if (!wrapper) return;
+    if (window._isGenerating) return;
     var docInfo = wrapper.querySelector('.document-info-area');
     if (docInfo) {
       var docNameEl = docInfo.querySelector('.doc-name');
@@ -6481,6 +6485,8 @@ html {
         var name = docNameEl.textContent;
         var sizeEl = docInfo.querySelector('.doc-size');
         var size = sizeEl ? sizeEl.textContent : '';
+        window._isGenerating = true;
+        setButtonMode('stop');
         window.location.href = '?mode=doc-translate&docName=' + encodeURIComponent(name) + '&docSize=' + encodeURIComponent(size);
         return;
       }
@@ -6488,7 +6494,26 @@ html {
     var textarea = wrapper.querySelector('textarea, .input-area');
     var text = textarea ? (textarea.value || textarea.textContent.trim()) : '';
     if (text) {
-      alert('翻译文本: ' + text.slice(0, 50) + '...');
+      window._isGenerating = true;
+      setButtonMode('stop');
+      // 清空输入
+      if (textarea) {
+        if (textarea.tagName === 'TEXTAREA') {
+          textarea.value = '';
+        } else {
+          textarea.textContent = '';
+        }
+        // 恢复占位符
+        var placeholder = wrapper.querySelector('.input-area-placeholder');
+        if (placeholder) placeholder.style.display = '';
+      }
+      // 插入翻译对话（不隐藏已有消息）
+      if (window.insertTranslateMessage) {
+        var targetLang = '中文';
+        var langSelects = wrapper.querySelectorAll('.lang-select-small');
+        if (langSelects.length >= 2) targetLang = langSelects[1].value;
+        window.insertTranslateMessage(text, targetLang, true);
+      }
     }
   };
   
@@ -6553,6 +6578,125 @@ html {
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
+  
+  // ----- 发送按钮模式管理 -----
+  window._isGenerating = false;
+  window._docParsing = false;
+  
+  function getSendButton() {
+    var btnWrapper = document.querySelector('.input-area-wrapper .search-btn-wrapper');
+    return btnWrapper ? btnWrapper.querySelector('button') : null;
+  }
+  
+  function setButtonMode(mode) {
+    var btn = getSendButton();
+    if (!btn) return;
+    if (mode === 'stop') {
+      btn.setAttribute('onclick', 'stopGeneration()');
+      btn.title = '停止生成';
+      btn.innerHTML = '\
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff" stroke="none">\
+          <rect x="6" y="6" width="12" height="12" rx="2"/>\
+        </svg>\
+      ';
+    } else if (mode === 'disabled') {
+      btn.removeAttribute('onclick');
+      btn.title = '';
+      btn.style.opacity = '0.4';
+      btn.style.cursor = 'not-allowed';
+      btn.innerHTML = '\
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>\
+      ';
+    } else {
+      var isTranslate = !!document.querySelector('.input-area-wrapper .translate-active-bar');
+      var onclick = isTranslate ? 'handleTranslateSend()' : 'handleSendMessage()';
+      btn.setAttribute('onclick', onclick);
+      btn.title = '发送';
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+      btn.innerHTML = '\
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>\
+      ';
+    }
+  }
+  
+  function updateSendButtonState() {
+    if (window._isGenerating) {
+      setButtonMode('stop');
+      return;
+    }
+    var wrapper = document.querySelector('.input-area-wrapper');
+    if (!wrapper) return;
+    var inputArea = wrapper.querySelector('.input-area');
+    var text = inputArea ? (inputArea.value || inputArea.textContent.trim()) : '';
+    var docInfo = wrapper.querySelector('.document-info-area');
+    if (docInfo) {
+      if (window._docParsing) {
+        setButtonMode('disabled');
+        return;
+      }
+      setButtonMode('send');
+      return;
+    }
+    if (text) {
+      setButtonMode('send');
+    } else {
+      setButtonMode('disabled');
+    }
+  }
+  
+  // 停止生成
+  window.stopGeneration = function() {
+    if (!window._isGenerating) return;
+    window._isGenerating = false;
+    
+    // 取消文档翻译定时器
+    if (window._docTranslateTimer) {
+      clearTimeout(window._docTranslateTimer);
+      window._docTranslateTimer = null;
+    }
+    
+    // 取消文本翻译定时器
+    if (window._translateStreamTimer) {
+      clearTimeout(window._translateStreamTimer);
+      window._translateStreamTimer = null;
+    }
+    
+    // 如果是文档翻译的进度，隐藏回答气泡中的 progress 和卡片
+    var progress = document.querySelector('.doc-translate-progress');
+    if (progress) {
+      var wrapper = progress.closest('.bg-[#fff].border-rounded-8px') || progress.parentElement;
+      if (wrapper) {
+        var bubble = wrapper.closest('.assistant-msg-v');
+        if (bubble) {
+          var statusText = progress.querySelector('.doc-translate-status-text');
+          if (statusText) statusText.textContent = '用户已终止回答';
+          var spinner = progress.querySelector('.translate-loading-spinner');
+          if (spinner) spinner.style.display = 'none';
+          var previewArea = wrapper.querySelector('.doc-preview-area');
+          if (previewArea) previewArea.style.display = 'none';
+        }
+      }
+    }
+    
+    // 如果是文本翻译的进度，重置结果
+    var translateResult = document.querySelector('.translate-result');
+    if (translateResult) {
+      var answer = translateResult.closest('.translate-answer');
+      if (answer) {
+        var loading = answer.querySelector('.translate-loading');
+        if (loading) {
+          loading.style.display = 'none';
+        }
+        translateResult.style.display = 'block';
+        var resultText = answer.querySelector('.translate-result-text');
+        if (resultText) resultText.textContent = '用户已终止回答';
+      }
+    }
+    
+    setButtonMode('send');
+    updateSendButtonState();
+  };
   
   function runAll() {
     fixMargin();
@@ -6633,6 +6777,8 @@ html {
     
     if (mode === 'translate') {
       var text = urlParams.get('text') || '';
+      window._isGenerating = true;
+      setButtonMode('stop');
       if (text && window.insertTranslateMessage) {
         var ok = window.insertTranslateMessage(text, targetLang);
         if (!ok) { setTimeout(handleUrlParams, 500); return; }
@@ -6642,8 +6788,11 @@ html {
     } else if (mode === 'doc-translate') {
       var docName = urlParams.get('docName') || '';
       var docSize = urlParams.get('docSize') || '';
+      window._isGenerating = true;
+      setButtonMode('stop');
       if (window.insertDocTranslateMessage) {
-        window.insertDocTranslateMessage(docName, docSize, targetLang);
+        var ok = window.insertDocTranslateMessage(docName, docSize, targetLang);
+        if (!ok) { setTimeout(handleUrlParams, 500); return; }
       }
       // 激活输入区的翻译模式
       activateTranslateInputMode(targetLang);
@@ -6659,11 +6808,10 @@ html {
     sessionHis.dataset.urlHandled = '1';
   }
   
-  // 激活输入区的翻译模式
+  // 激活输入区的翻译模式，并自动维持（抗 Vue 重置）
   function activateTranslateInputMode(targetLang) {
     function tryActivate(retryCount) {
       var wrapper = document.querySelector('.input-area-wrapper');
-      // 必须等 transformInputArea 跑完，search-bottom-actions 存在
       var bottomActions = wrapper ? wrapper.querySelector('.search-bottom-actions') : null;
       
       if (!wrapper || !bottomActions) {
@@ -6671,7 +6819,6 @@ html {
         return;
       }
       if (wrapper.querySelector('.translate-active-bar')) {
-        // 已经在翻译模式，只同步目标语言
         if (targetLang) {
           var langSelects = document.querySelectorAll('.input-area-wrapper .lang-select-small');
           if (langSelects.length >= 2) {
@@ -6681,7 +6828,6 @@ html {
         return;
       }
       
-      // 调用已有的 toggleTranslateMode
       if (window.toggleTranslateMode) {
         try {
           window.toggleTranslateMode();
@@ -6693,7 +6839,6 @@ html {
         return;
       }
       
-      // 设置目标语言（toggleTranslateMode 后再设一次）
       function setTargetLang() {
         if (targetLang) {
           var langSelects = document.querySelectorAll('.input-area-wrapper .lang-select-small');
@@ -6709,6 +6854,49 @@ html {
     }
     
     tryActivate(15);
+    
+    // 轮询检测，防止 Vue 重渲染清除翻译模式后丢失
+    if (window._translateRestoreTimer) return;
+    window._translateRestoreTimer = setInterval(function() {
+      var sessionHis = document.querySelector('.session-his');
+      if (!sessionHis || sessionHis.dataset.urlHandled !== '1') {
+        clearInterval(window._translateRestoreTimer);
+        window._translateRestoreTimer = null;
+        return;
+      }
+      
+      var wrapper = document.querySelector('.input-area-wrapper');
+      if (!wrapper) return;
+      if (wrapper.querySelector('.translate-active-bar')) return;
+      
+      // 恢复
+      if (!wrapper.querySelector('.search-bottom-actions')) {
+        try { transformInputArea(); } catch(e) {}
+        try { window.initInputMonitoring(); } catch(e) {}
+      }
+      // 同步占位符
+      var inputArea = wrapper.querySelector('.input-area');
+      var placeholder = wrapper.querySelector('.input-area-placeholder');
+      if (inputArea && placeholder) {
+        var hasText = inputArea.textContent.trim().length > 0;
+        placeholder.style.display = hasText ? 'none' : '';
+      }
+      try {
+        window.toggleTranslateMode();
+        if (targetLang) {
+          var langSelects = wrapper.querySelectorAll('.lang-select-small');
+          if (langSelects.length >= 2) langSelects[1].value = targetLang;
+        }
+      } catch(e) {}
+    }, 300);
+    
+    // 40 秒后自动停止
+    setTimeout(function() {
+      if (window._translateRestoreTimer) {
+        clearInterval(window._translateRestoreTimer);
+        window._translateRestoreTimer = null;
+      }
+    }, 40000);
   }
   
   // 初始化参考资料面板
@@ -6878,14 +7066,24 @@ html {
   
   // 发送消息
   window.handleSendMessage = function() {
+    if (window._isGenerating) return;
     var inputArea = document.querySelector('.input-area');
     var text = inputArea ? inputArea.textContent.trim() : '';
     if (text) {
-      console.log('发送消息:', text);
+      window._isGenerating = true;
+      setButtonMode('stop');
       inputArea.textContent = '';
       if (inputArea.nextElementSibling && inputArea.nextElementSibling.classList.contains('input-area-placeholder')) {
         inputArea.nextElementSibling.style.display = '';
       }
+      // 模拟生成完成
+      setTimeout(function() {
+        if (window._isGenerating) {
+          window._isGenerating = false;
+          setButtonMode('send');
+          updateSendButtonState();
+        }
+      }, 2000);
     }
   };
   
@@ -6906,19 +7104,33 @@ html {
     var oldDoc = wrapper.querySelector('.document-info-area');
     if (oldDoc) oldDoc.remove();
     
+    window._docParsing = true;
+    updateSendButtonState();
+    
     var docArea = document.createElement('div');
     docArea.className = 'document-info-area';
     docArea.innerHTML = '\
       <div class="doc-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#605CE5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>\
       <div class="doc-info">\
         <div class="doc-name">' + file.name + '</div>\
-        <div class="doc-size">' + formatFileSize(file.size) + '</div>\
+        <div class="doc-size">上传中...</div>\
       </div>\
       <div class="doc-delete" onclick="deleteDocument()">\
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>\
       </div>\
     ';
     wrapper.appendChild(docArea);
+    
+    // 模拟上传 → 解析完成
+    var sizeEl = docArea.querySelector('.doc-size');
+    setTimeout(function() {
+      if (sizeEl) sizeEl.textContent = '解析中...';
+      setTimeout(function() {
+        if (sizeEl) sizeEl.textContent = formatFileSize(file.size);
+        window._docParsing = false;
+        updateSendButtonState();
+      }, 1000);
+    }, 800);
   }
   
   // 删除文档
@@ -6931,6 +7143,52 @@ html {
     if (inputArea) inputArea.style.display = '';
     var placeholder = wrapper.querySelector('.input-area-placeholder');
     if (placeholder) placeholder.style.display = '';
+    window._docParsing = false;
+    updateSendButtonState();
+  };
+  
+  // 监听输入区域变化，更新发送按钮状态（使用事件委托，抗 Vue 重置）
+  window.initInputMonitoring = function() {
+    var wrapper = document.querySelector('.input-area-wrapper');
+    if (!wrapper || wrapper._inputMonitored) return;
+    wrapper._inputMonitored = true;
+    
+    function syncPlaceholder() {
+      var inputArea = wrapper.querySelector('.input-area');
+      var placeholder = wrapper.querySelector('.input-area-placeholder');
+      if (!inputArea || !placeholder) return;
+      var hasText = inputArea.textContent.trim().length > 0 ||
+                    (inputArea.innerText && inputArea.innerText.trim().length > 0);
+      placeholder.style.display = hasText ? 'none' : '';
+    }
+    
+    // 使用事件委托：监听整个 wrapper 的 input 事件
+    wrapper.addEventListener('input', function(e) {
+      if (e.target.classList.contains('input-area')) {
+        setTimeout(updateSendButtonState, 10);
+        setTimeout(syncPlaceholder, 10);
+      }
+    });
+    
+    // 也用 compositionend 处理中文输入法
+    wrapper.addEventListener('compositionend', function(e) {
+      if (e.target.classList.contains('input-area')) {
+        setTimeout(updateSendButtonState, 10);
+        setTimeout(syncPlaceholder, 10);
+      }
+    });
+    
+    syncPlaceholder();
+    updateSendButtonState();
+  }
+  
+  // 覆盖原 runAll，加入输入监控
+  var origRunAll = runAll;
+  runAll = function() {
+    if (origRunAll) origRunAll();
+    setTimeout(initInputMonitoring, 100);
+    setTimeout(initInputMonitoring, 500);
+    setTimeout(initInputMonitoring, 1000);
   };
   
   // 格式化文件大小

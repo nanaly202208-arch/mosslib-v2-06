@@ -5211,13 +5211,13 @@ html {
 <script>
 (function() {
   function initArticleClick() {
-    // 推荐页文章点击跳转到 MossLib.html
+    // 推荐页文章点击跳转到 detail.html
     var articles = document.querySelectorAll('.per-s-item-view');
     articles.forEach(function(el) {
       el.style.cursor = 'pointer';
       el.addEventListener('click', function(e) {
         e.stopPropagation();
-        window.location.href = './MossLib.html';
+        window.location.href = './detail.html';
       });
     });
   }

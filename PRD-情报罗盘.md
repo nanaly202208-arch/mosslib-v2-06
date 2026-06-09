@@ -390,6 +390,6 @@
 | KPI | Key Performance Indicator，关键性能指标 |
 
 ### 8.2 参考资料
-- 原型文件：[MossLib.html](detail/MossLib.html)
+- 原型文件：[detail.html](detail/detail.html)
 - 设计规范：Element Plus 组件库
 - 图标库：Lucide Icons
