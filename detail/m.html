@@ -1115,11 +1115,29 @@ img.max-w-243px.h-39px {
   transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
-/* 标签栏置顶时填满页面宽度 */
+/* 标签栏置顶时填满整个页面宽度 */
+.sticky-menu-view .fixed,
 .sticky-menu-view .fixed .cate-bar-view,
 .sticky-menu-view .fixed .cate-menu-view {
   width: 100vw !important;
   max-width: 100vw !important;
+  min-width: 100vw !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* 置顶时标签菜单栏水平左对齐，消除居中导致的左侧空白 */
+.sticky-menu-view .fixed .cate-menu-view {
+  justify-content: flex-start !important;
+}
+
+.sticky-menu-view .fixed .cate-menu-view .cate-menu-popper {
+  max-width: none !important;
+  padding-left: 12px !important;
 }
 
 /* 标签页置顶时显示的右侧浮动操作区 */
@@ -2360,20 +2378,19 @@ img.max-w-243px.h-39px {
           if (avatarWrapper) avatarWrapper.classList.remove('open');
         }
         // 标签栏通栏铺满
-        var _cb = document.querySelector('.cate-bar-view');
-        var _cm = document.querySelector('.cate-menu-view');
-        [_cb, _cm].forEach(function(el) {
-          if (!el) return;
+        var _fx = document.querySelector('.sticky-menu-view .fixed');
+        var containerEls = _fx ? _fx.querySelectorAll('.cate-bar-view, .cate-menu-view, .menu-bar') : [];
+        for (var i = 0; i < containerEls.length; i++) {
           if (pinned) {
-            el.style.width = '100vw';
-            el.style.maxWidth = '100vw';
-            el.style.boxSizing = 'border-box';
+            containerEls[i].style.cssText = 'width:100vw!important;max-width:100vw!important;left:0!important;margin-left:0!important;padding-left:0!important;justify-content:flex-start!important;';
           } else {
-            el.style.width = '';
-            el.style.maxWidth = '';
-            el.style.boxSizing = '';
+            containerEls[i].style.cssText = '';
           }
-        });
+        }
+        if (_fx) {
+          if (pinned) _fx.style.cssText = 'width:100vw!important;max-width:100vw!important;left:0!important;right:0!important;padding-left:0!important;';
+          else _fx.style.cssText = '';
+        }
       }
     }
     _pinnedScrollHandler = updatePinnedState;
