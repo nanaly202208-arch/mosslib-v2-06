@@ -1115,20 +1115,31 @@ img.max-w-243px.h-39px {
   transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
-/* 标签栏置顶通栏 - Vue已通过.fixed class处理通栏，这里只需调整内部布局 */
-.sticky-menu-view .fixed .cate-menu-view[data-v-f913d2ac] {
-  justify-content: flex-start !important;
-  padding-left: 60px !important;
-  padding-right: 140px !important;
-}
-
-.sticky-menu-view .fixed .cate-bar-view[data-v-f913d2ac] {
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06) !important;
-}
-
-.sticky-menu-view .fixed #retrieve-cate-bar-fixed-logo[data-v-f913d2ac] {
+/* 标签栏置顶通栏: Vue原生.sticky + .fixed机制 + CSS覆盖v-show */
+/* 置顶时显示左侧logo，覆盖Vue v-show="fixed"的display:none */
+.sticky-menu-view .fixed #retrieve-cate-bar-fixed-logo {
   display: flex !important;
   align-items: center;
+  flex-shrink: 0;
+  padding: 0 12px;
+}
+
+/* 置顶时cate-menu-view通栏 */
+.sticky-menu-view .fixed .cate-menu-view {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  padding: 0 140px 0 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* 置顶时标签栏底部阴影 */
+.sticky-menu-view .fixed .cate-bar-view {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+/* 置顶时logo容器内的sidebar-logo背景透明 */
+.sticky-menu-view .fixed #retrieve-cate-bar-fixed-logo .sidebar-logo-container {
+  background: transparent !important;
 }
 
 /* 标签页置顶时显示的右侧浮动操作区 */
@@ -2370,28 +2381,6 @@ img.max-w-243px.h-39px {
           _pinnedActionsEl.classList.remove('visible');
           if (avatarWrapper) avatarWrapper.classList.remove('open');
         }
-
-        // logo 注入/移除（CSS 已控制显示和布局，JS 只管理 img 元素）
-        (function() {
-          const logoSlot = document.querySelector('#retrieve-cate-bar-fixed-logo');
-          if (!logoSlot) return;
-          if (pinned) {
-            if (!logoSlot._logoInjected) {
-              const img = document.createElement('img');
-              img.src = './m_files/logo_mosslib_long.png';
-              img.alt = 'MossLib';
-              img.style.cssText = 'height:28px;width:auto;display:block;';
-              logoSlot.appendChild(img);
-              logoSlot._logoInjected = true;
-            }
-          } else {
-            const img = logoSlot.querySelector('img');
-            if (img) {
-              logoSlot.removeChild(img);
-              logoSlot._logoInjected = false;
-            }
-          }
-        })();
       }
     }
     _pinnedScrollHandler = updatePinnedState;
@@ -2428,15 +2417,15 @@ img.max-w-243px.h-39px {
     if (currentSticky && currentSticky !== _pinnedStickyRef) {
       rebindPinnedScroll();
     }
-    // 尝试注入 logo（Vue 重渲染后会清空）
+    // 兜底：当fixed激活时确保logo容器有图片
     const logoSlot = document.querySelector('#retrieve-cate-bar-fixed-logo');
-    if (logoSlot && !logoSlot._logoInjected && !logoSlot.querySelector('img')) {
+    if (logoSlot && logoSlot.offsetParent !== null && !logoSlot.querySelector('img')) {
       const img = document.createElement('img');
+      img.className = 'sidebar-logo';
       img.src = './m_files/logo_mosslib_long.png';
       img.alt = 'MossLib';
-      img.style.cssText = 'height:28px;width:auto;display:block;';
+      img.style.cssText = 'max-width:223px;height:28px;width:auto;display:block;';
       logoSlot.appendChild(img);
-      logoSlot._logoInjected = true;
     }
   });
   _pinnedActionsDOMObserver.observe(document.body, { childList: true, subtree: true });
