@@ -681,6 +681,17 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   height: 20px !important;
 }
 
+/* 发送按钮禁用态（放在翻译模式样式之后确保覆盖） */
+.search-entry-container.translate-mode .search-btn-internal.disabled,
+.search-entry-container.translate-mode .search-btn-wrapper button.disabled,
+.search-entry-container .search-btn-internal.disabled,
+.search-entry-container .search-btn-wrapper button.disabled {
+  background: #605CE5 !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+  pointer-events: none !important;
+}
+
 /* 暗色主题适配 */
 [data-theme="dark"] .search-entry-container .el-input__wrapper {
   background: #2a2a2a;
@@ -1135,6 +1146,10 @@ select.lang-select-small {
     
     isModified = true;
     console.log('搜索区域修改完成');
+    
+    // 初始设置按钮禁用态 + 启动输入监听（问答模式）
+    updateSendButtonState();
+    initInputMonitoring();
   }
   
   function moveNavButtons() {
@@ -1218,6 +1233,10 @@ select.lang-select-small {
         btn.setAttribute('onclick', 'handleTranslateSend()');
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>';
       }
+      updateSendButtonState();
+      initInputMonitoring();
+      setTimeout(updateSendButtonState, 100);
+      setTimeout(updateSendButtonState, 300);
     }
     
     // 修改底部按钮区域
@@ -1246,14 +1265,6 @@ select.lang-select-small {
               <polyline points="14 2 14 8 20 8"/>
             </svg>
             文档翻译
-          </button>
-          <button class="option-btn-small" title="图片翻译" onclick="handleImageTranslate()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="3" y="3" width="18" height="18" rx="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5"/>
-              <path d="M21 15l-5-5L5 21"/>
-            </svg>
-            图片翻译
           </button>
         </div>
       </div>
@@ -1301,6 +1312,7 @@ select.lang-select-small {
       if (btn) {
         btn.setAttribute('onclick', 'handleSearch()');
         btn.innerHTML = '<i class="el-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704"/></svg></i>';
+        btn.classList.remove('disabled');
       }
     }
     
@@ -1336,6 +1348,8 @@ select.lang-select-small {
   
   window.handleSimpleSearch = function() {
     console.log('简单搜索 clicked');
+    var btn = document.querySelector('.search-btn-wrapper button, .search-btn-internal');
+    if (btn && btn.classList.contains('disabled')) return;
     const input = document.querySelector('.search-entry-container input, .el-input__inner');
     const text = input ? input.value : '';
     if (text) {
@@ -1449,6 +1463,10 @@ select.lang-select-small {
   window.handleTranslateSend = function() {
     console.log('翻译发送 clicked');
     
+    // 检查是否可发送
+    var btn = document.querySelector('.search-btn-wrapper button, .search-btn-internal');
+    if ((btn && btn.classList.contains('disabled')) || window._docParsing) return;
+    
     // 获取目标语言（第二个 lang-select-small）
     var langSelects = document.querySelectorAll('.search-entry-container.translate-mode .lang-select-small');
     var targetLang = '中文';
@@ -1498,6 +1516,8 @@ select.lang-select-small {
   
   window.handleSearch = function() {
     console.log('搜索 clicked');
+    var btn = document.querySelector('.search-btn-wrapper button, .search-btn-internal');
+    if (btn && btn.classList.contains('disabled')) return;
     const input = document.querySelector('.search-entry-container input, .el-input__inner');
     const text = input ? input.value : '';
     if (text) {
@@ -1544,6 +1564,10 @@ select.lang-select-small {
   function showDocumentInfo(file) {
     const inputWrapper = document.querySelector('.search-entry-container .el-input__wrapper');
     if (!inputWrapper) return;
+    
+    // 标记解析中
+    window._docParsing = true;
+    updateSendButtonState();
     
     // 隐藏textarea
     const textarea = inputWrapper.querySelector('textarea');
@@ -1602,6 +1626,8 @@ select.lang-select-small {
         const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
         statusElement.textContent = fileSizeMB + ' MB';
       }
+      window._docParsing = false;
+      updateSendButtonState();
     }, 2000);
   }
   
@@ -1622,7 +1648,60 @@ select.lang-select-small {
     if (textarea) {
       textarea.style.display = '';
     }
+    window._docParsing = false;
+    updateSendButtonState();
   };
+  
+  // 更新发送按钮状态（问答/翻译模式通用）
+  function updateSendButtonState() {
+    var container = document.querySelector('.search-entry-container');
+    if (!container) return;
+    var btn = container.querySelector('.search-btn-wrapper button, .search-btn-internal');
+    if (!btn) return;
+    
+    var isTranslate = container.classList.contains('translate-mode');
+    
+    // 文档解析中 → 禁用（仅翻译模式）
+    if (isTranslate && window._docParsing) {
+      btn.classList.add('disabled');
+      return;
+    }
+    
+    // 获取输入文本（textarea 或 input）
+    var textarea = container.querySelector('textarea, .el-input__inner');
+    var text = textarea ? textarea.value.trim() : '';
+    
+    // 翻译模式：有文本或有文档 → 可用
+    // 问答模式：有文本 → 可用
+    var hasDoc = isTranslate && !!container.querySelector('.document-info-area');
+    
+    if (text || hasDoc) {
+      btn.classList.remove('disabled');
+    } else {
+      btn.classList.add('disabled');
+    }
+  }
+  
+  // 监听输入框变化，更新按钮状态
+  function initInputMonitoring() {
+    var container = document.querySelector('.search-entry-container');
+    if (!container || container._inputMonitored) return;
+    container._inputMonitored = true;
+    
+    container.addEventListener('input', function(e) {
+      if (e.target.matches('textarea, .el-input__inner, .el-textarea__inner')) {
+        setTimeout(updateSendButtonState, 10);
+      }
+    });
+    
+    container.addEventListener('compositionend', function(e) {
+      if (e.target.matches('textarea, .el-input__inner, .el-textarea__inner')) {
+        setTimeout(updateSendButtonState, 10);
+      }
+    });
+    
+    updateSendButtonState();
+  }
   
   // 图片翻译 - 打开文件选择器（仅支持图片）
   window.handleImageTranslate = function() {
@@ -1685,6 +1764,8 @@ select.lang-select-small {
         btn.innerHTML = expectedSvg;
       }
     }
+    // 同步发送按钮禁用状态（抗 Vue 重置）
+    updateSendButtonState();
   }, 500);
   
   // 页面加载完成后开始监听

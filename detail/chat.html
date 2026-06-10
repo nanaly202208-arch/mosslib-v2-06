@@ -552,14 +552,14 @@ select.lang-select-small option {
 /* 文档信息区域 */
 .document-info-area {
   position: absolute;
-  top: 16px;
+  top: 9px;
   left: 20px;
   right: 20px;
   background: #fff;
   border-radius: 8px;
-  padding: 10px;
+  padding: 2px;
   border: 0px solid #f0f0f0;
-  height: 52px;
+  height: 42px;
   box-sizing: border-box;
   z-index: 5;
 }
@@ -6390,14 +6390,6 @@ html {
             </svg>\
             文档翻译\
           </button>\
-          <button class="option-btn-small" title="图片翻译" onclick="alert(\'图片翻译\')">\
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">\
-              <rect x="3" y="3" width="18" height="18" rx="2"/>\
-              <circle cx="8.5" cy="8.5" r="1.5"/>\
-              <path d="M21 15l-5-5L5 21"/>\
-            </svg>\
-            图片翻译\
-          </button>\
         </div>\
       </div>\
     ';
@@ -6478,10 +6470,10 @@ html {
     if (window._isGenerating) return;
     var docInfo = wrapper.querySelector('.document-info-area');
     if (docInfo) {
-      var docNameEl = docInfo.querySelector('.doc-name');
+      var docNameEl = docInfo.querySelector('.document-name');
       if (docNameEl) {
         var name = docNameEl.textContent;
-        var sizeEl = docInfo.querySelector('.doc-size');
+        var sizeEl = docInfo.querySelector('.document-status');
         var size = sizeEl ? sizeEl.textContent : '';
         window._isGenerating = true;
         setButtonMode('stop');
@@ -6532,6 +6524,9 @@ html {
   function showDocumentInfo(file) {
     var wrapper = document.querySelector('.input-area-wrapper');
     if (!wrapper) return;
+    
+    window._docParsing = true;
+    updateSendButtonState();
     
     var textarea = wrapper.querySelector('textarea, .input-area');
     if (textarea) textarea.style.display = 'none';
@@ -7115,19 +7110,21 @@ html {
     var docArea = document.createElement('div');
     docArea.className = 'document-info-area';
     docArea.innerHTML = '\
-      <div class="doc-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#605CE5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>\
-      <div class="doc-info">\
-        <div class="doc-name">' + file.name + '</div>\
-        <div class="doc-size">上传中...</div>\
-      </div>\
-      <div class="doc-delete" onclick="deleteDocument()">\
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>\
+      <div class="document-info-content">\
+        <div class="document-icon"><svg viewBox="0 0 1024 1024" width="28" height="28" xmlns="http://www.w3.org/2000/svg"><path d="M791.94 155.36H332.48c-42.23 0-76.54 34.31-76.54 76.54v76.55h-51.03c-28.16 0-51.04 22.87-51.04 51.03v306.37c0 28.15 22.88 51.02 51.04 51.02h51.03v76.54c0 42.24 34.32 76.55 76.54 76.55h459.46c42.23 0 76.54-34.32 76.54-76.54V231.9c0.1-42.24-34.31-76.54-76.54-76.54z m-547.68 298.6h40.28l26.04 93.58h5.7l29.16-93.58h34.45l29.02 93.71h6.24l26.18-93.71h40.41l-40.41 133.72H384.1l-19.53-70.25h-5.43l-19.26 69.98h-55.74l-39.88-133.45zM817.45 793.5c-0.01 14.09-11.42 25.5-25.51 25.51H332.48c-14.09-0.01-25.5-11.43-25.51-25.51v-76.54h204.21c28.15 0 51.03-22.88 51.03-51.03V614.9H740.9c14.09-0.01 25.51-11.43 25.52-25.52-0.02-14.09-11.43-25.5-25.52-25.51H562.21v-51.03H740.9c14.09-0.01 25.51-11.43 25.52-25.52-0.01-14.09-11.43-25.5-25.52-25.52H562.21v-51.03H740.9c14.09-0.01 25.51-11.43 25.52-25.51-0.01-14.09-11.43-25.51-25.52-25.52H562.21c0-28.16-22.89-51.03-51.03-51.03H306.97v-76.54c0.01-14.09 11.43-25.5 25.51-25.52h459.46c14.08 0.01 25.5 11.43 25.51 25.52V793.5z m0 0" fill="#54A0FF"/></svg></div>\
+        <div class="document-details">\
+          <div class="document-name">' + file.name + '</div>\
+          <div class="document-status document-size">上传中...</div>\
+        </div>\
+        <div class="document-delete-btn" onclick="deleteDocument()">\
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>\
+        </div>\
       </div>\
     ';
     wrapper.appendChild(docArea);
     
     // 模拟上传 → 解析完成
-    var sizeEl = docArea.querySelector('.doc-size');
+    var sizeEl = docArea.querySelector('.document-status');
     setTimeout(function() {
       if (sizeEl) sizeEl.textContent = '解析中...';
       setTimeout(function() {
