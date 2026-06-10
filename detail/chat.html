@@ -543,6 +543,13 @@ select.lang-select-small option {
   line-height: 1.5 !important;
 }
 
+.lang-auto-label {
+  color: #666;
+  font-size: 14px;
+  font-family: "Microsoft YaHei", "微软雅黑", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  white-space: nowrap;
+}
+
 .lang-arrow-small {
   color: #666;
   font-size: 14px;
@@ -6347,11 +6354,7 @@ html {
       var langBar = document.createElement('div');
       langBar.className = 'translate-lang-bar';
       langBar.innerHTML = '\
-        <select class="lang-select-small">\
-          <option>自动识别</option>\
-          <option>中文</option>\
-          <option>英文</option>\
-        </select>\
+        <span class="lang-auto-label">自动识别</span>\
         <span class="lang-arrow-small">→</span>\
         <select class="lang-select-small">\
           <option>中文</option>\
@@ -6500,8 +6503,8 @@ html {
       // 插入翻译对话（不隐藏已有消息）
       if (window.insertTranslateMessage) {
         var targetLang = '中文';
-        var langSelects = wrapper.querySelectorAll('.lang-select-small');
-        if (langSelects.length >= 2) targetLang = langSelects[1].value;
+        var langSelect = wrapper.querySelector('.lang-select-small');
+        if (langSelect) targetLang = langSelect.value || '中文';
         window.insertTranslateMessage(text, targetLang, true);
       }
     }
@@ -6826,10 +6829,8 @@ html {
       }
       if (wrapper.querySelector('.translate-active-bar')) {
         if (targetLang) {
-          var langSelects = document.querySelectorAll('.input-area-wrapper .lang-select-small');
-          if (langSelects.length >= 2) {
-            langSelects[1].value = targetLang;
-          }
+          var langSelect = document.querySelector('.input-area-wrapper .lang-select-small');
+          if (langSelect) langSelect.value = targetLang;
         }
         return;
       }
@@ -6847,10 +6848,8 @@ html {
       
       function setTargetLang() {
         if (targetLang) {
-          var langSelects = document.querySelectorAll('.input-area-wrapper .lang-select-small');
-          if (langSelects.length >= 2) {
-            langSelects[1].value = targetLang;
-          }
+          var langSelect = document.querySelector('.input-area-wrapper .lang-select-small');
+          if (langSelect) langSelect.value = targetLang;
         }
       }
       setTargetLang();
@@ -6890,8 +6889,8 @@ html {
       try {
         window.toggleTranslateMode();
         if (targetLang) {
-          var langSelects = wrapper.querySelectorAll('.lang-select-small');
-          if (langSelects.length >= 2) langSelects[1].value = targetLang;
+          var langSelect = wrapper.querySelector('.lang-select-small');
+          if (langSelect) langSelect.value = targetLang;
         }
       } catch(e) {}
     }, 300);
