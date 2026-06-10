@@ -2345,12 +2345,10 @@ img.max-w-243px.h-39px {
     const avatarWrapper = _pinnedActionsEl.querySelector('.pinned-avatar-slot');
     let isPinned = false;
     function updatePinnedState() {
-      // 始终取最新的 sticky 元素，避免引用陈旧
       const liveSticky = document.querySelector('.sticky-menu-view');
       const target = liveSticky || _pinnedStickyRef;
       if (!target) return;
       const rect = target.getBoundingClientRect();
-      // 当 sticky 容器顶部到视口顶部距离为 0（或在视口顶部以上）时，表示已经置顶
       const pinned = rect.top <= 0.5;
       if (pinned !== isPinned) {
         isPinned = pinned;
@@ -2361,6 +2359,21 @@ img.max-w-243px.h-39px {
           _pinnedActionsEl.classList.remove('visible');
           if (avatarWrapper) avatarWrapper.classList.remove('open');
         }
+        // 标签栏通栏铺满
+        var _cb = document.querySelector('.cate-bar-view');
+        var _cm = document.querySelector('.cate-menu-view');
+        [_cb, _cm].forEach(function(el) {
+          if (!el) return;
+          if (pinned) {
+            el.style.width = '100vw';
+            el.style.maxWidth = '100vw';
+            el.style.boxSizing = 'border-box';
+          } else {
+            el.style.width = '';
+            el.style.maxWidth = '';
+            el.style.boxSizing = '';
+          }
+        });
       }
     }
     _pinnedScrollHandler = updatePinnedState;
