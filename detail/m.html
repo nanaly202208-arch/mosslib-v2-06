@@ -1115,42 +1115,10 @@ img.max-w-243px.h-39px {
   transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
-/* 标签栏置顶通栏 - 固定时全宽 + 左侧logo + 右侧操作区 */
-#retrieve-cate-bar-fixed-logo {
-  display: none;
-}
-
+/* 标签栏置顶通栏 - 固定时通栏（具体样式由 JS 内联控制） */
 .sticky-menu-logo {
   height: 28px;
   width: auto;
-  display: block;
-}
-
-.sticky-menu-view .fixed #retrieve-cate-bar-fixed-logo {
-  display: flex !important;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.sticky-menu-view .fixed .cate-bar-view {
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
-
-.sticky-menu-view .fixed .cate-menu-view {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100vw !important;
-  max-width: 100vw !important;
-  padding: 0 140px 0 24px;
-  gap: 12px;
-  box-sizing: border-box;
-  background: #efeffc !important;
-}
-
-.sticky-menu-view .fixed .cate-menu-view .cate-menu-popper {
-  max-width: none !important;
 }
 
 /* 标签页置顶时显示的右侧浮动操作区 */
@@ -1506,19 +1474,6 @@ img.max-w-243px.h-39px {
     // 隐藏原始容器
     navContainer.style.display = 'none';
     navContainer.classList.add('moved');
-  }
-
-  // ========== 标签栏置顶通栏 ==========
-  function initFixedTabLogo() {
-    const logoSlot = document.querySelector('#retrieve-cate-bar-fixed-logo');
-    if (!logoSlot) return;
-    // 避免重复注入（Vue 重新挂载会清空内子节点）
-    if (logoSlot.querySelector('img')) return;
-    const img = document.createElement('img');
-    img.className = 'sticky-menu-logo';
-    img.src = './m_files/logo_mosslib_long.png';
-    img.alt = 'MossLib';
-    logoSlot.appendChild(img);
   }
 
   // ========== 文献数量统计 - 数字滚动动画 ==========
@@ -2229,10 +2184,6 @@ img.max-w-243px.h-39px {
     setTimeout(initLitStatsPanel, 400);
     setTimeout(initLitStatsPanel, 1200);
     setTimeout(initLitStatsPanel, 2500);
-    // 初始化标签栏 logo
-    setTimeout(initFixedTabLogo, 600);
-    setTimeout(initFixedTabLogo, 1500);
-    setTimeout(initFixedTabLogo, 3000);
   }
 
   // 标签页置顶时，在右侧显示搜索按钮和用户头像及下拉菜单
@@ -2402,12 +2353,45 @@ img.max-w-243px.h-39px {
       const pinned = rect.top <= 0.5;
       if (pinned !== isPinned) {
         isPinned = pinned;
+        // 右侧浮动操作区
         if (pinned) {
           _pinnedActionsEl.classList.add('visible');
         } else {
           _pinnedActionsEl.classList.remove('visible');
           if (avatarWrapper) avatarWrapper.classList.remove('open');
         }
+
+        // 标签栏通栏 + logo
+        (function() {
+          const menuView = document.querySelector('.sticky-menu-view .fixed .cate-menu-view');
+          if (!menuView) return;
+          if (pinned) {
+            // 通栏、左侧留空间给 logo，右侧留空间给操作区
+            menuView.style.cssText = 'width:100vw!important;max-width:100vw!important;padding:0 140px 0 72px!important;box-sizing:border-box!important;';
+            // 注入 logo
+            const logoSlot = document.querySelector('#retrieve-cate-bar-fixed-logo');
+            if (logoSlot) {
+              logoSlot.style.display = 'flex';
+              if (!logoSlot.querySelector('img')) {
+                const img = document.createElement('img');
+                img.className = 'sticky-menu-logo';
+                img.src = './m_files/logo_mosslib_long.png';
+                img.alt = 'MossLib';
+                logoSlot.appendChild(img);
+              }
+            }
+            // 标签栏底部加阴影
+            const barView = document.querySelector('.sticky-menu-view .fixed .cate-bar-view');
+            if (barView) barView.style.boxShadow = '0 1px 4px rgba(0,0,0,0.06)';
+          } else {
+            // 恢复
+            menuView.style.cssText = '';
+            const logoSlot = document.querySelector('#retrieve-cate-bar-fixed-logo');
+            if (logoSlot) logoSlot.style.display = '';
+            const barView = document.querySelector('.sticky-menu-view .fixed .cate-bar-view');
+            if (barView) barView.style.boxShadow = '';
+          }
+        })();
       }
     }
     _pinnedScrollHandler = updatePinnedState;
@@ -2443,15 +2427,6 @@ img.max-w-243px.h-39px {
     const currentSticky = document.querySelector('.sticky-menu-view');
     if (currentSticky && currentSticky !== _pinnedStickyRef) {
       rebindPinnedScroll();
-    }
-    // logo 可能被 Vue 重渲染清空，重新注入
-    const logoSlot = document.querySelector('#retrieve-cate-bar-fixed-logo');
-    if (logoSlot && !logoSlot.querySelector('img')) {
-      const img = document.createElement('img');
-      img.className = 'sticky-menu-logo';
-      img.src = './m_files/logo_mosslib_long.png';
-      img.alt = 'MossLib';
-      logoSlot.appendChild(img);
     }
   });
   _pinnedActionsDOMObserver.observe(document.body, { childList: true, subtree: true });
