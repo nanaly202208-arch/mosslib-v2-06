@@ -1993,8 +1993,10 @@ img.max-w-243px.h-39px {
     console.log('搜索 clicked');
     var btn = document.querySelector('.search-btn-wrapper button, .search-btn-internal');
     if (btn && btn.classList.contains('disabled')) return;
-    const input = document.querySelector('.search-entry-container input, .el-input__inner');
-    const text = input ? input.value : '';
+    var container = document.querySelector('.search-entry-container');
+    if (!container) return;
+    var input = container.querySelector('textarea, input.el-input__inner');
+    var text = input ? input.value : '';
     if (text) {
       // 跳转到chat.html页面，并传递搜索内容
       window.location.href = './chat.html?q=' + encodeURIComponent(text);
@@ -2386,6 +2388,13 @@ img.max-w-243px.h-39px {
         var _mask = _overlay.querySelector('.pinned-search-mask');
         if (_mask) {
           _mask.addEventListener('click', function() {
+            // 将搜索容器移回主页面板
+            var _moved = _overlay.querySelector('.se-wrapper > .search-entry-container');
+            var _searchView = document.querySelector('.search-entry-view');
+            if (_moved && _searchView) {
+              _searchView.insertBefore(_moved, _searchView.firstChild);
+              _moved.style.cssText = '';
+            }
             _overlay.classList.remove('visible');
           });
         }
@@ -2393,19 +2402,33 @@ img.max-w-243px.h-39px {
 
       _searchBox.addEventListener('click', function(e) {
         e.stopPropagation();
-        // 克隆首页搜索区域到面板
-        var _src = document.querySelector('.search-entry-view .search-entry-container');
+        var _mainContainer = document.querySelector('.search-entry-view > .search-entry-container');
         var _wrap = _overlay.querySelector('.se-wrapper');
-        if (_src && _wrap) {
+        if (_mainContainer && _wrap) {
+          // 将主页面的搜索容器移动到覆盖层，保证全局 querySelector 只找到这一个
           _wrap.innerHTML = '';
-          var _clone = _src.cloneNode(true);
-          _clone.style.cssText = 'width:100%!important;max-width:100%!important;margin:0!important;';
-          _wrap.appendChild(_clone);
+          _wrap.appendChild(_mainContainer);
+          _mainContainer.style.cssText = 'width:100%!important;max-width:100%!important;margin:0!important;';
+        } else if (_wrap) {
+          // 兜底：直接构建新容器
+          _wrap.innerHTML = '' +
+            '<div class="search-entry-container" style="width:100%!important;max-width:100%!important;margin:0!important;">' +
+              '<div class="el-input el-input--default el-input--suffix" style="--el-input-width:100%;width:100%;max-width:760px;">' +
+                '<div class="el-input__wrapper" style="border-radius:24px;border:1px solid #e8e8e8;box-shadow:0 2px 12px rgba(0,0,0,.1);padding:16px 20px 42px 20px;background:#fff;position:relative;min-height:140px;display:flex;flex-direction:column;align-items:flex-start;">' +
+                  '<textarea class="el-input__inner" placeholder="搜资料、找答案" style="font-size:16px;height:auto;min-height:80px;align-self:flex-start;padding-top:8px;line-height:1.5;resize:none;overflow:auto;border:none;outline:none;background:transparent;width:100%;font-family:inherit;color:#333;"></textarea>' +
+                  '<div class="search-btn-wrapper"><button class="search-btn-internal disabled" onclick="handleSearch()" title="发送"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button></div>' +
+                  '<div class="search-bottom-actions">' +
+                    '<button class="history-btn" onclick="location.href=\'./chat.html?mode=last-session\'" title="历史记录"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"><path d="M729.6 499.2c127.488 0 230.4 102.912 230.4 230.4s-102.912 230.4-230.4 230.4-230.4-102.912-230.4-230.4 102.912-230.4 230.4-230.4z m0 409.6c98.816 0 179.2-80.384 179.2-179.2s-80.384-179.2-179.2-179.2-179.2 80.384-179.2 179.2 80.384 179.2 179.2 179.2z m87.04-204.8c8.704 0 15.36 7.168 15.36 15.36v19.968c0 8.704-7.168 15.36-15.36 15.36h-96.768c-8.704 0-15.36-7.168-15.36-15.36v-122.368c0-8.704 7.168-15.36 15.36-15.36h19.968c8.704 0 15.36 7.168 15.36 15.36v87.04h61.44z"/><path d="M924.672 506.88l10.24 0.512c13.312 1.024 25.088-9.728 25.088-23.04 0-201.216-200.704-364.032-448-364.032s-448 163.328-447.488 363.52c0 83.456 34.816 159.744 92.672 221.184-26.112 68.608-80.384 127.488-81.408 128-11.776 12.288-14.848 29.696-8.192 45.568 6.656 15.872 22.016 25.6 38.912 25.6 107.52 0 192.512-45.056 243.2-80.896 22.016 7.168 45.568 12.8 69.12 16.896 13.824 2.56 27.648-6.656 29.696-20.992l1.024-4.608c2.56-13.824-7.168-26.624-20.992-29.184-20.992-3.584-41.472-8.704-61.952-15.36l-26.624-8.192-22.528 15.872c-40.448 28.16-102.4 61.44-179.712 69.12 20.992-26.624 51.712-70.656 71.168-121.856l12.288-32.768-24.064-25.6c-50.688-53.248-77.312-116.736-77.312-182.272 0-169.472 176.128-307.712 392.192-307.712s392.192 138.752 392.192 308.224c0 11.776 8.704 21.504 20.48 22.016z"/></svg></button>' +
+                    '<button class="action-btn" onclick="handleTranslate()" title="专家级翻译智能体，支持多种语言"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 3-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg><span>象胥翻译</span></button>' +
+                    '<button class="action-btn" onclick="toggleSimpleSearchMode()" title="输入关键词进行简单快捷检索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg><span>简单搜索</span></button>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
         }
         _overlay.classList.add('visible');
-        // 自动聚焦输入框
         setTimeout(function() {
-          var _inp = _wrap.querySelector('textarea, input.el-input__inner');
+          var _inp = _overlay.querySelector('textarea, input.el-input__inner');
           if (_inp) try { _inp.focus(); } catch(e) {}
         }, 100);
       });

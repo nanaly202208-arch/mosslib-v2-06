@@ -8130,107 +8130,456 @@ html {
 
 <script>
 (function() {
-  // 创建搜索覆盖层（全部内联样式，不依赖任何CSS类）
+  // ===== 注入 CSS（与 m.html 搜索区域一致的样式） =====
+  var _css = document.createElement('style');
+  _css.textContent =
+    '.search-entry-container .search-btn-wrapper{position:absolute!important;right:12px!important;bottom:12px!important;z-index:10!important;}' +
+    '.search-entry-container .search-btn-wrapper .el-button,' +
+    '.search-entry-container .search-btn-internal{width:36px!important;height:36px!important;border-radius:50%!important;background:#605CE5!important;color:#fff!important;border:none!important;cursor:pointer!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;}' +
+    '.search-entry-container .search-btn-wrapper .el-button svg,' +
+    '.search-entry-container .search-btn-internal svg{width:20px!important;height:20px!important;}' +
+    '.search-entry-container .search-btn-wrapper .el-button:hover,' +
+    '.search-entry-container .search-btn-internal:hover{background:#4f4bd4!important;}' +
+    '.search-entry-container .el-icon{font-size:18px!important;}' +
+    '.search-bottom-actions{position:absolute;bottom:12px;left:16px;display:flex;align-items:center;gap:4px;z-index:10;height:36px!important;}' +
+    '.action-btn{display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:20px;cursor:pointer;transition:all .2s ease;background:transparent;border:none;font-size:14px;color:#666;font-weight:400;font-family:"Microsoft YaHei","微软雅黑",system-ui,-apple-system,sans-serif;}' +
+    '.action-btn:hover{background:#f0f0f0;color:#333;}' +
+    '.action-btn svg{width:14px;height:14px;color:inherit;flex-shrink:0;margin-top:2px;}' +
+    '.history-btn{display:flex;align-items:center;justify-content:center;padding:6px 6px;border-radius:20px;cursor:pointer;transition:all .2s ease;background:transparent;border:none;color:#666;}' +
+    '.history-btn:hover{background:#f0f0f0;color:#333;}' +
+    '.history-btn svg{width:16px;height:16px;margin-top:2px;color:inherit;flex-shrink:0;}' +
+    '[data-theme="dark"] .history-btn{color:#999;}' +
+    '[data-theme="dark"] .history-btn:hover{background:#3a3a3a;color:#e0e0e0;}' +
+    '.search-entry-container.translate-mode .search-btn-wrapper{bottom:12px!important;right:12px!important;display:flex!important;align-items:center!important;gap:8px!important;height:36px!important;}' +
+    '.search-entry-container.translate-mode .search-btn-wrapper .el-button,' +
+    '.search-entry-container.translate-mode .search-btn-internal{width:36px!important;height:36px!important;border-radius:50%!important;background:#605CE5!important;color:#fff!important;border:none!important;cursor:pointer!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;}' +
+    '.search-entry-container.translate-mode .search-btn-wrapper .el-button svg,' +
+    '.search-entry-container.translate-mode .search-btn-internal svg{width:20px!important;height:20px!important;margin-top:4px;}' +
+    '.search-entry-container.is-simple-search .search-btn-wrapper .el-button,' +
+    '.search-entry-container.is-simple-search .search-btn-internal{display:flex!important;align-items:center!important;justify-content:center!important;padding:0!important;}' +
+    '.search-entry-container.is-simple-search .search-btn-wrapper .el-button svg,' +
+    '.search-entry-container.is-simple-search .search-btn-internal svg{width:20px!important;height:20px!important;}' +
+    '.search-entry-container.translate-mode .search-btn-internal.disabled,' +
+    '.search-entry-container.translate-mode .search-btn-wrapper button.disabled,' +
+    '.search-entry-container .search-btn-internal.disabled,' +
+    '.search-entry-container .search-btn-wrapper button.disabled{background:#605CE5!important;cursor:not-allowed!important;opacity:.6!important;pointer-events:none!important;}' +
+    '[data-theme="dark"] .search-entry-container .el-input__wrapper{background:#2a2a2a;border-color:#3a3a3a;}' +
+    '[data-theme="dark"] .action-btn{color:#999;}' +
+    '[data-theme="dark"] .action-btn:hover{background:#3a3a3a;color:#e0e0e0;}' +
+    '.translate-active-bar{display:flex;align-items:center;gap:8px;width:100%;height:36px!important;}' +
+    '.action-btn.active{background:#605CE5!important;color:#fff!important;padding:6px 8px!important;}' +
+    '.action-btn.active svg{color:#fff!important;}' +
+    '.close-in-btn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;cursor:pointer;margin-left:4px;}' +
+    '.close-in-btn svg{width:14px;height:14px;color:rgba(255,255,255,.8)!important;}' +
+    '.close-in-btn:hover svg{color:#fff!important;}' +
+    '.search-entry-container .el-input__wrapper textarea.el-input__inner{' +
+      'font-size:16px;height:auto;min-height:80px;align-self:flex-start;padding-top:8px;line-height:1.5;resize:none;overflow:auto;border:none;outline:none;background:transparent;width:100%;font-family:inherit;color:#333;}' +
+    '[data-theme="dark"] .search-entry-container .el-input__wrapper textarea.el-input__inner{color:#e0e0e0;}';
+  document.head.appendChild(_css);
+
+  // ===== 构建搜索区域内部 HTML（每次打开时全新生成） =====
+  function _buildPanelInner() {
+    return '<div style="width:760px;max-width:90vw;margin:0 auto;">' +
+      '<div class="search-entry-container" style="width:100%;position:relative;display:flex;justify-content:center;box-sizing:border-box;">' +
+        '<div class="el-input el-input--default el-input--suffix" style="--el-input-width:100%;width:100%;max-width:760px;">' +
+          '<div class="el-input__wrapper" style="border-radius:24px;border:1px solid #e8e8e8;box-shadow:0 2px 12px rgba(0,0,0,.1);padding:16px 20px 42px 20px;background:#fff;position:relative;min-height:140px;display:flex;flex-direction:column;align-items:flex-start;">' +
+            '<textarea class="el-input__inner" placeholder="搜资料、找答案" style="font-size:16px;height:auto;min-height:80px;align-self:flex-start;padding-top:8px;line-height:1.5;resize:none;overflow:auto;border:none;outline:none;background:transparent;width:100%;font-family:inherit;color:#333;"></textarea>' +
+            '<div class="search-btn-wrapper">' +
+              '<button class="el-button el-button--default is-circle search-btn-internal disabled" onclick="handleSearch()">' +
+                '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>' +
+              '</button>' +
+            '</div>' +
+            '<div class="search-bottom-actions">' +
+            '<button class="history-btn" onclick="location.href=\'./chat.html?mode=last-session\'" title="历史记录">' +
+              '<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="margin-top:2px;"><path d="M729.6 499.2c127.488 0 230.4 102.912 230.4 230.4s-102.912 230.4-230.4 230.4-230.4-102.912-230.4-230.4 102.912-230.4 230.4-230.4z m0 409.6c98.816 0 179.2-80.384 179.2-179.2s-80.384-179.2-179.2-179.2-179.2 80.384-179.2 179.2 80.384 179.2 179.2 179.2z m87.04-204.8c8.704 0 15.36 7.168 15.36 15.36v19.968c0 8.704-7.168 15.36-15.36 15.36h-96.768c-8.704 0-15.36-7.168-15.36-15.36v-122.368c0-8.704 7.168-15.36 15.36-15.36h19.968c8.704 0 15.36 7.168 15.36 15.36v87.04h61.44z"></path><path d="M924.672 506.88l10.24 0.512c13.312 1.024 25.088-9.728 25.088-23.04 0-201.216-200.704-364.032-448-364.032s-448 163.328-447.488 363.52c0 83.456 34.816 159.744 92.672 221.184-26.112 68.608-80.384 127.488-81.408 128-11.776 12.288-14.848 29.696-8.192 45.568 6.656 15.872 22.016 25.6 38.912 25.6 107.52 0 192.512-45.056 243.2-80.896 22.016 7.168 45.568 12.8 69.12 16.896 13.824 2.56 27.648-6.656 29.696-20.992l1.024-4.608c2.56-13.824-7.168-26.624-20.992-29.184-20.992-3.584-41.472-8.704-61.952-15.36l-26.624-8.192-22.528 15.872c-40.448 28.16-102.4 61.44-179.712 69.12 20.992-26.624 51.712-70.656 71.168-121.856l12.288-32.768-24.064-25.6c-50.688-53.248-77.312-116.736-77.312-182.272 0-169.472 176.128-307.712 392.192-307.712s392.192 138.752 392.192 308.224c0 11.776 8.704 21.504 20.48 22.016z"></path></svg>' +
+            '</button>' +
+            '<button class="action-btn" onclick="handleTranslate()" title="专家级翻译智能体，支持多种语言">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 3-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>' +
+              '<span>象胥翻译</span>' +
+            '</button>' +
+            '<button class="action-btn" onclick="toggleSimpleSearchMode()" title="输入关键词进行简单快捷检索">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg>' +
+              '<span>简单搜索</span>' +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  // ===== 创建覆盖层 =====
   var _overlay = document.createElement('div');
   _overlay.id = 'detail-search-overlay';
   _overlay.style.cssText = 'position:fixed;top:50px;left:0;right:0;bottom:0;z-index:9999;display:none;';
   _overlay.innerHTML =
     '<div id="dso-mask" style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.35);"></div>' +
-    '<div id="dso-panel" style="position:absolute;top:0;left:0;right:0;background:#f5f5fa;padding:35px 0 45px;box-shadow:0 4px 16px rgba(0,0,0,0.1);">' +
-      '<div style="width:760px;max-width:90vw;margin:0 auto;">' +
-        '<div style="width:100%;max-width:760px;margin:0 auto;position:relative;display:flex;justify-content:center;box-sizing:border-box;">' +
-          '<div class="el-input el-input--default el-input--suffix" style="--el-input-width:100%;width:100%;max-width:760px;">' +
-            '<div class="el-input__wrapper" style="border-radius:24px;border:1px solid #e8e8e8;box-shadow:0 2px 12px rgba(0,0,0,.1);padding:16px 20px 42px 20px;background:#fff;position:relative;min-height:140px;display:flex;flex-direction:column;align-items:flex-start;">' +
-              '<textarea class="el-input__inner dso-search-textarea" placeholder="搜资料、找答案" style="font-size:16px;height:auto;min-height:80px;align-self:flex-start;padding-top:8px;line-height:1.5;resize:none;overflow:auto;border:none;outline:none;background:transparent;width:100%;font-family:inherit;color:#333;"></textarea>' +
-              '<div class="search-btn-wrapper" style="position:absolute;right:12px;bottom:12px;z-index:10;">' +
-                '<button class="dso-search-btn el-button el-button--default is-circle search-btn-internal" style="width:36px;height:36px;border-radius:50%;background:#605CE5;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;">' +
-                  '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>' +
-                '</button>' +
-              '</div>' +
-              '<div class="search-bottom-actions" style="position:absolute;bottom:12px;left:16px;display:flex;align-items:center;gap:4px;z-index:10;height:36px;">' +
-                '<button class="history-btn" onclick="location.href=\'./chat.html?mode=last-session\'" title="历史记录" style="display:flex;align-items:center;justify-content:center;padding:6px;border-radius:20px;cursor:pointer;background:transparent;border:none;color:#666;">' +
-                  '<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="margin-top:2px;"><path d="M729.6 499.2c127.488 0 230.4 102.912 230.4 230.4s-102.912 230.4-230.4 230.4-230.4-102.912-230.4-230.4 102.912-230.4 230.4-230.4z m0 409.6c98.816 0 179.2-80.384 179.2-179.2s-80.384-179.2-179.2-179.2-179.2 80.384-179.2 179.2 80.384 179.2 179.2 179.2z m87.04-204.8c8.704 0 15.36 7.168 15.36 15.36v19.968c0 8.704-7.168 15.36-15.36 15.36h-96.768c-8.704 0-15.36-7.168-15.36-15.36v-122.368c0-8.704 7.168-15.36 15.36-15.36h19.968c8.704 0 15.36 7.168 15.36 15.36v87.04h61.44z"></path><path d="M924.672 506.88l10.24 0.512c13.312 1.024 25.088-9.728 25.088-23.04 0-201.216-200.704-364.032-448-364.032s-448 163.328-447.488 363.52c0 83.456 34.816 159.744 92.672 221.184-26.112 68.608-80.384 127.488-81.408 128-11.776 12.288-14.848 29.696-8.192 45.568 6.656 15.872 22.016 25.6 38.912 25.6 107.52 0 192.512-45.056 243.2-80.896 22.016 7.168 45.568 12.8 69.12 16.896 13.824 2.56 27.648-6.656 29.696-20.992l1.024-4.608c2.56-13.824-7.168-26.624-20.992-29.184-20.992-3.584-41.472-8.704-61.952-15.36l-26.624-8.192-22.528 15.872c-40.448 28.16-102.4 61.44-179.712 69.12 20.992-26.624 51.712-70.656 71.168-121.856l12.288-32.768-24.064-25.6c-50.688-53.248-77.312-116.736-77.312-182.272 0-169.472 176.128-307.712 392.192-307.712s392.192 138.752 392.192 308.224c0 11.776 8.704 21.504 20.48 22.016z"></path></svg>' +
-                '</button>' +
-                '<button class="dso-action-btn" onclick="handleTranslate()" title="专家级翻译智能体，支持多种语言" style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:20px;cursor:pointer;background:transparent;border:none;font-size:14px;color:#666;font-family:inherit;">' +
-                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M5 8l6 6"/><path d="M4 14l6-6 3-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>' +
-                  '<span>象胥翻译</span>' +
-                '</button>' +
-                '<button class="dso-action-btn" onclick="toggleSimpleSearchMode()" title="输入关键词进行简单快捷检索" style="display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:20px;cursor:pointer;background:transparent;border:none;font-size:14px;color:#666;font-family:inherit;">' +
-                  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg>' +
-                  '<span>简单搜索</span>' +
-                '</button>' +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
+    '<div id="dso-panel" style="position:absolute;top:0;left:0;right:0;background:#f5f5fa;padding:35px 0 45px;box-shadow:0 4px 16px rgba(0,0,0,0.1);"><div id="dso-panel-inner"></div></div>';
   document.body.appendChild(_overlay);
 
-  // 蒙层点击关闭
-  var _mask = document.getElementById('dso-mask');
-  if (_mask) {
-    _mask.addEventListener('click', function() {
-      _overlay.style.display = 'none';
-    });
+  // ===== 蒙层点击关闭 =====
+  document.getElementById('dso-mask').addEventListener('click', function() {
+    _overlay.style.display = 'none';
+  });
+
+  // ===== 打开覆盖层：每次重建全新内容 =====
+  function _openOverlay() {
+    document.getElementById('dso-panel-inner').innerHTML = _buildPanelInner();
+    _overlay.style.display = 'block';
+    // 每次重建后重新绑定输入监听
+    updateSendButtonState();
+    initInputMonitoring();
+    setTimeout(function() {
+      var ta = _overlay.querySelector('textarea');
+      if (ta) try { ta.focus(); } catch(e) {}
+    }, 100);
   }
 
-  // 注入搜索面板额外样式
-  var _dsoCss = document.createElement('style');
-  _dsoCss.textContent = '.dso-action-btn:hover,.history-btn:hover{background:#f0f0f0;color:#333}.dso-search-btn:hover,.search-btn-internal:hover{background:#4f4bd4!important}.dso-search-btn.disabled,.search-btn-internal.disabled{background:#ccc!important;cursor:default!important}';
-  document.head.appendChild(_dsoCss);
-
-  // 搜索框回车跳转到m页搜索
-  var _input = _overlay.querySelector('textarea');
-  var _btn = _overlay.querySelector('.dso-search-btn');
-  if (_btn) _btn.classList.add('disabled');
-
-  function _doSearch() {
-    var q = _input ? _input.value.trim() : '';
-    if (q) window.location.href = './m.html?q=' + encodeURIComponent(q);
-  }
-
-  function _updateBtnState() {
-    if (!_input || !_btn) return;
-    var hasText = _input.value.trim().length > 0;
-    _btn.classList.toggle('disabled', !hasText);
-  }
-
-  if (_input) {
-    _input.addEventListener('input', _updateBtnState);
-    _input.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && !_btn.classList.contains('disabled')) {
-        _doSearch();
-      }
-    });
-  }
-
-  // 搜索按钮点击
-  if (_btn) {
-    _btn.addEventListener('click', function() {
-      if (_btn.classList.contains('disabled')) return;
-      _doSearch();
-    });
-  }
-
-  // 拦截detail页顶部搜索框点击（捕获阶段，绕过Vue @click.stop）
+  // ===== 拦截 detail 页顶部搜索框点击（捕获阶段，绕过 Vue @click.stop） =====
   document.addEventListener('click', function(e) {
     var t = e.target.closest('.s-bar-view, .top-s-ipt, .el-input--suffix.top-s-ipt');
-    if (t) {
-      _overlay.style.display = 'block';
-      setTimeout(function() {
-        if (_input) try { _input.focus(); } catch(e) {}
-      }, 100);
-    }
+    if (t) _openOverlay();
   }, true);
 
-  // Vue重新渲染时确保覆盖层仍在body中
+  // ===== MutationObserver：Vue 重新渲染后确保覆盖层仍在 body 中 =====
   var _obs = new MutationObserver(function() {
     if (!document.getElementById('detail-search-overlay')) {
       document.body.appendChild(_overlay);
     }
   });
   _obs.observe(document.body, { childList: true, subtree: true });
+
+  // ================================================================
+  // 以下全局函数与 m.html 搜索区域完全一致，查询范围限定在覆盖层内
+  // ================================================================
+
+  // ----- handleSearch：跳转到 chat.html 搜索 -----
+  window.handleSearch = function() {
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    if (!container) return;
+    var btn = container.querySelector('.search-btn-wrapper button, .search-btn-internal');
+    if (btn && btn.classList.contains('disabled')) return;
+    var textarea = container.querySelector('textarea');
+    var text = textarea ? textarea.value.trim() : '';
+    if (text) {
+      window.location.href = './chat.html?q=' + encodeURIComponent(text);
+    }
+  };
+
+  // ----- handleTranslate：切换翻译模式 -----
+  window.handleTranslate = function() {
+    toggleTranslateMode();
+  };
+
+  // ----- toggleTranslateMode / exitTranslateMode -----
+  function toggleTranslateMode() {
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    if (!container) return;
+    var bottomActions = container.querySelector('.search-bottom-actions');
+    if (!bottomActions) return;
+
+    if (container.classList.contains('translate-mode')) {
+      exitTranslateMode();
+      return;
+    }
+
+    container.classList.add('translate-mode');
+
+    var searchInput = container.querySelector('.el-input__inner');
+    if (searchInput) {
+      searchInput.dataset.originalPlaceholder = searchInput.placeholder;
+      searchInput.placeholder = '输入待翻译文本，或点击下方按钮翻译文档/图片';
+    }
+
+    var searchBtnWrapper = container.querySelector('.search-btn-wrapper');
+    if (searchBtnWrapper) {
+      searchBtnWrapper.classList.add('send-btn-mode');
+      var langBar = document.createElement('div');
+      langBar.className = 'translate-lang-bar';
+      langBar.innerHTML =
+        '<span class="lang-auto-label">自动识别</span>' +
+        '<span class="lang-arrow-small">→</span>' +
+        '<select class="lang-select-small">' +
+          '<option>中文</option>' +
+          '<option>英文</option>' +
+          '<option>日文</option>' +
+        '</select>';
+      searchBtnWrapper.insertBefore(langBar, searchBtnWrapper.firstChild);
+
+      var btn = searchBtnWrapper.querySelector('button');
+      if (btn) {
+        btn.setAttribute('onclick', 'handleTranslateSend()');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>';
+      }
+      updateSendButtonState();
+      initInputMonitoring();
+      setTimeout(updateSendButtonState, 100);
+      setTimeout(updateSendButtonState, 300);
+    }
+
+    bottomActions.innerHTML =
+      '<div class="translate-active-bar">' +
+        '<button class="action-btn active" onclick="handleTranslate()" title="象胥翻译">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 3-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>' +
+          '<span>象胥翻译</span>' +
+          '<span class="close-in-btn" onclick="event.stopPropagation();exitTranslateMode()">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
+          '</span>' +
+        '</button>' +
+        '<div class="translate-options-inline">' +
+          '<button class="option-btn-small" title="文档翻译" onclick="handleDocumentTranslate()">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+            '文档翻译' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  window.exitTranslateMode = function() {
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    if (!container) return;
+    var bottomActions = container.querySelector('.search-bottom-actions');
+    if (!bottomActions) return;
+
+    container.classList.remove('translate-mode');
+
+    var searchInput = container.querySelector('.el-input__inner');
+    if (searchInput && searchInput.dataset.originalPlaceholder) {
+      searchInput.placeholder = searchInput.dataset.originalPlaceholder;
+    }
+
+    var inputWrapper = container.querySelector('.el-input__wrapper');
+    if (inputWrapper) {
+      var textarea = inputWrapper.querySelector('textarea');
+      if (textarea) textarea.style.display = '';
+      var docInfoArea = inputWrapper.querySelector('.document-info-area');
+      if (docInfoArea) docInfoArea.remove();
+    }
+
+    var searchBtnWrapper = container.querySelector('.search-btn-wrapper');
+    if (searchBtnWrapper) {
+      searchBtnWrapper.classList.remove('send-btn-mode');
+      var langBar = searchBtnWrapper.querySelector('.translate-lang-bar');
+      if (langBar) langBar.remove();
+      var btn = searchBtnWrapper.querySelector('button');
+      if (btn) {
+        btn.setAttribute('onclick', 'handleSearch()');
+        btn.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>';
+        btn.classList.remove('disabled');
+      }
+    }
+
+    bottomActions.innerHTML =
+      '<button class="history-btn" onclick="location.href=\'./chat.html?mode=last-session\'" title="历史记录">' +
+        '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"><path d="M729.6 499.2c127.488 0 230.4 102.912 230.4 230.4s-102.912 230.4-230.4 230.4-230.4-102.912-230.4-230.4 102.912-230.4 230.4-230.4z m0 409.6c98.816 0 179.2-80.384 179.2-179.2s-80.384-179.2-179.2-179.2-179.2 80.384-179.2 179.2 80.384 179.2 179.2 179.2z m87.04-204.8c8.704 0 15.36 7.168 15.36 15.36v19.968c0 8.704-7.168 15.36-15.36 15.36h-96.768c-8.704 0-15.36-7.168-15.36-15.36v-122.368c0-8.704 7.168-15.36 15.36-15.36h19.968c8.704 0 15.36 7.168 15.36 15.36v87.04h61.44z"></path><path d="M924.672 506.88l10.24 0.512c13.312 1.024 25.088-9.728 25.088-23.04 0-201.216-200.704-364.032-448-364.032s-448 163.328-447.488 363.52c0 83.456 34.816 159.744 92.672 221.184-26.112 68.608-80.384 127.488-81.408 128-11.776 12.288-14.848 29.696-8.192 45.568 6.656 15.872 22.016 25.6 38.912 25.6 107.52 0 192.512-45.056 243.2-80.896 22.016 7.168 45.568 12.8 69.12 16.896 13.824 2.56 27.648-6.656 29.696-20.992l1.024-4.608c2.56-13.824-7.168-26.624-20.992-29.184-20.992-3.584-41.472-8.704-61.952-15.36l-26.624-8.192-22.528 15.872c-40.448 28.16-102.4 61.44-179.712 69.12 20.992-26.624 51.712-70.656 71.168-121.856l12.288-32.768-24.064-25.6c-50.688-53.248-77.312-116.736-77.312-182.272 0-169.472 176.128-307.712 392.192-307.712s392.192 138.752 392.192 308.224c0 11.776 8.704 21.504 20.48 22.016z"></path></svg>' +
+      '</button>' +
+      '<button class="action-btn" onclick="handleTranslate()" title="象胥翻译">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 3-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>' +
+        '<span>象胥翻译</span>' +
+      '</button>' +
+      '<button class="action-btn" onclick="toggleSimpleSearchMode()" title="简单搜索">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg>' +
+        '<span>简单搜索</span>' +
+      '</button>';
+  };
+
+  // ----- handleSimpleSearch / toggleSimpleSearchMode / exitSimpleSearchMode -----
+  window.handleSimpleSearch = function() {
+    var btn = document.querySelector('#detail-search-overlay .search-btn-wrapper button, #detail-search-overlay .search-btn-internal');
+    if (btn && btn.classList.contains('disabled')) return;
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    if (!container) return;
+    var textarea = container.querySelector('textarea');
+    var text = textarea ? textarea.value.trim() : '';
+    if (text) {
+      window.location.href = './m.html?q=' + encodeURIComponent(text);
+    }
+  };
+
+  window.toggleSimpleSearchMode = function() {
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    var btn = container ? container.querySelector('.search-btn-wrapper button, .search-btn-internal') : null;
+    var bottomActions = container ? container.querySelector('.search-bottom-actions') : null;
+    var searchInput = container ? container.querySelector('.el-input__inner') : null;
+    if (!container) return;
+    var isSimple = container.classList.toggle('is-simple-search');
+
+    if (isSimple) {
+      if (searchInput && !searchInput.dataset.originalPlaceholder) {
+        searchInput.dataset.originalPlaceholder = searchInput.placeholder;
+      }
+      if (searchInput) searchInput.placeholder = '输入关键词进行简单快捷检索';
+      if (bottomActions) {
+        bottomActions.innerHTML =
+          '<button class="action-btn active" onclick="toggleSimpleSearchMode()" title="输入关键词进行简单快捷检索">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg>' +
+            '<span>简单搜索</span>' +
+            '<span class="close-in-btn" onclick="event.stopPropagation();exitSimpleSearchMode()">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
+            '</span>' +
+          '</button>';
+      }
+    } else {
+      exitSimpleSearchMode();
+      return;
+    }
+
+    if (btn) btn.setAttribute('onclick', 'handleSimpleSearch()');
+  };
+
+  window.exitSimpleSearchMode = function() {
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    var bottomActions = container ? container.querySelector('.search-bottom-actions') : null;
+    var searchInput = container ? container.querySelector('.el-input__inner') : null;
+    if (!container) return;
+
+    container.classList.remove('is-simple-search');
+
+    if (searchInput && searchInput.dataset.originalPlaceholder) {
+      searchInput.placeholder = searchInput.dataset.originalPlaceholder;
+    }
+
+    if (bottomActions) {
+      bottomActions.innerHTML =
+        '<button class="history-btn" onclick="location.href=\'./chat.html?mode=last-session\'" title="历史记录">' +
+          '<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"><path d="M729.6 499.2c127.488 0 230.4 102.912 230.4 230.4s-102.912 230.4-230.4 230.4-230.4-102.912-230.4-230.4 102.912-230.4 230.4-230.4z m0 409.6c98.816 0 179.2-80.384 179.2-179.2s-80.384-179.2-179.2-179.2-179.2 80.384-179.2 179.2 80.384 179.2 179.2 179.2z m87.04-204.8c8.704 0 15.36 7.168 15.36 15.36v19.968c0 8.704-7.168 15.36-15.36 15.36h-96.768c-8.704 0-15.36-7.168-15.36-15.36v-122.368c0-8.704 7.168-15.36 15.36-15.36h19.968c8.704 0 15.36 7.168 15.36 15.36v87.04h61.44z"></path><path d="M924.672 506.88l10.24 0.512c13.312 1.024 25.088-9.728 25.088-23.04 0-201.216-200.704-364.032-448-364.032s-448 163.328-447.488 363.52c0 83.456 34.816 159.744 92.672 221.184-26.112 68.608-80.384 127.488-81.408 128-11.776 12.288-14.848 29.696-8.192 45.568 6.656 15.872 22.016 25.6 38.912 25.6 107.52 0 192.512-45.056 243.2-80.896 22.016 7.168 45.568 12.8 69.12 16.896 13.824 2.56 27.648-6.656 29.696-20.992l1.024-4.608c2.56-13.824-7.168-26.624-20.992-29.184-20.992-3.584-41.472-8.704-61.952-15.36l-26.624-8.192-22.528 15.872c-40.448 28.16-102.4 61.44-179.712 69.12 20.992-26.624 51.712-70.656 71.168-121.856l12.288-32.768-24.064-25.6c-50.688-53.248-77.312-116.736-77.312-182.272 0-169.472 176.128-307.712 392.192-307.712s392.192 138.752 392.192 308.224c0 11.776 8.704 21.504 20.48 22.016z"></path></svg>' +
+        '</button>' +
+        '<button class="action-btn" onclick="handleTranslate()" title="专业级翻译大模型，支持多种语言">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8l6 6"/><path d="M4 14l6-6 3-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="M22 22l-5-10-5 10"/><path d="M14 18h6"/></svg>' +
+          '<span>象胥翻译</span>' +
+        '</button>' +
+        '<button class="action-btn" onclick="toggleSimpleSearchMode()" title="输入关键词进行简单快捷检索">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg>' +
+          '<span>简单搜索</span>' +
+        '</button>';
+    }
+
+    var btn = document.querySelector('#detail-search-overlay .search-btn-wrapper button, #detail-search-overlay .search-btn-internal');
+    if (btn) btn.setAttribute('onclick', 'handleSearch()');
+  };
+
+  // ----- handleTranslateSend -----
+  window.handleTranslateSend = function() {
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    if (!container) return;
+    var btn = container.querySelector('.search-btn-wrapper button, .search-btn-internal');
+    if ((btn && btn.classList.contains('disabled')) || window._docParsing) return;
+
+    var targetLangSelect = container.querySelector('.lang-select-small');
+    var targetLang = targetLangSelect ? targetLangSelect.value || '中文' : '中文';
+
+    var docInfoArea = container.querySelector('.document-info-area');
+    if (docInfoArea) {
+      var docName = docInfoArea.querySelector('.document-name') ? docInfoArea.querySelector('.document-name').textContent : '';
+      var docSize = docInfoArea.querySelector('.document-size') ? docInfoArea.querySelector('.document-size').textContent : '';
+      var params = new URLSearchParams();
+      params.set('mode', 'doc-translate');
+      params.set('docName', docName);
+      params.set('docSize', docSize);
+      params.set('targetLang', targetLang);
+      window.location.href = './chat.html?' + params.toString();
+      return;
+    }
+
+    var textarea = container.querySelector('textarea');
+    var text = textarea ? textarea.value.trim() : '';
+    if (!text) {
+      var translateTextarea = container.querySelector('.translate-textarea');
+      text = translateTextarea ? translateTextarea.value.trim() : '';
+    }
+    if (!text) {
+      var inputArea = container.querySelector('.el-input__inner');
+      text = inputArea ? inputArea.value.trim() : '';
+    }
+    if (text) {
+      var params = new URLSearchParams();
+      params.set('mode', 'translate');
+      params.set('text', text);
+      params.set('targetLang', targetLang);
+      window.location.href = './chat.html?' + params.toString();
+    }
+  };
+
+  // ----- updateSendButtonState -----
+  function updateSendButtonState() {
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    if (!container) return;
+    var btn = container.querySelector('.search-btn-wrapper button, .search-btn-internal');
+    if (!btn) return;
+
+    var isTranslate = container.classList.contains('translate-mode');
+
+    if (isTranslate && window._docParsing) {
+      btn.classList.add('disabled');
+      return;
+    }
+
+    var textarea = container.querySelector('textarea, .el-input__inner');
+    var text = textarea ? textarea.value.trim() : '';
+
+    var hasDoc = isTranslate && !!container.querySelector('.document-info-area');
+
+    if (text || hasDoc) {
+      btn.classList.remove('disabled');
+    } else {
+      btn.classList.add('disabled');
+    }
+  }
+
+  // ----- initInputMonitoring -----
+  function initInputMonitoring() {
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    if (!container || container._inputMonitored) return;
+    container._inputMonitored = true;
+
+    container.addEventListener('input', function(e) {
+      if (e.target.matches('textarea, .el-input__inner, .el-textarea__inner')) {
+        setTimeout(updateSendButtonState, 10);
+      }
+    });
+
+    container.addEventListener('compositionend', function(e) {
+      if (e.target.matches('textarea, .el-input__inner, .el-textarea__inner')) {
+        setTimeout(updateSendButtonState, 10);
+      }
+    });
+
+    updateSendButtonState();
+  }
+
+  // ----- 初始化按钮状态 -----
+  updateSendButtonState();
+  initInputMonitoring();
+
+  // ================================================================
+  // 500ms 定时器：修复按钮 onclick / SVG / 禁用态（抗 Vue 重置）
+  // ================================================================
+  setInterval(function() {
+    var container = document.querySelector('#detail-search-overlay .search-entry-container');
+    if (!container) return;
+    var isSimple = container.classList.contains('is-simple-search');
+    var isTranslate = container.classList.contains('translate-mode');
+    var btn = container.querySelector('.search-btn-wrapper button, .search-btn-internal');
+    if (btn) {
+      var expectedOnclick;
+      if (isTranslate) {
+        expectedOnclick = 'handleTranslateSend()';
+      } else if (isSimple) {
+        expectedOnclick = 'handleSimpleSearch()';
+      } else {
+        expectedOnclick = 'handleSearch()';
+      }
+      if (btn.getAttribute('onclick') !== expectedOnclick) {
+        btn.setAttribute('onclick', expectedOnclick);
+      }
+      var expectedSvg = '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>';
+      var currentHtml = btn.innerHTML.replace(/\s+/g, ' ').trim();
+      var targetHtml = expectedSvg.replace(/\s+/g, ' ').trim();
+      if (currentHtml !== targetHtml) {
+        btn.innerHTML = expectedSvg;
+      }
+    }
+    updateSendButtonState();
+  }, 500);
 })();
 </script>
 </html>
