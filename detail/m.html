@@ -1132,6 +1132,16 @@ img.max-w-243px.h-39px {
   display: block;
 }
 
+/* 标签栏本身z-index高于背景层 */
+.sticky-menu-view {
+  z-index: 2 !important;
+}
+
+/* 覆盖Vue v-show,让logo在吸顶时可见(JS内联style兜底) */
+#retrieve-cate-bar-fixed-logo {
+  z-index: 3;
+}
+
 /* 标签页置顶时显示的右侧浮动操作区 */
 .pinned-top-actions {
   position: fixed;
@@ -2382,8 +2392,13 @@ img.max-w-243px.h-39px {
         if (bg) {
           bg.classList.toggle('visible', pinned);
         }
+        // 标签栏左侧logo：覆盖Vue v-show="fixed"的display:none
+        var logoSlot = document.querySelector('#retrieve-cate-bar-fixed-logo');
+        if (logoSlot) {
+          logoSlot.style.display = pinned ? 'block' : '';
+        }
       }
-      // 始终同步背景层位置（跟随标签栏顶部）
+      // 始终同步背景层位置
       if (pinned) {
         var bg = document.querySelector('.sticky-fullwidth-bg');
         if (bg) {
