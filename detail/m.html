@@ -2392,10 +2392,19 @@ img.max-w-243px.h-39px {
         if (bg) {
           bg.classList.toggle('visible', pinned);
         }
-        // 标签栏左侧logo：覆盖Vue v-show="fixed"的display:none
+        // 标签栏左侧logo（Vue v-show="fixed"控制显隐，强制覆盖）
         var logoSlot = document.querySelector('#retrieve-cate-bar-fixed-logo');
         if (logoSlot) {
-          logoSlot.style.display = pinned ? 'block' : '';
+          logoSlot.style.cssText = pinned ? 'display:flex!important;align-items:center;' : '';
+          // 确保内部logo容器和图片可见
+          var logoInner = logoSlot.querySelector('.sidebar-logo-container');
+          if (logoInner) {
+            logoInner.style.cssText = pinned ? 'display:flex!important;align-items:center;background:transparent!important;' : '';
+            var logoImg = logoInner.querySelector('img.sidebar-logo');
+            if (logoImg && logoImg.getAttribute('src') !== './m_files/logo_mosslib.png') {
+              logoImg.src = './m_files/logo_mosslib.png';
+            }
+          }
         }
       }
       // 始终同步背景层位置
