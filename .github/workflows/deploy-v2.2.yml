@@ -1,0 +1,53 @@
+name: Deploy V2.2 to /v2.2/
+
+on:
+  push:
+    branches: [V2.2]
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout V2.2 branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout existing gh-pages branch (to preserve root)
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: _existing
+          fetch-depth: 1
+        continue-on-error: true
+
+      - name: Build deployment directory
+        shell: bash
+        run: |
+          mkdir -p _deploy
+          # 复制旧的 root 内容（main 版本）
+          if [ -d "_existing" ]; then
+            # 排除 v2.2 目录自身
+            find _existing -maxdepth 1 -not -name '_existing' -not -name 'v2.2' -not -name '.git' -exec cp -r {} _deploy/ \; 2>/dev/null || true
+          fi
+          # 放入 V2.2 版本到 v2.2/ 子目录
+          mkdir -p _deploy/v2.2
+          cp -r detail/* _deploy/v2.2/
+          # 保留 .nojekyll
+          if [ -f "_existing/.nojekyll" ]; then
+            cp _existing/.nojekyll _deploy/.nojekyll
+          fi
+
+      - name: Create .nojekyll
+        run: touch _deploy/.nojekyll
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_deploy
+          publish_branch: gh-pages
+          force_orphan: true
