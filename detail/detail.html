@@ -8142,7 +8142,7 @@ html {
     '.search-entry-container .search-btn-internal:hover{background:#4f4bd4!important;}' +
     '.search-entry-container .el-icon{font-size:18px!important;}' +
     '.search-bottom-actions{position:absolute;bottom:12px;left:16px;display:flex;align-items:center;gap:4px;z-index:10;height:36px!important;}' +
-    '.action-btn{display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:20px;cursor:pointer;transition:all .2s ease;background:transparent;border:none;font-size:14px;color:#666;font-weight:400;font-family:"Microsoft YaHei","微软雅黑",system-ui,-apple-system,sans-serif;}' +
+    '.action-btn{display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:20px;cursor:pointer;transition:all .2s ease;background:transparent;border:none;font-size:14px;color:#323232;font-weight:400;font-family:"Microsoft YaHei","微软雅黑",system-ui,-apple-system,sans-serif;}' +
     '.action-btn:hover{background:#f0f0f0;color:#333;}' +
     '.action-btn svg{width:14px;height:14px;color:inherit;flex-shrink:0;margin-top:2px;}' +
     '.history-btn{display:flex;align-items:center;justify-content:center;padding:6px 6px;border-radius:20px;cursor:pointer;transition:all .2s ease;background:transparent;border:none;color:#666;}' +
@@ -8174,7 +8174,19 @@ html {
     '.close-in-btn:hover svg{color:#fff!important;}' +
     '.search-entry-container .el-input__wrapper textarea.el-input__inner{' +
       'font-size:16px;height:auto;min-height:80px;align-self:flex-start;padding-top:8px;line-height:1.5;resize:none;overflow:auto;border:none;outline:none;background:transparent;width:100%;font-family:inherit;color:#333;}' +
-    '[data-theme="dark"] .search-entry-container .el-input__wrapper textarea.el-input__inner{color:#e0e0e0;}';
+    '[data-theme="dark"] .search-entry-container .el-input__wrapper textarea.el-input__inner{color:#e0e0e0;}' +
+    '.upload-attach-btn{display:flex;align-items:center;justify-content:center;padding:6px 6px;border-radius:20px;border:none;background:transparent;color:#666;cursor:pointer;transition:all .2s;flex-shrink:0;}' +
+    '.upload-attach-btn:hover{background:#f0f0f0;color:#333;}' +
+    '.upload-attach-btn svg{width:14px;height:14px;display:block;}' +
+    '.file-attach-area{display:flex;flex-wrap:wrap;gap:8px;width:100%;margin-bottom:8px;}' +
+    '.file-attach-card{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f8f8fc;border:1px solid #e8e8e8;border-radius:8px;font-size:12px;max-width:180px;}' +
+    '.file-attach-info{display:flex;flex-direction:column;min-width:0;flex:1;}' +
+    '.file-attach-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#333;font-size:12px;}' +
+    '.file-attach-size{color:#999;font-size:11px;}' +
+    '.file-attach-remove{width:18px;height:18px;border-radius:50%;border:none;background:#eee;color:#666;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;padding:0;flex-shrink:0;line-height:1;}' +
+    '.file-attach-remove:hover{background:#ff4d4f;color:#fff;}' +
+    '.search-entry-container .el-input__wrapper.has-attachments{min-height:200px!important;}' +
+    '.search-entry-container .el-input__wrapper.has-attachments textarea{min-height:60px!important;}';
   document.head.appendChild(_css);
 
   // ===== 构建搜索区域内部 HTML（每次打开时全新生成） =====
@@ -8184,6 +8196,9 @@ html {
         '<div class="el-input el-input--default el-input--suffix" style="--el-input-width:100%;width:100%;max-width:760px;">' +
           '<div class="el-input__wrapper" style="border-radius:24px;border:1px solid #e8e8e8;box-shadow:0 2px 12px rgba(0,0,0,.1);padding:16px 20px 42px 20px;background:#fff;position:relative;min-height:140px;display:flex;flex-direction:column;align-items:flex-start;">' +
             '<textarea class="el-input__inner" placeholder="搜资料、找答案" style="font-size:16px;height:auto;min-height:80px;align-self:flex-start;padding-top:8px;line-height:1.5;resize:none;overflow:auto;border:none;outline:none;background:transparent;width:100%;font-family:inherit;color:#333;"></textarea>' +
+            '<button class="upload-attach-btn" type="button" onclick="window._triggerFileUpload()" title="上传文件" style="position:absolute!important;right:54px!important;bottom:12px!important;z-index:10!important;">' +
+              '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5498 9.75V5H6.9502V9.75C6.9502 10.3299 7.4201 10.7998 8 10.7998C8.5799 10.7998 9.0498 10.3299 9.0498 9.75V4.5C9.0498 2.9536 7.7964 1.7002 6.25 1.7002C4.7036 1.7002 3.4502 2.9536 3.4502 4.5V9.75C3.4502 12.2629 5.4871 14.2998 8 14.2998C10.5129 14.2998 12.5498 12.2629 12.5498 9.75V4H13.9502V9.75C13.9502 13.0361 11.2861 15.7002 8 15.7002C4.71391 15.7002 2.0498 13.0361 2.0498 9.75V4.5C2.04981 2.1804 3.9304 0.299806 6.25 0.299805C8.5696 0.299805 10.4502 2.1804 10.4502 4.5V9.75C10.4502 11.1031 9.3531 12.2002 8 12.2002C6.6469 12.2002 5.5498 11.1031 5.5498 9.75Z" fill="currentColor"></path></svg>' +
+            '</button>' +
             '<div class="search-btn-wrapper">' +
               '<button class="el-button el-button--default is-circle search-btn-internal disabled" onclick="handleSearch()">' +
                 '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>' +
@@ -8213,16 +8228,18 @@ html {
   _overlay.style.cssText = 'position:fixed;top:50px;left:0;right:0;bottom:0;z-index:9999;display:none;';
   _overlay.innerHTML =
     '<div id="dso-mask" style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.35);"></div>' +
-    '<div id="dso-panel" style="position:absolute;top:0;left:0;right:0;background:#f5f5fa;padding:35px 0 45px;box-shadow:0 4px 16px rgba(0,0,0,0.1);"><div id="dso-panel-inner"></div></div>';
+    '<div id="dso-panel" style="position:absolute;top:0;left:0;right:0;background:#f5f5fa;padding:35px 0 45px;box-shadow:0 4px 16px rgba(0,0,0,0.1);overflow-y:auto;max-height:100%;"><div id="dso-panel-inner"></div></div>';
   document.body.appendChild(_overlay);
 
   // ===== 蒙层点击关闭 =====
   document.getElementById('dso-mask').addEventListener('click', function() {
     _overlay.style.display = 'none';
+    if (window._clearAttachments) window._clearAttachments();
   });
 
   // ===== 打开覆盖层：每次重建全新内容 =====
   function _openOverlay() {
+    if (window._clearAttachments) window._clearAttachments();
     document.getElementById('dso-panel-inner').innerHTML = _buildPanelInner();
     _overlay.style.display = 'block';
     // 每次重建后重新绑定输入监听
@@ -8518,7 +8535,7 @@ html {
 
     var hasDoc = isTranslate && !!container.querySelector('.document-info-area');
 
-    if (text || hasDoc) {
+    if (text || hasDoc || (window._getAttachments && window._getAttachments().length > 0)) {
       btn.classList.remove('disabled');
     } else {
       btn.classList.add('disabled');
@@ -8580,6 +8597,95 @@ html {
     }
     updateSendButtonState();
   }, 500);
+
+  // ===== 文件上传附件模块 =====
+  (function() {
+    var _files = [];
+    var _fileInput = null;
+    
+    function fmtSize(bytes) {
+      if (bytes < 1024) return bytes + 'B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + 'KB';
+      if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + 'MB';
+      return (bytes / 1073741824).toFixed(2) + 'GB';
+    }
+    
+    function ensureInput() {
+      if (!_fileInput) {
+        _fileInput = document.createElement('input');
+        _fileInput.type = 'file';
+        _fileInput.multiple = true;
+        _fileInput.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;pointer-events:none;';
+        _fileInput.accept = '*/*';
+        document.body.appendChild(_fileInput);
+        _fileInput.addEventListener('change', function() {
+          Array.from(this.files).forEach(function(f) {
+            if (_files.length >= 5) return;
+            _files.push({ name: f.name, size: f.size, file: f });
+          });
+          renderCards();
+          this.value = '';
+          if (window.updateSendButtonState) setTimeout(window.updateSendButtonState, 10);
+        });
+      }
+      return _fileInput;
+    }
+    
+    function getActiveContainer() {
+      return document.querySelector('#detail-search-overlay .search-entry-container .el-input__wrapper');
+    }
+    
+    function renderCards() {
+      var container = getActiveContainer();
+      if (!container) return;
+      var area = container.querySelector('.file-attach-area');
+      if (!area) {
+        area = document.createElement('div');
+        area.className = 'file-attach-area';
+        // 插入到输入框最前面（textarea 之前），文件展示在上
+        var ref = container.querySelector('textarea, .el-input__inner, .input-area');
+        if (ref) container.insertBefore(area, ref);
+        else container.appendChild(area);
+      }
+      if (_files.length === 0) {
+        area.style.display = 'none';
+        container.classList.remove('has-attachments');
+        return;
+      }
+      area.style.display = 'flex';
+      container.classList.add('has-attachments');
+      var html = '';
+      _files.forEach(function(f, i) {
+        var nameDiv = document.createElement('div');
+        nameDiv.textContent = f.name;
+        var safeName = nameDiv.innerHTML;
+        html += '<div class="file-attach-card">' +
+          '<div class="file-attach-info">' +
+            '<span class="file-attach-name" title="' + safeName + '">' + safeName + '</span>' +
+            '<span class="file-attach-size">' + fmtSize(f.size) + '</span>' +
+          '</div>' +
+          '<button class="file-attach-remove" data-idx="' + i + '">×</button>' +
+        '</div>';
+      });
+      area.innerHTML = html;
+      area.querySelectorAll('.file-attach-remove').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(this.getAttribute('data-idx'));
+          _files.splice(idx, 1);
+          renderCards();
+          if (window.updateSendButtonState) setTimeout(window.updateSendButtonState, 10);
+        });
+      });
+    }
+    
+    window._triggerFileUpload = function() { ensureInput().click(); };
+    window._getAttachments = function() { return _files; };
+    window._clearAttachments = function() {
+      _files = [];
+      renderCards();
+      if (window.updateSendButtonState) setTimeout(window.updateSendButtonState, 10);
+    };
+  })();
 })();
 </script>
 </html>

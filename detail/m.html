@@ -431,15 +431,15 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   box-sizing: border-box !important;
 }
 
-/* 确保父容器居中 */
+/* 确保父容器在文档流中能随内容自然撑高 */
 .search-entry-view {
   width: 100% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
+  display: block !important;
   box-sizing: border-box !important;
   padding-top: 50px !important;
+  padding-bottom: 20px !important;
+  position: relative !important;
+  /* 不再使用 flex 居中布局，避免 justify-content:center 导致容器不随内容增高 */
 }
 
 /* 调整输入框高度 */
@@ -455,11 +455,14 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   max-width: 760px !important;
 }
 
-/* 调整搜索区域父容器高度，避免与下方按钮重叠 */
+/* 调整搜索区域父容器高度，随内容自然撑开 */
 .search-entry-view {
   height: auto !important;
-  min-height: 250px !important;
+  min-height: 290px !important;
+  /* 不设 max-height，避免高度被限制导致内容溢出遮盖下方按钮 */
   padding-bottom: 20px !important;
+  /* 保证不裁剪溢出的内容（兜底防御） */
+  overflow: visible !important;
 }
 
 /* 调整下方AI阅读助手和知识库按钮的容器，增加顶部间距 */
@@ -473,15 +476,140 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   margin: 30px auto 60px !important;
   display: flex !important;
   justify-content: center !important;
-  gap: 8px !important;
+  gap: 16px !important;
 }
 
-.nav-buttons-container .flex-row {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 8px !important;
-  margin-top: 0 !important;
+.nav-btn-original {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  font-size: 13px;
+  color: #323232;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  line-height: 1.4;
+  width: 110px;
+  height: 82px;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.nav-btn-original:hover {
+  background: #eeedfc !important;
+  border-color: #605CE5 !important;
+  color: #605CE5 !important;
+}
+
+.nav-btn-original svg {
+  width: 38px;
+  height: 38px;
+  display: block;
+  margin: 0;
+}
+
+.nav-btn-original span {
+  display: block;
+  margin: 0;
+}
+
+/* 上传附件按钮 */
+.search-entry-container .upload-attach-btn {
+  position: absolute !important;
+  right: 54px !important;
+  bottom: 12px !important;
+  z-index: 10 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 6px;
+  border-radius: 20px;
+  border: none;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.search-entry-container .upload-attach-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+.search-entry-container .upload-attach-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+/* 文件附件展示区域 */
+.file-attach-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+.file-attach-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #f8f8fc;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  font-size: 12px;
+  max-width: 180px;
+}
+.file-attach-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex:1;
+}
+.file-attach-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #333;
+  font-size:12px;
+}
+.file-attach-size {
+  color: #999;
+  font-size: 11px;
+}
+.file-attach-remove {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: #eee;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  padding: 0;
+  flex-shrink: 0;
+  line-height:1;
+}
+.file-attach-remove:hover {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+/* 有附件时输入框高度增加 */
+.search-entry-container .el-input__wrapper.has-attachments {
+  min-height: 200px !important;
+  overflow: visible !important;
+}
+.search-entry-container .el-input__wrapper.has-attachments textarea {
+  min-height: 60px !important;
 }
 
 /* 增大搜索输入框 - 为底部按钮和右侧搜索按钮留出空间 */
@@ -581,7 +709,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   background: transparent;
   border: none;
   font-size: 14px;
-  color: #666;
+  color: #323232;
   font-weight: 400;
   font-family: "Microsoft YaHei", "微软雅黑", system-ui, -apple-system, sans-serif;
 }
@@ -1193,6 +1321,8 @@ img.max-w-243px.h-39px {
   background: #f5f5fa;
   padding: 35px 0 45px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: 100%;
 }
 
 .pinned-search-overlay .pinned-search-panel .se-wrapper {
@@ -1478,6 +1608,17 @@ img.max-w-243px.h-39px {
     searchBtnWrapper.className = 'search-btn-wrapper';
     searchBtnWrapper.innerHTML = searchBtnHtml;
     inputWrapper.appendChild(searchBtnWrapper);
+    // 添加上传附件按钮（放在search-btn-wrapper同级前）
+    var uploadBtn = document.createElement('button');
+    uploadBtn.className = 'upload-attach-btn';
+    uploadBtn.setAttribute('type', 'button');
+    uploadBtn.title = '上传文件';
+    uploadBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5498 9.75V5H6.9502V9.75C6.9502 10.3299 7.4201 10.7998 8 10.7998C8.5799 10.7998 9.0498 10.3299 9.0498 9.75V4.5C9.0498 2.9536 7.7964 1.7002 6.25 1.7002C4.7036 1.7002 3.4502 2.9536 3.4502 4.5V9.75C3.4502 12.2629 5.4871 14.2998 8 14.2998C10.5129 14.2998 12.5498 12.2629 12.5498 9.75V4H13.9502V9.75C13.9502 13.0361 11.2861 15.7002 8 15.7002C4.71391 15.7002 2.0498 13.0361 2.0498 9.75V4.5C2.04981 2.1804 3.9304 0.299806 6.25 0.299805C8.5696 0.299805 10.4502 2.1804 10.4502 4.5V9.75C10.4502 11.1031 9.3531 12.2002 8 12.2002C6.6469 12.2002 5.5498 11.1031 5.5498 9.75Z" fill="currentColor"></path></svg>';
+    uploadBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (window._triggerFileUpload) window._triggerFileUpload();
+    });
+    inputWrapper.insertBefore(uploadBtn, searchBtnWrapper);
     
     // 创建底部按钮区域 - 插入到inputWrapper内部
     const bottomActions = document.createElement('div');
@@ -1531,25 +1672,67 @@ img.max-w-243px.h-39px {
   }
   
   function moveNavButtons() {
-    // 查找AI阅读助手和知识库按钮容器
-    const navContainer = document.querySelector('.other-nav-entry-view');
-    if (!navContainer) return;
-    
-    // 查找搜索区域视图
-    const searchView = document.querySelector('.search-entry-view');
-    if (!searchView) return;
-    
-    // 检查是否已经移动过
+    var navContainer = document.querySelector('.other-nav-entry-view');
+    var searchView = document.querySelector('.search-entry-view');
+    if (!navContainer || !searchView) return;
     if (navContainer.classList.contains('moved')) return;
-    
-    // 创建新的容器来放置按钮
-    const newNavContainer = document.createElement('div');
+
+    // 保留原始 Vue 按钮引用（用于转发点击事件）
+    var origBtns = navContainer.querySelectorAll('.flex-row > *');
+    var origAiBtn = null, origKbBtn = null;
+    origBtns.forEach(function(b) {
+      var t = b.textContent.trim();
+      if (t.indexOf('AI') !== -1 || t.indexOf('阅读') !== -1) origAiBtn = b;
+      else origKbBtn = b;
+    });
+
+    var newNavContainer = document.createElement('div');
     newNavContainer.className = 'nav-buttons-container';
-    newNavContainer.innerHTML = navContainer.innerHTML;
-    
-    // 将新容器插入到搜索区域视图之后
+
+    // AI 阅读助手图标（来自 Vue sprite 原始数据）
+    var aiSvg = '<svg viewBox="0 0 24 24" width="24" height="24">' +
+      '<path d="M11.705 20.193H3.677A2.673 2.673 0 0 1 1 17.517V7.703a2.673 2.673 0 0 1 2.676-2.676h8.028V20.193Z" fill="#5C92FE"/>' +
+      '<path d="M11.705 20.193H3.677A2.673 2.673 0 0 1 1 17.517V7.703a2.673 2.673 0 0 1 2.676-2.676h8.028V20.193Z" opacity=".13" fill="#344075"/>' +
+      '<path d="m11.705 20.193-6.63-1.079c-.82-.187-1.399-.955-1.399-1.838V5.073c0-1.204 1.053-2.097 2.168-1.838l5.86 1.793v15.165Z" fill="#81AEFF"/>' +
+      '<path d="m11.705 20.193-6.63-1.079c-.82-.187-1.399-.955-1.399-1.838V5.073c0-1.204 1.053-2.097 2.168-1.838l5.86 1.793v15.165Z" opacity=".13" fill="#5E9ADD"/>' +
+      '<path d="M11.704 20.193h7.262c1.34 0 2.42-1.196 2.42-2.676V7.703c0-1.48-1.08-2.676-2.42-2.676h-7.262V20.193Z" fill="#D6E8FF"/>' +
+      '<path d="M11.704 20.193h7.262c1.34 0 2.42-1.196 2.42-2.676V7.703c0-1.48-1.08-2.676-2.42-2.676h-7.262V20.193Z" opacity=".29" fill="#ADCEFF"/>' +
+      '<path d="M12.493 13.807a3.503 3.503 0 0 1 3.502-3.502h3.502A3.503 3.503 0 0 1 23 13.807v3.503a3.502 3.502 0 0 1-3.503 3.502h-3.502a3.501 3.501 0 0 1-3.502-3.502v-3.503Z" fill="#5787EC"/>' +
+      '<path d="m18.148 17.86-.285-.748h-2.418l-.284.764c-.11.296-.205.498-.285.605-.077.102-.205.154-.385.154a.566.566 0 0 1-.401-.166.511.511 0 0 1-.175-.379c0-.08.014-.165.04-.251.028-.086.072-.207.135-.361l1.52-3.864.155-.396c.062-.158.126-.287.194-.39a.798.798 0 0 1 .69-.345c.167 0 .307.032.419.097a.747.747 0 0 1 .27.244c.072.1.13.207.175.324.049.114.11.267.183.46l1.555 3.838c.121.292.182.504.182.637a.53.53 0 0 1-.175.38.564.564 0 0 1-.413.171.523.523 0 0 1-.414-.186 1.405 1.405 0 0 1-.151-.267l-.133-.32h.001Zm-2.386-1.653h1.777l-.896-2.454-.881 2.454Zm4.61 1.694v-4.688c0-.243.056-.426.166-.547a.555.555 0 0 1 .43-.183c.182 0 .328.06.44.183.112.118.17.301.17.547v4.688c0 .245-.058.43-.172.552a.563.563 0 0 1-.438.181.562.562 0 0 1-.43-.181c-.11-.125-.166-.31-.166-.552Z" fill="#FFF"/>' +
+    '</svg>';
+
+    // 知识库图标（来自 Vue sprite 原始数据）
+    var kbSvg = '<svg viewBox="0 0 22 22" width="22" height="22">' +
+      '<path d="M4.714 7.142c-.867 0-1.549.758-1.549 1.722v2.93c0-.481.434-.791.837-.653.248.102.495.172.712.274V7.142Zm12.303 0v4.274c.249-.104.497-.173.713-.276.403-.137.837.172.837.653v-2.93c0-.963-.681-1.72-1.55-1.72Z" fill="#5EA65E"/>' +
+      '<path d="M10.866 12.44c2.044-.891 4.088-1.202 6.132-2.092V4.809c0-1.05-.69-1.91-1.534-1.91H6.267c-.843 0-1.533.86-1.533 1.91v5.538c2.044.89 4.088 1.203 6.132 2.093Z" fill="#ADE0AD"/>' +
+      '<path d="M10.866 13.196c1.56-.728 3.146-1.457 4.706-2.185V6.34c0-1.092-.669-1.986-1.487-1.986H7.647c-.818 0-1.487.894-1.487 1.987v4.67c1.56.728 3.146 1.456 4.706 2.185Z" opacity=".82" fill="#FFF"/>' +
+      '<path d="M13.077 8.13H8.799a.802.802 0 0 1-.36-.078.657.657 0 0 1-.262-.223.523.523 0 0 1-.092-.304c0-.342.31-.604.713-.604h4.278c.404 0 .713.262.713.604 0 .342-.309.604-.713.604Zm0 2.213H8.799a.801.801 0 0 1-.36-.077.658.658 0 0 1-.262-.222.523.523 0 0 1-.092-.305c0-.342.31-.604.713-.604h4.278c.404 0 .713.262.713.604 0 .342-.309.604-.713.604Z" opacity=".72" fill="#5EA65E"/>' +
+      '<path d="M17.96 18.9H3.915c-.47-.002-.93-.13-1.336-.374a2.732 2.732 0 0 1-.979-1.013 2.852 2.852 0 0 1-.36-1.383v-5.952a.69.69 0 0 1 .903-.657c2.942 1.038 5.885 1.71 8.795 2.748 2.942-1.038 5.885-1.71 8.793-2.748a.69.69 0 0 1 .903.657v5.952a2.854 2.854 0 0 1-.36 1.383c-.235.42-.573.77-.979 1.012a2.614 2.614 0 0 1-1.335.374Z" fill="#ADE0AD"/>' +
+    '</svg>';
+
+    // 构建四个静态按钮
+    var items = [
+      { text: '阅读助手', svg: aiSvg, orig: origAiBtn },
+      { text: '专题库', svg: kbSvg, orig: origKbBtn },
+      { text: 'MossLibClaw', svg: '<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M641.4848 127.872c18.8416-20.7872 66.9184-55.9872 120.5504-41.984 4.48 1.2032 4.9408 13.9008 0 13.952-6.144 0-61.2096-8.832-98.5856 37.3248a375.68 375.68 0 0 1 209.0496 258.432c9.1392-0.768 18.2272-1.1776 26.7776-1.1776a82.0736 82.0736 0 1 1 0 164.1216c-7.9872 0-16.4352-2.1504-24.9856-5.76-25.9072 130.4576-117.7088 240.896-238.7456 287.8464v100.6592h-84.4288v-79.4112c-14.6176 1.8432-29.4912 2.9696-44.5696 2.9696-12.3392 0-24.4992-0.7168-36.48-1.9712v78.4128h-84.4032v-98.0736c-122.5984-45.1584-213.888-156.6208-239.616-289.024-7.296 2.688-14.4384 4.352-21.248 4.352a82.0992 82.0992 0 0 1 0-164.1216c7.2704 0 14.9504 0.2816 22.7328 0.8448 24.8576-115.0976 100.7104-210.1248 203.776-258.304-37.3248-45.8752-92.16-37.12-98.304-37.12-4.9664-0.0256-4.5056-12.7744 0-13.952 53.376-13.9264 101.1712 20.9152 120.192 41.728a366.592 366.592 0 0 1 133.3504-24.8576c47.5648 0 93.056 8.96 134.9376 25.1136z" fill="#E34D56"/><path d="M385.6128 269.824a46.9248 46.9248 0 0 1 0 93.7984 46.9248 46.9248 0 0 1 0-93.7728z m8.9088 24.9344l0 0zM635.4944 269.824a46.9248 46.9248 0 0 1 0 93.7984 46.9248 46.9248 0 0 1 0-93.7728z m8.9088 24.9344a14.08 14.08 0 1 0 0.0256 28.1856 14.08 14.08 0 0 0 0-28.1856z" fill="#000000"/></svg>', orig: null },
+      { text: '课题研究', svg: '<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M227.328 830.464c-16.384 0-31.744-10.24-37.888-26.624-7.168-20.48 3.072-43.008 24.576-51.2L774.144 552.96c20.48-7.168 43.008 3.072 51.2 24.576 7.168 20.48-3.072 43.008-24.576 51.2L240.64 828.416c-4.096 1.024-9.216 2.048-13.312 2.048zM28.672 517.12c-3.072-4.096-2.048-10.24 3.072-12.288 13.312-5.12 33.792-12.288 48.128-17.408 11.264-4.096 24.576-3.072 34.816 3.072 21.504 11.264 57.344 30.72 75.776 40.96 7.168 4.096 15.36 5.12 23.552 2.048 34.816-12.288 132.096-48.128 154.624-56.32 4.096-2.048 6.144-7.168 3.072-11.264L162.816 141.312c-3.072-4.096-1.024-10.24 4.096-11.264 17.408-7.168 57.344-21.504 78.848-29.696 6.144-2.048 9.216-1.024 14.336 2.048 116.736 92.16 233.472 185.344 349.184 277.504 6.144 5.12 10.24 5.12 17.408 3.072 92.16-33.792 185.344-67.584 278.528-101.376 43.008-15.36 86.016 10.24 92.16 55.296 5.12 30.72-14.336 61.44-46.08 72.704-72.704 26.624-146.432 53.248-219.136 79.872L222.208 675.84c-36.864 13.312-64.512 3.072-88.064-27.648-17.408-24.576-83.968-104.448-105.472-131.072z" fill="#FE765F"/><path d="M227.328 978.944c-16.384 0-31.744-10.24-37.888-26.624-7.168-20.48 3.072-44.032 23.552-51.2l286.72-105.472c20.48-7.168 44.032 3.072 51.2 23.552 7.168 20.48-3.072 44.032-23.552 51.2l-286.72 105.472c-4.096 2.048-9.216 3.072-13.312 3.072z" fill="#F4C9A8"/></svg>', orig: null }
+    ];
+
+    items.forEach(function(item) {
+      var btn = document.createElement('button');
+      btn.className = 'nav-btn-original';
+      btn.setAttribute('type', 'button');
+      btn.innerHTML = item.svg + '<span>' + item.text + '</span>';
+      // 点击时转发到原始的 Vue 按钮（保持原有行为）
+      btn.addEventListener('click', function(e) {
+        if (item.orig) { item.orig.click(); }
+        else { alert('MossLib Claw'); }
+      });
+      newNavContainer.appendChild(btn);
+    });
+
     searchView.parentNode.insertBefore(newNavContainer, searchView.nextSibling);
-    
+
     // 隐藏原始容器
     navContainer.style.display = 'none';
     navContainer.classList.add('moved');
@@ -2152,7 +2335,7 @@ img.max-w-243px.h-39px {
     // 问答模式：有文本 → 可用
     var hasDoc = isTranslate && !!container.querySelector('.document-info-area');
     
-    if (text || hasDoc) {
+    if (text || hasDoc || (window._getAttachments && window._getAttachments().length > 0)) {
       btn.classList.remove('disabled');
     } else {
       btn.classList.add('disabled');
@@ -2347,7 +2530,7 @@ img.max-w-243px.h-39px {
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
-          <span>知识库</span>
+          <span>专题库</span>
         </div>
         <div class="pinned-avatar-menu-item" data-action="settings">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -2396,12 +2579,14 @@ img.max-w-243px.h-39px {
               _moved.style.cssText = '';
             }
             _overlay.classList.remove('visible');
+            if (window._clearAttachments) window._clearAttachments();
           });
         }
       }
 
       _searchBox.addEventListener('click', function(e) {
         e.stopPropagation();
+        if (window._clearAttachments) window._clearAttachments();
         var _mainContainer = document.querySelector('.search-entry-view > .search-entry-container');
         var _wrap = _overlay.querySelector('.se-wrapper');
         if (_mainContainer && _wrap) {
@@ -2416,6 +2601,7 @@ img.max-w-243px.h-39px {
               '<div class="el-input el-input--default el-input--suffix" style="--el-input-width:100%;width:100%;max-width:760px;">' +
                 '<div class="el-input__wrapper" style="border-radius:24px;border:1px solid #e8e8e8;box-shadow:0 2px 12px rgba(0,0,0,.1);padding:16px 20px 42px 20px;background:#fff;position:relative;min-height:140px;display:flex;flex-direction:column;align-items:flex-start;">' +
                   '<textarea class="el-input__inner" placeholder="搜资料、找答案" style="font-size:16px;height:auto;min-height:80px;align-self:flex-start;padding-top:8px;line-height:1.5;resize:none;overflow:auto;border:none;outline:none;background:transparent;width:100%;font-family:inherit;color:#333;"></textarea>' +
+                  '<button class="upload-attach-btn" type="button" title="上传文件" onclick="if(window._triggerFileUpload) window._triggerFileUpload();event.stopPropagation()" style="position:absolute!important;right:54px!important;bottom:12px!important;z-index:10!important;"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5498 9.75V5H6.9502V9.75C6.9502 10.3299 7.4201 10.7998 8 10.7998C8.5799 10.7998 9.0498 10.3299 9.0498 9.75V4.5C9.0498 2.9536 7.7964 1.7002 6.25 1.7002C4.7036 1.7002 3.4502 2.9536 3.4502 4.5V9.75C3.4502 12.2629 5.4871 14.2998 8 14.2998C10.5129 14.2998 12.5498 12.2629 12.5498 9.75V4H13.9502V9.75C13.9502 13.0361 11.2861 15.7002 8 15.7002C4.71391 15.7002 2.0498 13.0361 2.0498 9.75V4.5C2.04981 2.1804 3.9304 0.299806 6.25 0.299805C8.5696 0.299805 10.4502 2.1804 10.4502 4.5V9.75C10.4502 11.1031 9.3531 12.2002 8 12.2002C6.6469 12.2002 5.5498 11.1031 5.5498 9.75Z" fill="currentColor"></path></svg></button>' +
                   '<div class="search-btn-wrapper"><button class="search-btn-internal disabled" onclick="handleSearch()" title="发送"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button></div>' +
                   '<div class="search-bottom-actions">' +
                     '<button class="history-btn" onclick="location.href=\'./chat.html?mode=last-session\'" title="历史记录"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"><path d="M729.6 499.2c127.488 0 230.4 102.912 230.4 230.4s-102.912 230.4-230.4 230.4-230.4-102.912-230.4-230.4 102.912-230.4 230.4-230.4z m0 409.6c98.816 0 179.2-80.384 179.2-179.2s-80.384-179.2-179.2-179.2-179.2 80.384-179.2 179.2 80.384 179.2 179.2 179.2z m87.04-204.8c8.704 0 15.36 7.168 15.36 15.36v19.968c0 8.704-7.168 15.36-15.36 15.36h-96.768c-8.704 0-15.36-7.168-15.36-15.36v-122.368c0-8.704 7.168-15.36 15.36-15.36h19.968c8.704 0 15.36 7.168 15.36 15.36v87.04h61.44z"/><path d="M924.672 506.88l10.24 0.512c13.312 1.024 25.088-9.728 25.088-23.04 0-201.216-200.704-364.032-448-364.032s-448 163.328-447.488 363.52c0 83.456 34.816 159.744 92.672 221.184-26.112 68.608-80.384 127.488-81.408 128-11.776 12.288-14.848 29.696-8.192 45.568 6.656 15.872 22.016 25.6 38.912 25.6 107.52 0 192.512-45.056 243.2-80.896 22.016 7.168 45.568 12.8 69.12 16.896 13.824 2.56 27.648-6.656 29.696-20.992l1.024-4.608c2.56-13.824-7.168-26.624-20.992-29.184-20.992-3.584-41.472-8.704-61.952-15.36l-26.624-8.192-22.528 15.872c-40.448 28.16-102.4 61.44-179.712 69.12 20.992-26.624 51.712-70.656 71.168-121.856l12.288-32.768-24.064-25.6c-50.688-53.248-77.312-116.736-77.312-182.272 0-169.472 176.128-307.712 392.192-307.712s392.192 138.752 392.192 308.224c0 11.776 8.704 21.504 20.48 22.016z"/></svg></button>' +
@@ -2433,6 +2619,115 @@ img.max-w-243px.h-39px {
         }, 100);
       });
     }
+
+  // ===== 文件上传附件模块 =====
+  (function() {
+    var _files = [];
+    var _fileInput = null;
+    
+    function fmtSize(bytes) {
+      if (bytes < 1024) return bytes + 'B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + 'KB';
+      if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + 'MB';
+      return (bytes / 1073741824).toFixed(2) + 'GB';
+    }
+    
+    function ensureInput() {
+      if (!_fileInput) {
+        _fileInput = document.createElement('input');
+        _fileInput.type = 'file';
+        _fileInput.multiple = true;
+        _fileInput.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;pointer-events:none;';
+        _fileInput.accept = '*/*';
+        document.body.appendChild(_fileInput);
+        _fileInput.addEventListener('change', function() {
+          Array.from(this.files).forEach(function(f) {
+            if (_files.length >= 5) return;
+            _files.push({ name: f.name, size: f.size, file: f });
+          });
+          renderCards();
+          this.value = '';
+          if (window.updateSendButtonState) setTimeout(window.updateSendButtonState, 10);
+        });
+      }
+      return _fileInput;
+    }
+    
+    function getActiveContainer() {
+      var c = document.querySelector('.search-entry-view .search-entry-container .el-input__wrapper');
+      if (c) return c;
+      c = document.querySelector('.pinned-search-overlay.visible .search-entry-container .el-input__wrapper');
+      if (c) return c;
+      return null;
+    }
+    
+    function renderCards() {
+      var container = getActiveContainer();
+      if (!container) return;
+      var area = container.querySelector('.file-attach-area');
+      if (!area) {
+        area = document.createElement('div');
+        area.className = 'file-attach-area';
+        // 插入到输入框最前面（textarea 之前），文件展示在上
+        var ref = container.querySelector('textarea, .el-input__inner, .input-area');
+        if (ref) container.insertBefore(area, ref);
+        else container.appendChild(area);
+      }
+      // 通过 CSS 变量驱动 Vue Tailwind 类 h-[calc(var(--search-area-height,290px))]，
+      // 这样 Vue re-render 时也会用新高度，不会被内联 style 丢失
+      var searchView = container.closest('.search-entry-view');
+      if (_files.length === 0) {
+        area.style.display = 'none';
+        container.classList.remove('has-attachments');
+        // 重置 CSS 变量到默认值
+        document.documentElement.style.setProperty('--search-area-height', '290px');
+        if (searchView) searchView.style.height = '';
+        return;
+      }
+      area.style.display = 'flex';
+      container.classList.add('has-attachments');
+      // 根据文件卡片实际行数计算需要的高度
+      // 每行卡片：高度约 42px，加上文件区与 textarea 之间的间距 8px
+      var fileRows = Math.ceil(_files.length / 5);
+      var cardHeight = fileRows * 42 + 8;
+      // 290 是搜索区域原本高度（包含 textarea + bottomActions + padding）
+      var newHeight = 290 + cardHeight;
+      // 关键：写到 :root CSS 变量，Vue 的 h-[calc(var(--search-area-height))] 自动跟随
+      document.documentElement.style.setProperty('--search-area-height', newHeight + 'px');
+      // 同时再设置一次内联 height 兜底，防止 Tailwind 类在某些时序下不刷新
+      if (searchView) searchView.style.height = newHeight + 'px';
+      var html = '';
+      _files.forEach(function(f, i) {
+        var nameDiv = document.createElement('div');
+        nameDiv.textContent = f.name;
+        var safeName = nameDiv.innerHTML;
+        html += '<div class="file-attach-card">' +
+          '<div class="file-attach-info">' +
+            '<span class="file-attach-name" title="' + safeName + '">' + safeName + '</span>' +
+            '<span class="file-attach-size">' + fmtSize(f.size) + '</span>' +
+          '</div>' +
+          '<button class="file-attach-remove" data-idx="' + i + '">×</button>' +
+        '</div>';
+      });
+      area.innerHTML = html;
+      area.querySelectorAll('.file-attach-remove').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(this.getAttribute('data-idx'));
+          _files.splice(idx, 1);
+          renderCards();
+          if (window.updateSendButtonState) setTimeout(window.updateSendButtonState, 10);
+        });
+      });
+    }
+    
+    window._triggerFileUpload = function() { ensureInput().click(); };
+    window._getAttachments = function() { return _files; };
+    window._clearAttachments = function() {
+      _files = [];
+      renderCards();
+      if (window.updateSendButtonState) setTimeout(window.updateSendButtonState, 10);
+    };
+  })();
 
     // 头像下拉菜单（兼容克隆结构与 fallback 结构）
     const avatarSlot = _pinnedActionsEl.querySelector('.pinned-avatar-slot');
