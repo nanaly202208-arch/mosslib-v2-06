@@ -1115,31 +1115,8 @@ img.max-w-243px.h-39px {
   transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
-/* 标签栏置顶时填满页面宽度 */
-.sticky-menu-view .fixed {
-  background: #efeffc !important;
-  left: 0 !important;
-  right: 0 !important;
-}
-
-.sticky-menu-view .fixed .cate-bar-view,
-.sticky-menu-view .fixed .cate-menu-view {
-  width: 100vw !important;
-  max-width: 100vw !important;
-}
-
-/* 防止左侧残留空白 */
-.sticky-menu-view .fixed .cate-bar-view,
-.sticky-menu-view .fixed .cate-menu-view {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-
-.sticky-menu-view .fixed .cate-menu-view .el-menu--horizontal,
-.sticky-menu-view .fixed .cate-menu-view .menu-bar {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-}
+/* 标签栏置顶样式（JS双保险直接操作DOM）
+   无需额外CSS，全由updatePinnedState的style.cssText控制 */
 
 /* 标签页置顶时显示的右侧浮动操作区 */
 .pinned-top-actions {
@@ -2378,10 +2355,40 @@ img.max-w-243px.h-39px {
           _pinnedActionsEl.classList.remove('visible');
           if (avatarWrapper) avatarWrapper.classList.remove('open');
         }
-        // 标签栏通栏铺满
-        var f = document.querySelector('.sticky-menu-view .fixed');
-        if (f) {
-          f.style.cssText = pinned ? 'width:auto!important;max-width:none!important;margin:0!important;left:0!important;' : '';
+
+        // 标签栏：铺满全屏 + 左对齐 + 注入logo
+        var _els = [
+          document.querySelector('.sticky-menu-view .fixed .cate-bar-view'),
+          document.querySelector('.sticky-menu-view .fixed .cate-menu-view')
+        ];
+        _els.forEach(function(el) {
+          if (!el) return;
+          if (pinned) {
+            el.style.cssText = 'display:flex!important;flex-direction:row!important;align-items:center!important;width:100vw!important;max-width:100vw!important;margin:0!important;padding:0!important;left:0!important;box-sizing:border-box!important;';
+          } else {
+            el.style.cssText = '';
+          }
+        });
+        // 标签菜单左对齐
+        var _menu = document.querySelector('.sticky-menu-view .fixed .cate-menu-view .cate-menu-popper, .sticky-menu-view .fixed .cate-menu-view .menu-bar, .sticky-menu-view .fixed .cate-menu-view .el-menu');
+        if (_menu) {
+          _menu.style.cssText = pinned ? 'justify-content:flex-start!important;padding-left:100px!important;padding-right:140px!important;' : '';
+        }
+        // 注入logo
+        var _slot = document.querySelector('#retrieve-cate-bar-fixed-logo');
+        if (_slot) {
+          if (pinned) {
+            _slot.style.cssText = 'display:flex!important;align-items:center;flex-shrink:0;';
+            if (!_slot.querySelector('img')) {
+              var _img = document.createElement('img');
+              _img.src = './m_files/logo_mosslib_long.png';
+              _img.alt = 'MossLib';
+              _img.style.cssText = 'height:28px;width:auto;display:block;';
+              _slot.appendChild(_img);
+            }
+          } else {
+            _slot.style.cssText = '';
+          }
         }
       }
     }
