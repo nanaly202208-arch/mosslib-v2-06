@@ -1137,15 +1137,99 @@ img.max-w-243px.h-39px {
   z-index: 2 !important;
 }
 
-/* 覆盖Vue v-show,让logo在吸顶时可见(JS内联style兜底) */
-#retrieve-cate-bar-fixed-logo {
-  z-index: 3;
+/* 吸顶时显示的固定logo（与pinned-top-actions同级） */
+.pinned-logo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 170px;
+  display: none;
+  align-items: center;
+  z-index: 1000;
+  pointer-events: none;
+  padding-left: 50px;
+  box-sizing: border-box;
 }
 
-/* 标签页置顶时显示的右侧浮动操作区 */
+.pinned-logo.visible {
+  display: flex;
+}
+
+.pinned-logo img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+/* 吸顶搜索框弹出覆盖层 */
+.pinned-search-overlay {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: none;
+}
+
+.pinned-search-overlay.visible {
+  display: block;
+}
+
+.pinned-search-overlay .pinned-search-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.pinned-search-overlay .pinned-search-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #f5f5fa;
+  padding: 35px 0 45px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pinned-search-overlay .pinned-search-panel .se-wrapper {
+  width: 760px;
+  max-width: 90vw;
+  margin: 0 auto;
+}
+
+/* 吸顶时搜索框（在pinned-top-actions内，头像左边） */
+.pinned-search-box {
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.pinned-search-box .el-input__wrapper {
+  border-radius: 16px;
+  border: 0.6px solid #e2ebee;
+  box-shadow: 0 0 0 0 var(--el-input-border-color, var(--el-border-color)) inset;
+  cursor: pointer;
+}
+
+.pinned-search-box .el-input__suffix .search-btn.el-button {
+  color: #605CE5;
+}
+
+.pinned-search-box .el-input__suffix .search-btn.el-button .el-icon {
+  font-size: 15px;
+}
+
+.pinned-search-box .el-input__suffix .search-btn.el-button.is-disabled {
+  color: #d3d3d9;
+}
+
+/* 吸顶时右侧操作区（只保留头像） */
 .pinned-top-actions {
   position: fixed;
-  top: 8px;
+  top: 3px;
   right: 24px;
   height: 44px;
   display: none;
@@ -1157,32 +1241,6 @@ img.max-w-243px.h-39px {
 
 .pinned-top-actions.visible {
   display: flex;
-}
-
-.pinned-search-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #e8e8e8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  color: #605CE5;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  flex-shrink: 0;
-}
-
-.pinned-search-btn:hover {
-  background: #f5f3ff;
-  border-color: #605CE5;
-}
-
-.pinned-search-btn svg {
-  width: 20px;
-  height: 20px;
 }
 
 /* 克隆原顶部栏的 Element UI 头像结构以保持一致 */
@@ -2222,6 +2280,7 @@ img.max-w-243px.h-39px {
   let _pinnedResizeHandler = null;
   let _pinnedStickyRef = null;
   let _pinnedInitStarted = false;
+  let _pinnedLogoEl = null;
 
   function initPinnedTopActions() {
     if (_pinnedActionsEl && document.body.contains(_pinnedActionsEl)) {
@@ -2250,11 +2309,24 @@ img.max-w-243px.h-39px {
       avatarHtml = `<div class="avatar-container"><div class="el-dropdown right-menu-item hover-effect"><div class="avatar-wrapper el-tooltip__trigger" role="button" tabindex="0" aria-haspopup="menu"><span class="el-avatar el-avatar--circle portrait" style="--el-avatar-size: 36px; --el-avatar-bg-color: #fff;"><img src="./m_files/file.png" style="object-fit: cover;"></span><i class="el-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="m192 384 320 384 320-384z"></path></svg></i></div></div></div>`;
     }
     _pinnedActionsEl.innerHTML = `
-      <button class="pinned-search-btn" id="pinnedSearchBtn" title="搜索" aria-label="搜索">
-        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-          <path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704"/>
-        </svg>
-      </button>
+      <div class="pinned-search-box">
+        <div class="el-input el-input--default el-input--suffix" style="--el-input-width:200px">
+          <div class="el-input__wrapper">
+            <input class="el-input__inner" type="text" autocomplete="off" placeholder="搜资料、找答案">
+            <span class="el-input__suffix">
+              <span class="el-input__suffix-inner">
+                <button class="el-button el-button--default is-disabled is-plain is-circle is-link wh search-btn" disabled>
+                  <i class="el-icon">
+                    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                      <path fill="currentColor" d="m795.904 750.72 124.992 124.928a32 32 0 0 1-45.248 45.248L750.656 795.904a416 416 0 1 1 45.248-45.248zM480 832a352 352 0 1 0 0-704 352 352 0 0 0 0 704"/>
+                    </svg>
+                  </i>
+                </button>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
       <div class="pinned-avatar-slot">${avatarHtml}</div>
       <div class="pinned-avatar-dropdown" id="pinnedAvatarDropdown">
         <div class="pinned-avatar-header">
@@ -2294,19 +2366,48 @@ img.max-w-243px.h-39px {
     `;
     document.body.appendChild(_pinnedActionsEl);
 
-    // 搜索按钮：滚动到顶部并聚焦搜索输入框
-    const searchBtn = _pinnedActionsEl.querySelector('#pinnedSearchBtn');
-    if (searchBtn) {
-      searchBtn.addEventListener('click', function() {
-        const input = document.querySelector('.search-entry-container textarea, .search-entry-container .el-input__inner');
-        if (input) {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          setTimeout(function() {
-            try { input.focus(); } catch (e) {}
-          }, 350);
-        } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 创建固定的左侧logo（完全脱离Vue DOM）
+    _pinnedLogoEl = document.createElement('div');
+    _pinnedLogoEl.className = 'pinned-logo';
+    _pinnedLogoEl.innerHTML = '<img src="./m_files/logo_mosslib.png" alt="MossLib">';
+    document.body.appendChild(_pinnedLogoEl);
+
+    // 搜索框点击：弹出覆盖层展示首页搜索区域
+    var _searchBox = _pinnedActionsEl.querySelector('.pinned-search-box');
+    if (_searchBox) {
+      // 创建覆盖层（仅首次）
+      var _overlay = document.querySelector('.pinned-search-overlay');
+      if (!_overlay) {
+        _overlay = document.createElement('div');
+        _overlay.className = 'pinned-search-overlay';
+        _overlay.innerHTML = '<div class="pinned-search-mask"></div><div class="pinned-search-panel"><div class="se-wrapper"></div></div>';
+        document.body.appendChild(_overlay);
+        // 点击蒙层关闭
+        var _mask = _overlay.querySelector('.pinned-search-mask');
+        if (_mask) {
+          _mask.addEventListener('click', function() {
+            _overlay.classList.remove('visible');
+          });
         }
+      }
+
+      _searchBox.addEventListener('click', function(e) {
+        e.stopPropagation();
+        // 克隆首页搜索区域到面板
+        var _src = document.querySelector('.search-entry-view .search-entry-container');
+        var _wrap = _overlay.querySelector('.se-wrapper');
+        if (_src && _wrap) {
+          _wrap.innerHTML = '';
+          var _clone = _src.cloneNode(true);
+          _clone.style.cssText = 'width:100%!important;max-width:100%!important;margin:0!important;';
+          _wrap.appendChild(_clone);
+        }
+        _overlay.classList.add('visible');
+        // 自动聚焦输入框
+        setTimeout(function() {
+          var _inp = _wrap.querySelector('textarea, input.el-input__inner');
+          if (_inp) try { _inp.focus(); } catch(e) {}
+        }, 100);
       });
     }
 
@@ -2392,19 +2493,9 @@ img.max-w-243px.h-39px {
         if (bg) {
           bg.classList.toggle('visible', pinned);
         }
-        // 标签栏左侧logo（Vue v-show="fixed"控制显隐，强制覆盖）
-        var logoSlot = document.querySelector('#retrieve-cate-bar-fixed-logo');
-        if (logoSlot) {
-          logoSlot.style.cssText = pinned ? 'display:flex!important;align-items:center;' : '';
-          // 确保内部logo容器和图片可见
-          var logoInner = logoSlot.querySelector('.sidebar-logo-container');
-          if (logoInner) {
-            logoInner.style.cssText = pinned ? 'display:flex!important;align-items:center;background:transparent!important;' : '';
-            var logoImg = logoInner.querySelector('img.sidebar-logo');
-            if (logoImg && logoImg.getAttribute('src') !== './m_files/logo_mosslib.png') {
-              logoImg.src = './m_files/logo_mosslib.png';
-            }
-          }
+        // 固定logo（与right-menu同级，完全脱离Vue DOM）
+        if (_pinnedLogoEl) {
+          _pinnedLogoEl.classList.toggle('visible', pinned);
         }
       }
       // 始终同步背景层位置
@@ -2439,6 +2530,13 @@ img.max-w-243px.h-39px {
       _pinnedInitStarted = false;
       initPinnedTopActions();
       return;
+    }
+    // 确保logo存在
+    if (!_pinnedLogoEl || !document.body.contains(_pinnedLogoEl)) {
+      _pinnedLogoEl = document.createElement('div');
+      _pinnedLogoEl.className = 'pinned-logo';
+      _pinnedLogoEl.innerHTML = '<img src="./m_files/logo_mosslib.png" alt="MossLib">';
+      document.body.appendChild(_pinnedLogoEl);
     }
     // UI 已存在；如 sticky 节点被替换，重挂 scroll
     if (!_pinnedInitStarted) {
