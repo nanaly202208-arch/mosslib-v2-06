@@ -395,6 +395,8 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Vector-Bold.woff") format("woff");
 }
 </style><link}</style>
+<!-- Fraunces font for daily briefing -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet">
 <!-- 自定义样式：修改搜索区域和添加底部按钮 -->
 <style>
 /* 页面加载前的初始样式 - 防止闪烁 */
@@ -519,426 +521,372 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   margin: 0;
 }
 
-/* ===== 每日简报区域 ===== */
-.daily-briefing-container {
-  width: 1000px !important;
-  max-width: 90vw;
-  margin: 0 auto 40px;
-  box-sizing: border-box;
-}
-
-/* 标题区 */
-.briefing-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-  padding: 0 2px;
-}
-.briefing-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.briefing-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #222;
-  margin: 0;
-  font-family: inherit;
-}
-.briefing-title-en {
-  font-size: 11px;
-  color: #999;
-  letter-spacing: 1.5px;
-  font-weight: 500;
-}
-.briefing-ai-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: #605CE5;
-  background: linear-gradient(135deg, #efeffd 0%, #f5f3ff 100%);
-  padding: 3px 8px;
-  border-radius: 10px;
-  font-weight: 500;
-  border: 1px solid #e0deff;
-}
-.briefing-ai-tag svg {
-  color: #FE765F;
-}
-.briefing-more {
-  font-size: 13px;
-  color: #605CE5;
-  text-decoration: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.briefing-more:hover {
-  opacity: 0.7;
-}
-
-/* 网格布局: 左侧大卡片 60% + 右侧 2 个小卡片 40% */
-.briefing-grid {
-  display: grid;
-  grid-template-columns: 60% 40%;
-  gap: 14px;
-  align-items: stretch;
-  /* 简报区域固定高度 360px */
+/* ===== AI日报模块 (从 日报.html 完全复刻) ===== */
+.ai-daily-module {
+  width: 1000px;
   height: 360px;
-}
-.briefing-column {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 14px;
-  min-width: 0;
-  height: 100%;
-}
-
-/* 卡片通用样式 */
-.briefing-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  border: 1px solid #ececf2;
-  border-radius: 12px;
-  padding: 18px 20px;
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
+  background: #fafafa;
+  border-radius: 20px;
+  box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  min-width: 0;
-}
-.briefing-card:hover {
-  border-color: #c7c5f3;
-  box-shadow: 0 4px 16px rgba(96, 92, 229, 0.08);
-  transform: translateY(-1px);
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Microsoft Yahei', Arial, sans-serif;
+  color: #2d2d2d;
+  transition: all 0.2s;
+  margin: 0 auto 40px;
 }
 
-/* 大小卡片尺寸 - 简报区域固定 360px，小卡片均分 */
-.briefing-card--large {
-  padding: 20px 22px 0;
-  height: 100%;
-  /* 大卡片整体可滚动 */
-  overflow-y: auto;
-  min-height: 0;
-  /* Firefox: 滚动条轨道始终保留 6px 宽度（避免 hover 时内容闪烁） */
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-}
-/* WebKit: 滚动条轨道始终 6px 宽，thumb 默认透明 */
-.briefing-card--large::-webkit-scrollbar {
-  width: 6px;
-  background: transparent;
-}
-.briefing-card--large::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 3px;
-  transition: background 0.2s ease;
-}
-.briefing-card--large::-webkit-scrollbar-track {
-  background: transparent;
-}
-/* 鼠标悬停时 thumb 才显示，且弱化样式 */
-.briefing-card--large:hover {
-  scrollbar-color: #ececf2 transparent;
-}
-.briefing-card--large:hover::-webkit-scrollbar-thumb {
-  background: #ececf2;
-}
-.briefing-card--large:hover::-webkit-scrollbar-thumb:hover {
-  background: #d0d0e0;
-}
-.briefing-card--small {
-  padding: 20px 20px;
-  height: 100%;
-  overflow: hidden;
-  justify-content: space-between;
+/* 左右 flex 布局，高度严格继承 */
+.daily-module-layout {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background: #fafafa;
 }
 
-/* 最新标签 */
-.briefing-tag {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  display: inline-block;
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  z-index: 1;
-}
-.briefing-tag--latest {
-  background: linear-gradient(135deg, #ff6b6b 0%, #ff9550 100%);
-  color: #fff;
-  box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
+/* ========= 左侧日期导航栏 ========= */
+.date-sidebar {
+    width: 210px;
+    flex-shrink: 0;
+    background: #fafafa;
+    border-right: 1px solid #e9e9e9;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
 }
 
-/* 卡片头部：日期块 + AI 汇总标签 */
-.briefing-card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  gap: 8px;
-  flex-shrink: 0;
-}
-.briefing-date-block {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-/* 突出显示主日期 - 大字号+粗体+等宽字体 */
-.briefing-date-main {
-  font-family: 'SF Mono', 'JetBrains Mono', Consolas, monospace;
-  font-size: 28px;
-  font-weight: 700;
-  color: #1a1a1a;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
-}
-.briefing-card--small .briefing-date-main {
-  font-size: 20px;
-}
-.briefing-date-sub {
-  font-size: 11px;
-  color: #999;
-  font-weight: 500;
-  line-height: 1.2;
-}
-.briefing-ai-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 10px;
-  color: #FE765F;
-  background: #fff5f0;
-  padding: 2px 6px;
-  border-radius: 8px;
-  font-weight: 500;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-.briefing-ai-badge svg {
-  flex-shrink: 0;
+/* 左侧固定标题行 */
+.sidebar-header {
+    padding: 10px 14px 0 14px;
+    flex-shrink: 0;
 }
 
-/* 订阅源数量徽章（右上角，icon + 数字） */
-.briefing-source-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  color: #605CE5;
-  background: #f5f4ff;
-  padding: 3px 8px;
-  border-radius: 10px;
-  font-weight: 600;
-  flex-shrink: 0;
-  white-space: nowrap;
-  border: 1px solid #ece9ff;
-  font-family: 'SF Mono', 'JetBrains Mono', Consolas, monospace;
-  letter-spacing: 0.2px;
+.date-card-month {
+    padding: 10px 14px 4px 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
 }
-.briefing-source-icon {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-  /* 保持 SVG 原色 #333333 显示 */
+.month-text {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2d2d2d;
+    letter-spacing: 0.08em;
 }
-
-/* 摘要区（每张卡片都展示） */
-.briefing-summary-block {
-  position: relative;
-  padding: 0px 0 0px 12px;
-  margin-bottom: 14px;
-  border-left: 3px solid #605CE5;
+.year-text {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: #7a7b7b;
+    letter-spacing: 0.06em;
 }
-.briefing-card--small .briefing-summary-block {
-  margin-bottom: 0;
-  border-left-width: 3px;
-  padding: 0px 0 0px 10px;
+.day-big {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 0 20px;
 }
-.briefing-summary-quote {
-  display: none;
+.day-number {
+    font-family: 'Times New Roman', 'Times', serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #2d2d2d;
+    line-height: 1;
+    letter-spacing: -0.01em;
 }
-.briefing-summary-text {
-  margin: 0;
-  font-size: 14px;
-  color: #333;
-  line-height: 1.65;
-  letter-spacing: 0.2px;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  word-break: break-word;
+.weekday {
+    font-size: 12px;
+    color: #777777;
+    font-weight: 500;
+    margin-top: 4px;
+    letter-spacing: 0.05em;
 }
-.briefing-card--small .briefing-summary-text {
-  font-size: 14px;
-  line-height: 1.55;
-  -webkit-line-clamp: 4;
+.read-stats {
+    display: flex;
+    margin-bottom: 6px;
+    background: #f5f5f5;
+    height: 28px;
+    align-items: stretch;
 }
 
-/* 主题区（仅大卡片展示） */
-.briefing-topics {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 0;
-  padding-top: 8px;
-  border-top: 1px solid #f0f0f5;
-  /* 关键：去掉 flex: 1，让 topics 按内容自然高度
-     这样父级 padding-bottom 才能真正产生留白 */
-  flex-shrink: 0;
-  min-height: 0;
-  /* 滚动已交给外层 .briefing-card--large */
+.stat-value {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #2d2d2d;
 }
-/* 真实 DOM 占位元素：保证底部 20px 留白（不受 flex/overflow 干扰） */
-.briefing-bottom-spacer {
-  height: 20px;
-  flex-shrink: 0;
-  width: 100%;
-  /* 真实 DOM 元素，渲染上必然存在 20px 高度 */
+.divider-light {
+    margin: 8px 16px 12px 16px;
+    height: 1px;
+    background: #e5e5e5;
 }
-.briefing-topic {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.date-list {
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
-.briefing-topic-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 2px;
+.date-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border-radius: 14px;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid transparent;
+    background: transparent;
 }
-.briefing-topic-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1a1a1a;
-  position: relative;
-  padding-left: 8px;
+.date-item:hover {
+    background: rgba(0,0,0,0.02);
 }
-.briefing-topic-name::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 4px;
-  bottom: 4px;
-  width: 3px;
-  border-radius: 2px;
-  background: linear-gradient(180deg, #605CE5 0%, #FE765F 100%);
+/* 选中项 = 日历卡片样式 + 左侧高亮圆点 */
+.date-item.active {
+    background: #ffffff;
+    border: 1px solid rgba(217, 217, 217, 0.5);
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.03);
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    overflow: hidden;
+    transform: none;
 }
-.briefing-topic-count {
-  font-size: 11px;
-  color: #999;
-  background: #f5f5fa;
-  padding: 1px 6px;
-  border-radius: 8px;
-  font-weight: 500;
+.date-item.active .date-card-month::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #605ce5;
+    flex-shrink: 0;
+    transform: scale(1.3);
 }
-.briefing-topic-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.date-item.active .date-marker,
+.date-item.active .date-num,
+.date-item.active .date-week,
+.date-item.active .check-icon {
+    display: none;
 }
-.briefing-topic-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 14px;
-  line-height: 1.55;
-  padding: 3px 0;
-  min-width: 0;
+.date-marker {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d9d9d9;
+    transition: all 0.2s;
+    flex-shrink: 0;
 }
-.briefing-topic-item .briefing-bullet {
-  width: 4px;
-  height: 4px;
-  margin-top: 8px;
-  background: #605CE5;
-  opacity: 0.6;
-  flex-shrink: 0;
+.date-item.active .date-marker {
+    background: #2d2d2d;
+    transform: scale(1.3);
 }
-.briefing-topic-text {
-  flex: 1;
-  min-width: 0;
-  color: #444;
-  text-decoration: none;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  word-break: break-word;
-  transition: color 0.2s;
+.date-num {
+    font-family: 'Times New Roman', 'Times', serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #2d2d2d;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
 }
-.briefing-topic-text:hover {
-  color: #605CE5;
-  text-decoration: underline;
+.date-item.active .date-num {
+    font-size: 18px;
+    font-weight: 700;
+    color: #7a7b7b;
 }
-.briefing-topic-source {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 10.5px;
-  color: #888;
-  background: #f7f7fb;
-  padding: 2px 6px;
-  border-radius: 6px;
-  flex-shrink: 0;
-  white-space: nowrap;
-  margin-top: 1px;
+.date-week {
+    font-size: 11px;
+    color: #9e9e9e;
+    margin-left: auto;
+    white-space: nowrap;
 }
-.briefing-topic-source svg {
-  flex-shrink: 0;
-  color: #605CE5;
+.date-item.active .date-week {
+    font-size: 12px;
+    color: #7a7b7b;
 }
-
-/* 卡片底部 */
-.briefing-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-  color: #999;
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px dashed #f0f0f5;
-  flex-shrink: 0;
+.today-tag {
+    display: inline;
+    font-size: 12px;
+    font-weight: 500;
+    color: #323232;
+    margin-left: 4px;
 }
-.briefing-card--small .briefing-footer {
-  margin-top: 8px;
-  padding-top: 6px;
+.check-icon {
+    margin-left: 6px;
+    flex-shrink: 0;
 }
-.briefing-source-count {
-  color: #888;
+.expand-more-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    font-size: 11px;
+    color: #9e9e9e;
+    padding: 6px 0;
+    margin-top: 0px;
+    cursor: pointer;
+    transition: color 0.2s;
 }
-.briefing-expand {
-  color: #605CE5;
-  font-weight: 500;
-  transition: transform 0.2s;
-}
-.briefing-card:hover .briefing-expand {
-  transform: translateX(2px);
+.expand-more-btn:hover {
+    color: #2d2d2d;
 }
 
-/* 响应式 */
-@media (max-width: 900px) {
-  .briefing-grid {
-    grid-template-columns: 1fr;
-  }
-  .briefing-column {
-    grid-template-rows: auto;
-  }
+/* ========= 右侧日报内容 (滚动区域) ========= */
+.daily-content {
+    flex: 1;
+    background: #fff;
+    overflow-y: auto;
+    padding: 16px 20px 20px 24px;
+    /* 预留滚动条宽度，避免 hover 时内容闪烁 */
+    scrollbar-gutter: stable;
+    /* Firefox: 默认隐藏，hover 后 300ms 显示 */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0s 0.3s;
+}
+.daily-content:hover {
+    scrollbar-color: #e5e5e5 transparent;
+    transition: scrollbar-color 0s 0s;
+}
+.daily-content.scrolling {
+    scrollbar-color: #e5e5e5 transparent;
+    transition: scrollbar-color 0s 0s;
+}
+/* WebKit: 默认透明，hover/滚动中立即显示，停止300ms后消失 */
+.daily-content::-webkit-scrollbar {
+    width: 1px;
+    background: transparent;
+}
+.daily-content::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 2px;
+    transition: background 0s 0.3s;
+}
+.daily-content:hover::-webkit-scrollbar-thumb,
+.daily-content.scrolling::-webkit-scrollbar-thumb {
+    background: #e5e5e5;
+    transition: background 0s 0s;
+}
+.daily-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.daily-inner {
+    max-width: 100%;
+}
+
+/* 日报新标题行 */
+.brief-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+/* 标题标签 */
+.brief-title-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #605CE5;
+    background: linear-gradient(135deg, #efeffd 0%, #f5f3ff 100%);
+    padding: 4px 12px;
+    border: 1px solid #e0deff;
+    letter-spacing: 0.5px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0px), calc(100% - 0px) 100%, 0 100%);
+}
+.brief-title-actions {
+    display: flex;
+    gap: 8px;
+}
+.brief-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    padding: 0;
+}
+.brief-action-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+/* 摘要段落 */
+.brief-summary-block {
+    padding: 0 0 0 14px;
+    margin-bottom: 20px;
+    border-left: 4px solid #605CE5;
+}
+.brief-summary-text {
+    margin: 0;
+    font-size: 14px;
+    color: #444;
+    line-height: 1.65;
+    letter-spacing: 0.2px;
+    text-align: justify;
+}
+
+/* 主题区块 */
+.brief-topic-section {
+    margin-bottom: 16px;
+}
+.brief-topic-title {
+    font-family: 'Noto Serif SC', 'Songti SC', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2d2d2d;
+    margin-bottom: 4px;
+}
+.brief-topic-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 2px 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #2d2d2d;
+    margin-bottom: 0px;
+}
+.brief-topic-bullet {
+    flex-shrink: 0;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #3667e1;
+    margin-top: 7px;
+    opacity: 0.6;
+}
+.brief-topic-text {
+    flex: 1;
+    min-width: 0;
+    color: #2d2d2d;
+    text-align: justify;
+}
+.brief-topic-source {
+    font-size: 10px;
+    color: #9e9e9e;
+    flex-shrink: 0;
+    background: #f5f5f5;
+    padding: 1px 6px;
+    border-radius: 6px;
+    white-space: nowrap;
+    margin-top: 1px;
 }
 
 /* 上传附件按钮 */
@@ -2166,166 +2114,221 @@ img.max-w-243px.h-39px {
   // ========== 每日简报区域 ==========
   function insertDailyBriefing(searchView) {
     if (!searchView || !searchView.parentNode) return;
-    if (document.querySelector('.daily-briefing-container')) return;
+    if (document.querySelector('.ai-daily-module')) return;
 
-    // 数据结构：每一天 = 一份 AI 汇总简报
-    // - summary: 一段话摘要（每张卡片都显示）
-    // - topics: 分主题（仅大卡片展示），每条带 source 可溯源到详情页
-    var briefings = [
-      {
-        date: '2026-06-11',
-        weekday: '今天 · 周四',
-        isToday: true,
-        aiGenerated: true,
-        sourceCount: 28,
-        summary: '今日 AI 行业重磅更新密集：OpenAI 发布 GPT-5o 推理增强模型，Anthropic 升级企业版能力，欧盟通过《AI 责任法案》最终版；学术方面，Nature 子刊关注 LLM 在系统性综述中的偏差问题。整体看，大模型在企业级应用与监管合规两条主线持续推进。',
-        topics: [
-          {
-            name: '大模型动态',
-            items: [
-              { text: 'OpenAI 发布 GPT-5o 推理增强模型，多模态能力显著提升', source: 'OpenAI 官方博客', url: '#' },
-              { text: 'Anthropic 推出 Claude 企业版，扩展 100 万 token 上下文', source: 'Anthropic', url: '#' },
-              { text: 'Google DeepMind 发布 Gemini 2.5 技术报告', source: 'DeepMind', url: '#' }
+    // ---------- 模拟日报数据集 ----------
+    var reportsDB = {
+        "2026-06-12": {
+            fullDate: "06/12",
+            weekday: "周五",
+            summary: '本周五AI行业动态密集：欧盟对俄新制裁落地、国内AI产业扶持政策出台、DeepMind发布Gemini Ultra 2.0、人形机器人Optimus进厂测试。整体看，AI在产业端与政策端双线加速推进。',
+            topics: [
+                { title: "国际局势与市场", items: [{ text: "欧盟通过对俄新制裁方案，重点限制能源技术出口并扩大个人黑名单", source: "路透社" },{ text: "欧盟通过对俄新制裁方案，重点限制能源技术出口并扩大个人黑名单", source: "路透社" },{ text: "欧盟通过对俄新制裁方案，重点限制能源技术出口并扩大个人黑名单", source: "路透社" }] },
+                { title: "国内要闻", items: [{ text: "发改委发布人工智能产业扶持计划，投入50亿引导基金支持AI芯片及大模型底层技术研发", source: "财联社" }] },
+                { title: "AI模型与应用", items: [{ text: "Google DeepMind推出Gemini Ultra 2.0，推理与多模态理解刷新多项基准，上下文突破200万token", source: "机器之心" }, { text: "智谱AI发布CodeGeeX4全能版，支持192K上下文，代码生成速度提升34%", source: "智谱官方" }] },
+                { title: "产业观察", items: [{ text: "人形机器人Optimus进入工厂测试，德州工厂执行物料搬运任务，效率接近人类80%", source: "36氪" }] }
             ]
-          },
-          {
-            name: '学术前沿',
-            items: [
-              { text: 'Nature 子刊：LLM 在系统性综述中的偏差问题研究', source: 'Nature 期刊', url: '#' },
-              { text: 'IEEE：图神经网络在推荐系统的新进展', source: 'IEEE', url: '#' },
-              { text: 'Cell 论文：AI 辅助药物分子设计取得突破', source: 'Cell', url: '#' }
+        },
+        "2026-06-11": {
+            fullDate: "06/11",
+            weekday: "周四",
+            summary: '今日国际局势趋紧——伊朗宣布关闭霍尔木兹海峡；国内安全生产巡查启动；AI领域Claude发布重大更新，小米超大杯模型亮相；舟山支老实验引发社会关注。',
+            topics: [
+                { title: "国际局势与市场", items: [{ text: "伊朗宣布全面关闭霍尔木兹海峡，任何违规通行者都将成为打击目标", source: "新华社-公众号" }] },
+                { title: "国内要闻", items: [{ text: "2026年度中央安全生产考核巡查工作启动，24个考核巡查组进驻31个省区市", source: "新华社-公众号" }] },
+                { title: "产业观察", items: [{ text: "SemiAnalysis拆解宇树G1机器人，中国供应链优势和高垂直整合能力是低价高毛利关键", source: "解码AI前沿突破" }] },
+                { title: "AI模型与应用", items: [{ text: "Anthropic发布Claude Fable 5和Mythos 5，一天内完成Stripe 5000万行代码库迁移", source: "解码AI前沿突破" }, { text: "小米发布MiMo-V2.5-Pro-UltraSpeed大模型，1T总参数、1M上下文，推理速度达1000+ TPS", source: "解码AI技术突破" }] },
+                { title: "社会民生", items: [{ text: "舟山柴山岛进行政府引导的支老实验，用社会组织运营盘活海岛养老资源", source: "新闻" }] }
             ]
-          },
-          {
-            name: '行业政策',
-            items: [
-              { text: '欧盟通过《AI 责任法案》最终修订版', source: '欧盟委员会', url: '#' },
-              { text: '美国 NIST 发布生成式 AI 评估新标准', source: 'NIST', url: '#' }
+        },
+        "2026-06-10": {
+            fullDate: "06/10",
+            weekday: "周三",
+            summary: '美联储维持利率不变暗示年内降息；OpenAI搜索产品问世挑战传统格局；台积电2nm工艺量产计划提前。市场与技术在博弈中前行。',
+            topics: [
+                { title: "国际局势与市场", items: [{ text: "美联储维持利率不变，暗示年内降息一次，美股三大指数集体收涨", source: "CNBC" }] },
+                { title: "AI模型与应用", items: [{ text: "OpenAI推出SearchGPT智能搜索，整合实时信息与模型推理，直接挑战传统搜索引擎", source: "OpenAI博客" }, { text: "字节跳动发布Seed-TTS语音模型，支持情感迁移及零样本克隆", source: "AI科技评论" }] },
+                { title: "产业观察", items: [{ text: "台积电宣布2nm工艺量产计划提前，预计2026年底试产，苹果、英伟达首批采用", source: "半导体行业观察" }] }
             ]
-          }
-        ]
-      },
-      {
-        date: '2026-06-10',
-        weekday: '昨天 · 周三',
-        isToday: false,
-        aiGenerated: true,
-        sourceCount: 24,
-        summary: 'MossLib Claw 完成第二轮全量抓取，覆盖 128 万篇核心期刊；arXiv 出现扩散模型推理速度 3 倍提升的新工作，推理成本持续下降。',
-        topics: []
-      },
-      {
-        date: '2026-06-09',
-        weekday: '周二',
-        isToday: false,
-        aiGenerated: true,
-        sourceCount: 22,
-        summary: 'MossLib 专题库更新，新增 4 个跨学科主题包；ICML 2026 接收论文名单公布，AI for Science 占比再创新高。',
-        topics: []
-      }
-    ];
+        },
+        "2026-06-09": {
+            fullDate: "06/09",
+            weekday: "周二",
+            summary: '《人工智能法》草案首次提请审议；腾讯混元升级视频生成能力；蔚来自研5nm智驾芯片发布。立法与商业化同步提速。',
+            topics: [
+                { title: "国内要闻", items: [{ text: "《人工智能法》草案首次提请审议，聚焦算法安全、生成内容标识及AI责任认定", source: "人民日报" }] },
+                { title: "AI模型与应用", items: [{ text: "腾讯混元大模型升级视频生成能力，支持5秒长视频生成，风格迁移与物理仿真大幅提升", source: "腾讯云" }] },
+                { title: "产业观察", items: [{ text: "蔚来发布自研5nm智驾芯片神玑NX9031，算力超1000TOPS，明年上车", source: "汽车之心" }] }
+            ]
+        },
+        "2026-06-08": {
+            fullDate: "06/08",
+            weekday: "周一",
+            summary: 'G7峰会聚焦AI全球治理框架；Stable Video 4D颠覆3D内容创作；国内首例AI生成图片著作权案认定受版权保护。',
+            topics: [
+                { title: "国际局势", items: [{ text: "G7峰会聚焦AI全球治理框架，七国集团同意制定AI开发者行为准则，强调风险分级", source: "AP News" }] },
+                { title: "AI模型与应用", items: [{ text: "Stability AI开源Stable Video 4D模型，可从单图生成多视角动态视频引爆3D内容创作", source: "Stability AI" }] },
+                { title: "社会民生", items: [{ text: "北京互联网法院首例AI生成图片著作权案宣判，认定AI生成图片体现人类创造性受著作权保护", source: "法治日报" }] }
+            ]
+        }
+    };
 
-    // 构造单张卡片 HTML
-    function buildCard(b, isLarge) {
-      var sizeClass = isLarge ? 'briefing-card--large' : 'briefing-card--small';
+    var dateKeys = ["2026-06-12","2026-06-11","2026-06-10","2026-06-09","2026-06-08"];
+    var activeDate = "2026-06-12";
 
-      // 日期格式化：年/月/日，当年则省略年份，且不显示前导 0
-      // 当前年份
-      var currentYear = new Date().getFullYear();
-      // 解析日期字符串 '2026-06-11' → [2026, 06, 11]
-      var dateParts = b.date.split('-');
-      var year = parseInt(dateParts[0], 10);
-      var month = parseInt(dateParts[1], 10);
-      var day = parseInt(dateParts[2], 10);
-      var displayDate = (year === currentYear)
-        ? (month + '/' + day)
-        : (year + '/' + month + '/' + day);
-
-      // 摘要（每张卡片都展示）
-      var summaryHtml =
-        '<div class="briefing-summary-block">' +
-          '<span class="briefing-summary-quote">"</span>' +
-          '<p class="briefing-summary-text">' + b.summary + '</p>' +
-        '</div>';
-
-      // 主题（仅大卡片展示）
-      var topicsHtml = '';
-      if (isLarge && b.topics && b.topics.length > 0) {
-        topicsHtml = '<div class="briefing-topics">' +
-          b.topics.map(function(topic) {
-            var itemsHtml = topic.items.map(function(item) {
-              return '<li class="briefing-topic-item">' +
-                '<span class="briefing-bullet"></span>' +
-                '<a class="briefing-topic-text" href="' + (item.url || '#') + '" title="' + (item.text || '').replace(/"/g, '&quot;') + '">' +
-                  item.text +
-                '</a>' +
-                '<span class="briefing-topic-source">' +
-                  '<svg viewBox="0 0 16 16" width="10" height="10" fill="none">' +
-                    '<path d="M5 3h6l3 3v7a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm5 0v3h3M6 8h4M6 10h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>' +
-                  '</svg>' +
-                  item.source +
-                '</span>' +
-              '</li>';
-            }).join('');
-            return '<div class="briefing-topic">' +
-              '<div class="briefing-topic-header">' +
-                '<span class="briefing-topic-name">' + topic.name + '</span>' +
-                '<span class="briefing-topic-count">' + topic.items.length + ' 条</span>' +
-              '</div>' +
-              '<ul class="briefing-topic-list">' + itemsHtml + '</ul>' +
-            '</div>';
-          }).join('') +
-        '</div>';
-      }
-
-      return '<div class="briefing-card ' + sizeClass + '">' +
-        '<div class="briefing-card-header">' +
-          '<div class="briefing-date-block">' +
-            '<div class="briefing-date-main">' + displayDate + '</div>' +
-            '<div class="briefing-date-sub">' + b.weekday + '</div>' +
-          '</div>' +
-          // 右上角显示订阅源数量（icon + 数字）
-          '<span class="briefing-source-badge" title="聚合自 ' + b.sourceCount + ' 个订阅源">' +
-            '<svg t="1781235832251" class="briefing-source-icon icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8507" width="200" height="200"><path d="M847.36 121.856c-18.944-14.848-44.544-24.576-72.192-24.576h-527.36c-28.16 0-54.272 9.216-72.192 24.576-18.944 15.36-30.72 36.352-30.72 59.392v718.848c0 4.608 1.536 9.728 4.608 14.336 9.728 12.8 29.696 17.408 45.568 9.728l296.96-146.944c6.144-3.072 12.288-4.608 19.456-4.608s13.824 1.536 19.456 4.608l294.912 145.92c5.632 3.584 11.776 5.12 19.456 5.12 18.432 0 33.792-12.288 33.792-27.648V181.248c-1.024-23.04-12.8-44.032-31.744-59.392z m-24.576 695.296c0 18.944-11.264 36.352-27.648 27.648l-230.4-115.712c-16.896-8.704-35.328-12.288-53.76-12.288-18.432 0-36.864 4.096-53.76 12.288l-230.4 115.712c-16.384 8.704-27.648-9.728-27.648-27.648V180.224s13.824-27.648 41.472-27.648h539.648c34.304 0 41.472 26.624 41.472 27.648v636.928zM681.472 291.328H342.016c-16.896 0-30.72 15.36-30.72 34.304s13.824 34.304 30.72 34.304h339.968c16.896 0 30.72-15.36 30.72-34.304-0.512-18.944-13.824-34.304-31.232-34.304z m0 165.888H341.504c-16.896 0-30.72 15.36-30.72 34.304s13.824 34.304 30.72 34.304h339.968c16.896 0 30.72-15.36 30.72-34.304-0.512-19.456-14.336-34.304-30.72-34.304z" fill="#333333" p-id="8508"></path></svg>' +
-            b.sourceCount +
-          '</span>' +
-        '</div>' +
-        summaryHtml +
-        topicsHtml +
-        // 真实 DOM 占位元素：保证大卡片底部 20px 留白
-        // 真实元素无视 flex/overflow 限制，物理占据 20px
-        (isLarge ? '<div class="briefing-bottom-spacer"></div>' : '') +
-      '</div>';
+    function getWeekdayByKey(key) {
+        var map = {
+            "2026-06-08":"周一","2026-06-09":"周二",
+            "2026-06-10":"周三","2026-06-11":"周四","2026-06-12":"周五"
+        };
+        return map[key] || "";
     }
 
-    // 顶部区域
-    var html = '<div class="briefing-header">' +
-      '<div class="briefing-title-wrap">' +
-        '<h2 class="briefing-title">每日简报</h2>' +
-      '</div>' +
-      '<a href="javascript:void(0)" class="briefing-more">查看全部 →</a>' +
-    '</div>' +
-    '<div class="briefing-grid">' +
-      // 左侧大卡片 - 60%
-      buildCard(briefings[0], true) +
-      // 右侧 2 个小卡片 - 40%
-      '<div class="briefing-column">' +
-        buildCard(briefings[1], false) +
-        buildCard(briefings[2], false) +
-      '</div>' +
-    '</div>';
+    function renderDateList() {
+        var container = document.getElementById("dateListContainer");
+        if(!container) return;
+        var html = '';
+        var todayKey = new Date().toISOString().slice(0, 10);
+        dateKeys.forEach(function(key) {
+            var dateObj = reportsDB[key] || { fullDate: key.slice(5).replace('-','/'), weekday: getWeekdayByKey(key) };
+            var displayDate = dateObj.fullDate || key.slice(5).replace('-','/');
+            var weekStr = dateObj.weekday || "";
+            var isActive = (key === activeDate);
+            var isToday = (key === todayKey);
+            if (isActive) {
+                // 选中项：日历卡片样式
+                html +=
+                    '<div class="date-item active" data-date="' + key + '">' +
+                        '<div class="date-card-month">' +
+                            '<span class="month-text">JUN</span>' +
+                            '<span class="year-text">2026</span>' +
+                        '</div>' +
+                        '<div class="day-big">' +
+                            '<div class="day-number">' + displayDate + '</div>' +
+                            '<div class="weekday">星期' + weekStr.charAt(weekStr.length-1) + (isToday ? ' <span class="today-tag">今天</span>' : '') + '</div>' +
+                        '</div>' +
+                    '</div>';
+            } else {
+                html +=
+                    '<div class="date-item" data-date="' + key + '">' +
+                        '<span class="date-marker"></span>' +
+                        '<div class="date-num">' + displayDate + '</div>' +
+                        '<div class="date-week">' + weekStr + (isToday ? ' <span class="today-tag">今天</span>' : '') + '</div>' +
+                    '</div>';
+            }
+        });
+        container.innerHTML = html;
 
-    var container = document.createElement('div');
-    container.className = 'daily-briefing-container';
-    container.innerHTML = html;
+        document.querySelectorAll('.date-item').forEach(function(el) {
+            el.addEventListener('click', function(e) {
+                var dateVal = el.getAttribute('data-date');
+                if(dateVal && reportsDB[dateVal]) {
+                    activeDate = dateVal;
+                    renderDateList();
+                    renderDailyContent(activeDate);
+                }
+            });
+        });
+    }
+
+    function renderDailyContent(dateKey) {
+        var report = reportsDB[dateKey];
+        if(!report) {
+            document.getElementById("dailyContentArea").innerHTML = '<div class="daily-inner" style="padding:30px; text-align:center;">暂无日报数据</div>';
+            return;
+        }
+        var topics = report.topics || [];
+        var topicsHtml = '';
+        topics.forEach(function(topic, idx) {
+            var itemsHtml = '';
+            topic.items.forEach(function(item) {
+                itemsHtml +=
+                    '<div class="brief-topic-item">' +
+                        '<span class="brief-topic-bullet"></span>' +
+                        '<span class="brief-topic-text">' + item.text + '</span>' +
+                        '<span class="brief-topic-source">' + item.source + '</span>' +
+                    '</div>';
+            });
+            topicsHtml +=
+                '<div class="brief-topic-section">' +
+                    '<div class="brief-topic-title">' + topic.title + '</div>' +
+                    itemsHtml +
+                '</div>';
+        });
+        var finalHtml =
+            '<div class="daily-inner">' +
+                '<div class="brief-title-row">' +
+                    '<span class="brief-title-tag">' + report.fullDate + ' AI简报</span>' +
+                    '<div class="brief-title-actions">' +
+                        '<button class="brief-action-btn" title="下载">' +
+                            '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+                        '</button>' +
+                        '<button class="brief-action-btn" title="分享">' +
+                            '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+                        '</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="brief-summary-block">' +
+                    '<p class="brief-summary-text">' + report.summary + '</p>' +
+                '</div>' +
+                topicsHtml +
+            '</div>';
+        document.getElementById("dailyContentArea").innerHTML = finalHtml;
+    }
+
+    function init() {
+        renderDateList();
+        renderDailyContent(activeDate);
+
+        // 日报右侧区域：滚动时立即显示滚动条，停止300ms后隐藏
+        var contentEl = document.getElementById("dailyContentArea");
+        if (contentEl) {
+            var scrollTimer = null;
+            contentEl.addEventListener('scroll', function() {
+                contentEl.classList.add('scrolling');
+                clearTimeout(scrollTimer);
+                scrollTimer = setTimeout(function() {
+                    contentEl.classList.remove('scrolling');
+                }, 300);
+            });
+        }
+    }
+
+    // 构建 AI 日报模块 DOM
+    var moduleHtml =
+      '<div class="daily-module-layout">' +
+        '<div class="date-sidebar">' +
+          '<div class="sidebar-header">' +
+            '<div class="read-stats">' +
+              '<div class="stat-value">AI日报</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="date-list" id="dateListContainer"></div>' +
+          '<a class="expand-more-btn" id="expandMoreBtn" href="javascript:void(0)">查看更多' +
+            '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3 L5 7 L9 3" stroke="currentColor" fill="none" stroke-linecap="round"/></svg>' +
+          '</a>' +
+        '</div>' +
+        '<div class="daily-content" id="dailyContentArea">' +
+          '<div class="daily-inner">' +
+            '<div style="text-align:center; padding:40px;">加载日报中...</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+
+    var moduleWrapper = document.createElement('div');
+    moduleWrapper.className = 'ai-daily-module';
+    moduleWrapper.innerHTML = moduleHtml;
 
     // 插入到 nav-buttons-container 之后
     var navContainer = searchView.parentNode.querySelector('.nav-buttons-container');
     if (navContainer && navContainer.nextSibling) {
-      searchView.parentNode.insertBefore(container, navContainer.nextSibling);
+      searchView.parentNode.insertBefore(moduleWrapper, navContainer.nextSibling);
     } else {
-      searchView.parentNode.appendChild(container);
+      searchView.parentNode.appendChild(moduleWrapper);
     }
+
+    // 调用 init 渲染最新日报
+    init();
   }
 
   // ========== 文献数量统计 - 数字滚动动画 ==========
