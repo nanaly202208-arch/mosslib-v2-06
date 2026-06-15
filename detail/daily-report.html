@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class=" " style="--el-color-primary: #605CE5; --el-color-primary-light-3: #8B85EA; --el-color-primary-light-5: #B0ACF0; --el-color-primary-light-7: #D0CDF6; --el-color-primary-light-8: #E2E0FA; --el-color-primary-light-9: #F0EFFD; --el-color-primary-dark-2: #4D49B7;">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="renderer" content="webkit">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="icon" href="https://mosslib-v2.newtranx.com/systemImg/logo_mosslib.ico">
+<title>MossLib · 每日晨报</title>
+<link rel="stylesheet" crossorigin="" href="./chat_files/index-0pRNdLMr.css">
+<link rel="stylesheet" crossorigin="" href="./chat_files/login-Bx1K0yZ-.css">
+<link rel="stylesheet" crossorigin="" href="./chat_files/sessionHistory-DRxQcj-u.css">
+<style>
+/* 全局重置 */
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Microsoft Yahei', Arial, sans-serif;
+  background: #f5f5f5;
+  color: #2d2d2d;
+}
+* {
+  box-sizing: border-box;
+}
+
+/* ===== 主布局: 左右分栏 ===== */
+.kb-chat {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
+/* ===== 左侧面板 ===== */
+.daily-left-panel {
+  width: 265px;
+  min-width: 265px;
+  background: #fff;
+  border-right: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* 顶部标题栏（仿 chat.html session-his-header） */
+.daily-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 10px 10px 14px;
+  height: 52px;
+  flex-shrink: 0;
+}
+.daily-header .header-logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.daily-header .header-logo img {
+  height: 52px;
+  width: auto;
+}
+/* 收起按钮（仿 chat.html） */
+.daily-header .collapse-btn {
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #666;
+  background: transparent;
+  border: none;
+  padding: 0;
+  transition: background 0.15s;
+}
+.daily-header .collapse-btn:hover {
+  background: #f0f0f0;
+}
+.daily-header .collapse-btn svg {
+  width: 20px;
+  height: 20px;
+  color: #666;
+}
+
+/* 左侧面板收起态 */
+.daily-left-panel.collapsed {
+  width: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  border-right: none !important;
+  flex: 0 0 0 !important;
+  padding: 0 !important;
+}
+
+/* 收起状态下的左上角工具栏 */
+.collapsed-toolbar {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  flex-direction: column;
+  gap: 8px;
+}
+.collapsed-toolbar.show {
+  display: flex;
+}
+.collapsed-toolbar .toolbar-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #E0E1E3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+}
+.collapsed-toolbar .toolbar-icon:hover {
+  background: #f5f5f5;
+  color: #333;
+  border-color: #605CE5;
+}
+.collapsed-toolbar .toolbar-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* 日期列表区域（flex:1 占据剩余空间，可滚动） */
+.daily-date-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.daily-date-area::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===== 左侧日期列表（复用 m.html 样式）===== */
+/* 月份分组头 */
+.date-month-group {
+  margin-bottom: 4px;
+}
+.month-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 12px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+  margin-bottom:6px;
+}
+.month-group-header:hover {
+  background: rgba(0,0,0,0.02);
+}
+.month-group-header.active {
+  background: #f5f7ff;
+}
+.month-group-header.active .month-group-title {
+  color: #605CE5;
+}
+.month-group-header.active .month-group-title-icon svg {
+  stroke: #605CE5;
+}
+.month-group-header.active .month-group-count {
+  color: #605CE5;
+}
+.month-group-title {
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #323232;
+}
+.month-group-header.active .month-group-title {
+  font-weight: 700;
+}
+.month-group-title-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.month-group-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.month-group-count {
+  font-size: 12px;
+  color: #bbb;
+  font-weight: 400;
+}
+.month-group-toggle {
+  color: #bbb;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.month-group-header.collapsed .month-group-toggle {
+  transform: rotate(-90deg);
+}
+.month-group-body {
+  overflow: hidden;
+  transition: max-height 0.25s ease;
+}
+
+.date-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: 2px;
+  padding: 10px 10px;
+  margin: 2px 28px 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  border: 1px solid #e9e9f2;
+  background: transparent;
+}
+.date-item:hover {
+  background: rgba(0,0,0,0.02);
+}
+/* 选中项 = 紧凑列表样式 + 高亮圆点 */
+.date-item.active {
+  background: #605ce5;
+  border-color: #605ce5;
+}
+.date-item.active .date-item-icon {
+  color: #fff;
+}
+.date-item.active .date-num {
+  font-weight: 700;
+  color: #fff;
+}
+.date-item.active .date-week {
+  color: #fff;
+  font-weight: 500;
+}
+.date-item-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  color: #d9d9d9;
+  transition: color 0.2s;
+}
+.date-num {
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #2d2d2d;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+.date-week {
+  font-size: 11px;
+  color: #9e9e9e;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.today-tag {
+  display: inline;
+  font-size: 10px;
+  font-weight: 500;
+  color: #888;
+  margin-left: 4px;
+}
+
+/* ===== 底部用户信息栏（仿 chat.html user-profile-section） ===== */
+.daily-user-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 12px;
+  border-top: 1px solid #e8e8e8;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: #fff;
+  transition: background 0.2s;
+  z-index: 10;
+}
+.daily-user-section:hover {
+  background: rgba(96, 92, 229, 0.05);
+}
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #605CE5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+}
+.user-info {
+  flex: 1;
+  margin-left: 10px;
+  min-width: 0;
+}
+.user-name {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.user-arrow {
+  color: #bbb;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+/* ===== 右侧日报内容区域 ===== */
+.daily-main-area {
+  flex: 1;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.daily-main-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 40px 40px;
+}
+.daily-inner {
+  max-width: 100%;
+  min-width: 320px;
+  margin: 0 max(0px, min(100px, calc((100vw - 1065px) / 2)));
+}
+
+/* ===== 日报内容样式（从 m.html 复用） ===== */
+.brief-title-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+.brief-title-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.brief-title-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: #333;
+  letter-spacing: 5px;
+}
+.brief-update-time {
+  display: block;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 14px;
+  color: #5a5a5a;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin-bottom: 0px;
+}
+.brief-title-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  margin-top: 4px;
+}
+.brief-title-divider span {
+  display: block;
+  width: 360px;
+  height: 1px;
+  background: #ddd;
+}
+.brief-title-divider span:last-child {
+  height: 2px;
+  background: #ccc;
+}
+.brief-desc-line {
+  display: block;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px;
+  color: #5a5a5a;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+
+.brief-title-actions {
+  display: flex;
+  gap: 8px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.brief-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  padding: 0;
+}
+.brief-action-btn:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+.brief-summary-block {
+  position: relative;
+  padding: 20px 20px 20px 36px;
+  margin-bottom: 24px;
+  border: 1px solid #e0deff;
+  border-radius: 8px;
+}
+.brief-summary-block::before {
+  content: '\201C';
+  position: absolute;
+  left: 0px;
+  top: 8px;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 38px;
+  color: #605CE5;
+  line-height: 1;
+  opacity: 0.35;
+}
+.brief-summary-text {
+  margin: 0;
+  font-size: 15px;
+  color: #333;
+  line-height: 1.7;
+  letter-spacing: 0.3px;
+  text-align: justify;
+}
+.brief-topic-section {
+  margin-bottom: 20px;
+}
+.brief-topic-title {
+  font-family: 'Noto Serif SC', 'Songti SC', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2d2d2d;
+  margin-bottom: 10px;
+}
+.brief-topic-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 3px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #2d2d2d;
+  margin-bottom: 2px;
+  flex-wrap: wrap;
+}
+.brief-topic-bullet {
+  flex-shrink: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #3667e1;
+  margin-top: 8px;
+  opacity: 0.6;
+}
+.brief-topic-text {
+  flex: 1;
+  min-width: 0;
+  color: #2d2d2d;
+  text-align: justify;
+}
+.brief-topic-source {
+  font-size: 11px;
+  color: #9e9e9e;
+  flex-shrink: 0;
+  background: #f5f5f5;
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  margin-top: 2px;
+  text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+}
+a.brief-topic-source:hover {
+  color: #605CE5;
+  background: #efeffd;
+}
+.brief-topic-sources {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+.brief-topic-source-more {
+  font-size: 10px;
+  color: #999;
+  background: #f0f0f0;
+  padding: 1px 6px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+</style>
+<style>
+/* MathJax / 插件全局样式 */
+.CtxtMenu_InfoContent { display: none; }
+</style>
+</head>
+<body>
+<div id="app">
+<div class="kb-chat">
+  <!-- 左侧面板 -->
+  <div class="daily-left-panel">
+    <!-- 顶部标题行（仿 chat.html） -->
+    <div class="daily-header">
+      <div class="header-logo" onclick="window.location.href='./m.html'">
+        <img src="./chat_files/logo_mosslib.png" alt="MossLib">
+      </div>
+      <button class="collapse-btn" onclick="toggleDailyPanel()" title="收起">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024">
+          <path d="M725.333333 132.266667A166.4 166.4 0 0 1 891.733333 298.666667v426.666666c0 91.904-74.496 166.4-166.4 166.4H298.666667A166.442667 166.442667 0 0 1 132.266667 725.333333V298.666667A166.4 166.4 0 0 1 298.666667 132.266667h426.666666z m-281.6 682.666666H725.333333a89.6 89.6 0 0 0 89.6-89.6V298.666667A89.6 89.6 0 0 0 725.333333 209.066667h-281.6v605.866666zM298.666667 209.066667A89.6 89.6 0 0 0 209.066667 298.666667v426.666666c0 49.493333 40.106667 89.6 89.6 89.6h68.266666V209.066667H298.666667z" fill="currentColor"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- 日期列表 -->
+    <div class="daily-date-area" id="dateListContainer"></div>
+
+    <!-- 底部用户信息（仿 chat.html） -->
+    <div class="daily-user-section" id="userProfileTrigger">
+      <div class="user-avatar">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div class="user-info">
+        <div class="user-name">小明</div>
+      </div>
+      <svg class="user-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#bbb" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 右侧日报内容区 -->
+  <div class="daily-main-area">
+    <div class="daily-main-scroll" id="dailyContentArea">
+      <div class="daily-inner">
+        <div style="text-align:center; padding:40px;">加载日报中...</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 收起态浮动工具栏 -->
+<div class="collapsed-toolbar">
+  <div class="toolbar-icon" onclick="toggleDailyPanel()" title="展开面板">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 1024 1024">
+      <path d="M725.333333 132.266667A166.4 166.4 0 0 1 891.733333 298.666667v426.666666c0 91.904-74.496 166.4-166.4 166.4H298.666667A166.442667 166.442667 0 0 1 132.266667 725.333333V298.666667A166.4 166.4 0 0 1 298.666667 132.266667h426.666666z m-281.6 682.666666H725.333333a89.6 89.6 0 0 0 89.6-89.6V298.666667A89.6 89.6 0 0 0 725.333333 209.066667h-281.6v605.866666zM298.666667 209.066667A89.6 89.6 0 0 0 209.066667 298.666667v426.666666c0 49.493333 40.106667 89.6 89.6 89.6h68.266666V209.066667H298.666667z" fill="currentColor"></path>
+    </svg>
+  </div>
+</div>
+
+<script>
+// ===== 模拟日报数据集（与 m.html 一致） =====
+var reportsDB = {
+    "2026-06-12": {
+        fullDate: "06/12",
+        weekday: "周五",
+        summary: '本周五AI行业动态密集：欧盟对俄新制裁落地、国内AI产业扶持政策出台、DeepMind发布Gemini Ultra 2.0、人形机器人Optimus进厂测试。整体看，AI在产业端与政策端双线加速推进。',
+        topics: [
+            { title: "国际局势与市场", items: [{ text: "欧盟通过对俄新制裁方案，重点限制能源技术出口并扩大个人黑名单", sources: [{ source: "路透社", url: "https://www.google.com/search?q=%E6%AC%A7%E7%9B%9F%E9%80%9A%E8%BF%87%E5%AF%B9%E4%BF%84%E6%96%B0%E5%88%B6%E8%A3%81%E6%96%B9%E6%A1%88" }, { source: "环球网", url: "https://www.google.com/search?q=%E6%AC%A7%E7%9B%9F%E5%AF%B9%E4%BF%84%E6%96%B0%E5%88%B6%E8%A3%81" }, { source: "FT中文网", url: "https://www.google.com/search?q=%E6%AC%A7%E7%9B%9F%E5%AF%B9%E4%BF%84%E6%96%B0%E5%88%B6%E8%A3%81+FT" }] }] },
+            { title: "国内要闻", items: [{ text: "发改委发布人工智能产业扶持计划，投入50亿引导基金支持AI芯片及大模型底层技术研发", source: "财联社", url: "https://www.google.com/search?q=%E5%8F%91%E6%94%B9%E5%A7%94%E5%8F%91%E5%B8%83%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E4%BA%A7%E4%B8%9A%E6%89%B6%E6%8C%81%E8%AE%A1%E5%88%92%EF%BC%8C%E6%8A%95%E5%85%A550%E4%BA%BF%E5%BC%95%E5%AF%BC%E5%9F%BA%E9%87%91%E6%94%AF%E6%8C%81AI%E8%8A%AF%E7%89%87%E5%8F%8A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF%E7%A0%94%E5%8F%91" }] },
+            { title: "AI模型与应用", items: [{ text: "Google DeepMind推出Gemini Ultra 2.0，推理与多模态理解刷新多项基准，上下文突破200万token", sources: [{ source: "机器之心", url: "https://www.google.com/search?q=Google+DeepMind+Gemini+Ultra+2.0+%E6%9C%BA%E5%99%A8%E4%B9%8B%E5%BF%83" }, { source: "量子位", url: "https://www.google.com/search?q=Gemini+Ultra+2.0+%E9%87%8F%E5%AD%90%E4%BD%8D" }] }, { text: "智谱AI发布CodeGeeX4全能版，支持192K上下文，代码生成速度提升34%", source: "智谱官方", url: "https://www.google.com/search?q=%E6%99%BA%E8%B0%B1AI%E5%8F%91%E5%B8%83CodeGeeX4%E5%85%A8%E8%83%BD%E7%89%88%EF%BC%8C%E6%94%AF%E6%8C%81192K%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%8C%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E9%80%9F%E5%BA%A6%E6%8F%90%E5%8D%8734%25" }] },
+            { title: "产业观察", items: [{ text: "人形机器人Optimus进入工厂测试，德州工厂执行物料搬运任务，效率接近人类80%", source: "36氪", url: "https://www.google.com/search?q=%E4%BA%BA%E5%BD%A2%E6%9C%BA%E5%99%A8%E4%BA%BAOptimus%E8%BF%9B%E5%85%A5%E5%B7%A5%E5%8E%82%E6%B5%8B%E8%AF%95%EF%BC%8C%E5%BE%B7%E5%B7%9E%E5%B7%A5%E5%8E%82%E6%89%A7%E8%A1%8C%E7%89%A9%E6%96%99%E6%90%AC%E8%BF%90%E4%BB%BB%E5%8A%A1%EF%BC%8C%E6%95%88%E7%8E%87%E6%8E%A5%E8%BF%91%E4%BA%BA%E7%B1%BB80%25" }] }
+        ]
+    },
+    "2026-06-11": {
+        fullDate: "06/11",
+        weekday: "周四",
+        summary: '今日国际局势趋紧——伊朗宣布关闭霍尔木兹海峡；国内安全生产巡查启动；AI领域Claude发布重大更新，小米超大杯模型亮相；舟山支老实验引发社会关注。',
+        topics: [
+            { title: "国际局势与市场", items: [{ text: "伊朗宣布全面关闭霍尔木兹海峡，任何违规通行者都将成为打击目标", source: "新华社-公众号", url: "https://www.google.com/search?q=%E4%BC%8A%E6%9C%97%E5%AE%A3%E5%B8%83%E5%85%A8%E9%9D%A2%E5%85%B3%E9%97%AD%E9%9C%8D%E5%B0%94%E6%9C%A8%E5%85%B9%E6%B5%B7%E5%B3%A1%EF%BC%8C%E4%BB%BB%E4%BD%95%E8%BF%9D%E8%A7%84%E9%80%9A%E8%A1%8C%E8%80%85%E9%83%BD%E5%B0%86%E6%88%90%E4%B8%BA%E6%89%93%E5%87%BB%E7%9B%AE%E6%A0%87" }] },
+            { title: "国内要闻", items: [{ text: "2026年度中央安全生产考核巡查工作启动，24个考核巡查组进驻31个省区市", source: "新华社-公众号", url: "https://www.google.com/search?q=2026%E5%B9%B4%E5%BA%A6%E4%B8%AD%E5%A4%AE%E5%AE%89%E5%85%A8%E7%94%9F%E4%BA%A7%E8%80%83%E6%A0%B8%E5%B7%A1%E6%9F%A5%E5%B7%A5%E4%BD%9C%E5%90%AF%E5%8A%A8%EF%BC%8C24%E4%B8%AA%E8%80%83%E6%A0%B8%E5%B7%A1%E6%9F%A5%E7%BB%84%E8%BF%9B%E9%A9%BB31%E4%B8%AA%E7%9C%81%E5%8C%BA%E5%B8%82" }] },
+            { title: "产业观察", items: [{ text: "SemiAnalysis拆解宇树G1机器人，中国供应链优势和高垂直整合能力是低价高毛利关键", source: "解码AI前沿突破", url: "https://www.google.com/search?q=SemiAnalysis%E6%8B%86%E8%A7%A3%E5%AE%87%E6%A0%91G1%E6%9C%BA%E5%99%A8%E4%BA%BA%EF%BC%8C%E4%B8%AD%E5%9B%BD%E4%BE%9B%E5%BA%94%E9%93%BE%E4%BC%98%E5%8A%BF%E5%92%8C%E9%AB%98%E5%9E%82%E7%9B%B4%E6%95%B4%E5%90%88%E8%83%BD%E5%8A%9B%E6%98%AF%E4%BD%8E%E4%BB%B7%E9%AB%98%E6%AF%9B%E5%88%A9%E5%85%B3%E9%94%AE" }] },
+            { title: "AI模型与应用", items: [{ text: "Anthropic发布Claude Fable 5和Mythos 5，一天内完成Stripe 5000万行代码库迁移", source: "解码AI前沿突破", url: "https://www.google.com/search?q=Anthropic%E5%8F%91%E5%B8%83Claude%20Fable%205%E5%92%8CMythos%205%EF%BC%8C%E4%B8%80%E5%A4%A9%E5%86%85%E5%AE%8C%E6%88%90Stripe%205000%E4%B8%87%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%BA%93%E8%BF%81%E7%A7%BB" }, { text: "小米发布MiMo-V2.5-Pro-UltraSpeed大模型，1T总参数、1M上下文，推理速度达1000+ TPS", source: "解码AI技术突破", url: "https://www.google.com/search?q=%E5%B0%8F%E7%B1%B3%E5%8F%91%E5%B8%83MiMo-V2.5-Pro-UltraSpeed%E5%A4%A7%E6%A8%A1%E5%9E%8B%EF%BC%8C1T%E6%80%BB%E5%8F%82%E6%95%B0%E3%80%811M%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%8C%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6%E8%BE%BE1000%2B%20TPS" }] },
+            { title: "社会民生", items: [{ text: "舟山柴山岛进行政府引导的支老实验，用社会组织运营盘活海岛养老资源", source: "新闻", url: "https://www.google.com/search?q=%E8%88%9F%E5%B1%B1%E6%9F%B4%E5%B1%B1%E5%B2%9B%E8%BF%9B%E8%A1%8C%E6%94%BF%E5%BA%9C%E5%BC%95%E5%AF%BC%E7%9A%84%E6%94%AF%E8%80%81%E5%AE%9E%E9%AA%8C%EF%BC%8C%E7%94%A8%E7%A4%BE%E4%BC%9A%E7%BB%84%E7%BB%87%E8%BF%90%E8%90%A5%E7%9B%98%E6%B4%BB%E6%B5%B7%E5%B2%9B%E5%85%BB%E8%80%81%E8%B5%84%E6%BA%90" }] }
+        ]
+    },
+    "2026-06-10": {
+        fullDate: "06/10",
+        weekday: "周三",
+        summary: '美联储维持利率不变暗示年内降息；OpenAI搜索产品问世挑战传统格局；台积电2nm工艺量产计划提前。市场与技术在博弈中前行。',
+        topics: [
+            { title: "国际局势与市场", items: [{ text: "美联储维持利率不变，暗示年内降息一次，美股三大指数集体收涨", source: "CNBC", url: "https://www.google.com/search?q=%E7%BE%8E%E8%81%94%E5%82%A8%E7%BB%B4%E6%8C%81%E5%88%A9%E7%8E%87%E4%B8%8D%E5%8F%98%EF%BC%8C%E6%9A%97%E7%A4%BA%E5%B9%B4%E5%86%85%E9%99%8D%E6%81%AF%E4%B8%80%E6%AC%A1%EF%BC%8C%E7%BE%8E%E8%82%A1%E4%B8%89%E5%A4%A7%E6%8C%87%E6%95%B0%E9%9B%86%E4%BD%93%E6%94%B6%E6%B6%A8" }] },
+            { title: "AI模型与应用", items: [{ text: "OpenAI推出SearchGPT智能搜索，整合实时信息与模型推理，直接挑战传统搜索引擎", source: "OpenAI博客", url: "https://www.google.com/search?q=OpenAI%E6%8E%A8%E5%87%BASearchGPT%E6%99%BA%E8%83%BD%E6%90%9C%E7%B4%A2%EF%BC%8C%E6%95%B4%E5%90%88%E5%AE%9E%E6%97%B6%E4%BF%A1%E6%81%AF%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%EF%BC%8C%E7%9B%B4%E6%8E%A5%E6%8C%91%E6%88%98%E4%BC%A0%E7%BB%9F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E" }, { text: "字节跳动发布Seed-TTS语音模型，支持情感迁移及零样本克隆", source: "AI科技评论", url: "https://www.google.com/search?q=%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E5%8F%91%E5%B8%83Seed-TTS%E8%AF%AD%E9%9F%B3%E6%A8%A1%E5%9E%8B%EF%BC%8C%E6%94%AF%E6%8C%81%E6%83%85%E6%84%9F%E8%BF%81%E7%A7%BB%E5%8F%8A%E9%9B%B6%E6%A0%B7%E6%9C%AC%E5%85%8B%E9%9A%86" }] },
+            { title: "产业观察", items: [{ text: "台积电宣布2nm工艺量产计划提前，预计2026年底试产，苹果、英伟达首批采用", source: "半导体行业观察", url: "https://www.google.com/search?q=%E5%8F%B0%E7%A7%AF%E7%94%B5%E5%AE%A3%E5%B8%832nm%E5%B7%A5%E8%89%BA%E9%87%8F%E4%BA%A7%E8%AE%A1%E5%88%92%E6%8F%90%E5%89%8D%EF%BC%8C%E9%A2%84%E8%AE%A12026%E5%B9%B4%E5%BA%95%E8%AF%95%E4%BA%A7%EF%BC%8C%E8%8B%B9%E6%9E%9C%E3%80%81%E8%8B%B1%E4%BC%9F%E8%BE%BE%E9%A6%96%E6%89%B9%E9%87%87%E7%94%A8" }] }
+        ]
+    },
+    "2026-06-09": {
+        fullDate: "06/09",
+        weekday: "周二",
+        summary: '《人工智能法》草案首次提请审议；腾讯混元升级视频生成能力；蔚来自研5nm智驾芯片发布。立法与商业化同步提速。',
+        topics: [
+            { title: "国内要闻", items: [{ text: "《人工智能法》草案首次提请审议，聚焦算法安全、生成内容标识及AI责任认定", source: "人民日报", url: "https://www.google.com/search?q=%E3%80%8A%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%B3%95%E3%80%8B%E8%8D%89%E6%A1%88%E9%A6%96%E6%AC%A1%E6%8F%90%E8%AF%B7%E5%AE%A1%E8%AE%AE%EF%BC%8C%E8%81%9A%E7%84%A6%E7%AE%97%E6%B3%95%E5%AE%89%E5%85%A8%E3%80%81%E7%94%9F%E6%88%90%E5%86%85%E5%AE%B9%E6%A0%87%E8%AF%86%E5%8F%8AAI%E8%B4%A3%E4%BB%BB%E8%AE%A4%E5%AE%9A" }] },
+            { title: "AI模型与应用", items: [{ text: "腾讯混元大模型升级视频生成能力，支持5秒长视频生成，风格迁移与物理仿真大幅提升", source: "腾讯云", url: "https://www.google.com/search?q=%E8%85%BE%E8%AE%AF%E6%B7%B7%E5%85%83%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%8D%87%E7%BA%A7%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E8%83%BD%E5%8A%9B%EF%BC%8C%E6%94%AF%E6%8C%815%E7%A7%92%E9%95%BF%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%EF%BC%8C%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB%E4%B8%8E%E7%89%A9%E7%90%86%E4%BB%BF%E7%9C%9F%E5%A4%A7%E5%B9%85%E6%8F%90%E5%8D%87" }] },
+            { title: "产业观察", items: [{ text: "蔚来发布自研5nm智驾芯片神玑NX9031，算力超1000TOPS，明年上车", source: "汽车之心", url: "https://www.google.com/search?q=%E8%94%9A%E6%9D%A5%E5%8F%91%E5%B8%83%E8%87%AA%E7%A0%945nm%E6%99%BA%E9%A9%BE%E8%8A%AF%E7%89%87%E7%A5%9E%E7%8E%91NX9031%EF%BC%8C%E7%AE%97%E5%8A%9B%E8%B6%851000TOPS%EF%BC%8C%E6%98%8E%E5%B9%B4%E4%B8%8A%E8%BD%A6" }] }
+        ]
+    },
+    "2026-05-28": {
+        fullDate: "05/28",
+        weekday: "周四",
+        summary: '五月末AI圈热闹不减：OpenAI发布新一代推理模型、国内数据要素市场改革方案出台、AI芯片独角兽完成新一轮融资。',
+        topics: [
+            { title: "AI模型与应用", items: [{ text: "OpenAI发布o4系列推理模型，在数学、编程和多模态推理上全面超越前代", source: "OpenAI博客", url: "https://www.google.com/search?q=OpenAI%E5%8F%91%E5%B8%83o4%E7%B3%BB%E5%88%97%E6%8E%A8%E7%90%86%E6%A8%A1%E5%9E%8B%EF%BC%8C%E5%9C%A8%E6%95%B0%E5%AD%A6%E3%80%81%E7%BC%96%E7%A8%8B%E5%92%8C%E5%A4%9A%E6%A8%A1%E6%80%81%E6%8E%A8%E7%90%86%E4%B8%8A%E5%85%A8%E9%9D%A2%E8%B6%85%E8%B6%8A%E5%89%8D%E4%BB%A3" }] },
+            { title: "国内要闻", items: [{ text: "数据要素市场化改革方案出台，鼓励AI企业参与公共数据开发利用", source: "新华社", url: "https://www.google.com/search?q=%E6%95%B0%E6%8D%AE%E8%A6%81%E7%B4%A0%E5%B8%82%E5%9C%BA%E5%8C%96%E6%94%B9%E9%9D%A9%E6%96%B9%E6%A1%88%E5%87%BA%E5%8F%B0%EF%BC%8C%E9%BC%93%E5%8A%B1AI%E4%BC%81%E4%B8%9A%E5%8F%82%E4%B8%8E%E5%85%AC%E5%85%B1%E6%95%B0%E6%8D%AE%E5%BC%80%E5%8F%91%E5%88%A9%E7%94%A8" }] },
+            { title: "产业观察", items: [{ text: "AI芯片初创公司地平线完成20亿美元融资，估值突破200亿", source: "36氪", url: "https://www.google.com/search?q=AI%E8%8A%AF%E7%89%87%E5%88%9D%E5%88%9B%E5%85%AC%E5%8F%B8%E5%9C%B0%E5%B9%B3%E7%BA%BF%E5%AE%8C%E6%88%9020%E4%BA%BF%E7%BE%8E%E5%85%83%E8%9E%8D%E8%B5%84%EF%BC%8C%E4%BC%B0%E5%80%BC%E7%AA%81%E7%A0%B4200%E4%BA%BF" }] }
+        ]
+    },
+    "2026-05-29": {
+        fullDate: "05/29",
+        weekday: "周五",
+        summary: 'AI安全议题升温：G7数字部长会议聚焦AI风险防控；国内首个AI伦理审查指引发布；微软Copilot全面接入Office全家桶。',
+        topics: [
+            { title: "国际局势", items: [{ text: "G7数字部长会议达成AI风险防控协议，要求高风险AI系统强制备案", source: "环球网", url: "https://www.google.com/search?q=G7%E6%95%B0%E5%AD%97%E9%83%A8%E9%95%BF%E4%BC%9A%E8%AE%AE%E8%BE%BE%E6%88%90AI%E9%A3%8E%E9%99%A9%E9%98%B2%E6%8E%A7%E5%8D%8F%E8%AE%AE%EF%BC%8C%E8%A6%81%E6%B1%82%E9%AB%98%E9%A3%8E%E9%99%A9AI%E7%B3%BB%E7%BB%9F%E5%BC%BA%E5%88%B6%E5%A4%87%E6%A1%88" }] },
+            { title: "国内要闻", items: [{ text: "国家AI伦理审查指引发布，明确医疗、金融等领域的AI应用伦理边界", source: "人民日报", url: "https://www.google.com/search?q=%E5%9B%BD%E5%AE%B6AI%E4%BC%A6%E7%90%86%E5%AE%A1%E6%9F%A5%E6%8C%87%E5%BC%95%E5%8F%91%E5%B8%83%EF%BC%8C%E6%98%8E%E7%A1%AE%E5%8C%BB%E7%96%97%E3%80%81%E9%87%91%E8%9E%8D%E7%AD%89%E9%A2%86%E5%9F%9F%E7%9A%84AI%E5%BA%94%E7%94%A8%E4%BC%A6%E7%90%86%E8%BE%B9%E7%95%8C" }] },
+            { title: "AI应用", items: [{ text: "微软Copilot全面接入Office全家桶，支持Word/Excel/PPT全场景AI辅助", source: "IT之家", url: "https://www.google.com/search?q=%E5%BE%AE%E8%BD%AFCopilot%E5%85%A8%E9%9D%A2%E6%8E%A5%E5%85%A5Office%E5%85%A8%E5%AE%B6%E6%A1%B6%EF%BC%8C%E6%94%AF%E6%8C%81Word%2FExcel%2FPPT%E5%85%A8%E5%9C%BA%E6%99%AFAI%E8%BE%85%E5%8A%A9" }] }
+        ]
+    },
+    "2026-06-08": {
+        fullDate: "06/08",
+        weekday: "周一",
+        summary: 'G7峰会聚焦AI全球治理框架；Stable Video 4D颠覆3D内容创作；国内首例AI生成图片著作权案认定受版权保护。',
+        topics: [
+            { title: "国际局势", items: [{ text: "G7峰会聚焦AI全球治理框架，七国集团同意制定AI开发者行为准则，强调风险分级", source: "AP News", url: "https://www.google.com/search?q=G7%E5%B3%B0%E4%BC%9A%E8%81%9A%E7%84%A6AI%E5%85%A8%E7%90%83%E6%B2%BB%E7%90%86%E6%A1%86%E6%9E%B6%EF%BC%8C%E4%B8%83%E5%9B%BD%E9%9B%86%E5%9B%A2%E5%90%8C%E6%84%8F%E5%88%B6%E5%AE%9AAI%E5%BC%80%E5%8F%91%E8%80%85%E8%A1%8C%E4%B8%BA%E5%87%86%E5%88%99%EF%BC%8C%E5%BC%BA%E8%B0%83%E9%A3%8E%E9%99%A9%E5%88%86%E7%BA%A7" }] },
+            { title: "AI模型与应用", items: [{ text: "Stability AI开源Stable Video 4D模型，可从单图生成多视角动态视频引爆3D内容创作", source: "Stability AI", url: "https://www.google.com/search?q=Stability%20AI%E5%BC%80%E6%BA%90Stable%20Video%204D%E6%A8%A1%E5%9E%8B%EF%BC%8C%E5%8F%AF%E4%BB%8E%E5%8D%95%E5%9B%BE%E7%94%9F%E6%88%90%E5%A4%9A%E8%A7%86%E8%A7%92%E5%8A%A8%E6%80%81%E8%A7%86%E9%A2%91%E5%BC%95%E7%88%863D%E5%86%85%E5%AE%B9%E5%88%9B%E4%BD%9C" }] },
+            { title: "社会民生", items: [{ text: "北京互联网法院首例AI生成图片著作权案宣判，认定AI生成图片体现人类创造性受著作权保护", source: "法治日报", url: "https://www.google.com/search?q=%E5%8C%97%E4%BA%AC%E4%BA%92%E8%81%94%E7%BD%91%E6%B3%95%E9%99%A2%E9%A6%96%E4%BE%8BAI%E7%94%9F%E6%88%90%E5%9B%BE%E7%89%87%E8%91%97%E4%BD%9C%E6%9D%83%E6%A1%88%E5%AE%A3%E5%88%A4%EF%BC%8C%E8%AE%A4%E5%AE%9AAI%E7%94%9F%E6%88%90%E5%9B%BE%E7%89%87%E4%BD%93%E7%8E%B0%E4%BA%BA%E7%B1%BB%E5%88%9B%E9%80%A0%E6%80%A7%E5%8F%97%E8%91%97%E4%BD%9C%E6%9D%83%E4%BF%9D%E6%8A%A4" }] }
+        ]
+    },
+    "2026-06-09": {
+        fullDate: "06/09",
+        weekday: "周二",
+        summary: '《人工智能法》草案首次提请审议；腾讯混元升级视频生成能力；蔚来自研5nm智驾芯片发布。立法与商业化同步提速。',
+        topics: [
+            { title: "国内要闻", items: [{ text: "《人工智能法》草案首次提请审议，聚焦算法安全、生成内容标识及AI责任认定", source: "人民日报", url: "https://www.google.com/search?q=%E3%80%8A%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%B3%95%E3%80%8B%E8%8D%89%E6%A1%88%E9%A6%96%E6%AC%A1%E6%8F%90%E8%AF%B7%E5%AE%A1%E8%AE%AE%EF%BC%8C%E8%81%9A%E7%84%A6%E7%AE%97%E6%B3%95%E5%AE%89%E5%85%A8%E3%80%81%E7%94%9F%E6%88%90%E5%86%85%E5%AE%B9%E6%A0%87%E8%AF%86%E5%8F%8AAI%E8%B4%A3%E4%BB%BB%E8%AE%A4%E5%AE%9A" }] },
+            { title: "AI模型与应用", items: [{ text: "腾讯混元大模型升级视频生成能力，支持5秒长视频生成，风格迁移与物理仿真大幅提升", source: "腾讯云", url: "https://www.google.com/search?q=%E8%85%BE%E8%AE%AF%E6%B7%B7%E5%85%83%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%8D%87%E7%BA%A7%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E8%83%BD%E5%8A%9B%EF%BC%8C%E6%94%AF%E6%8C%815%E7%A7%92%E9%95%BF%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%EF%BC%8C%E9%A3%8E%E6%A0%BC%E8%BF%81%E7%A7%BB%E4%B8%8E%E7%89%A9%E7%90%86%E4%BB%BF%E7%9C%9F%E5%A4%A7%E5%B9%85%E6%8F%90%E5%8D%87" }] },
+            { title: "产业观察", items: [{ text: "蔚来发布自研5nm智驾芯片神玑NX9031，算力超1000TOPS，明年上车", source: "汽车之心", url: "https://www.google.com/search?q=%E8%94%9A%E6%9D%A5%E5%8F%91%E5%B8%83%E8%87%AA%E7%A0%945nm%E6%99%BA%E9%A9%BE%E8%8A%AF%E7%89%87%E7%A5%9E%E7%8E%91NX9031%EF%BC%8C%E7%AE%97%E5%8A%9B%E8%B6%851000TOPS%EF%BC%8C%E6%98%8E%E5%B9%B4%E4%B8%8A%E8%BD%A6" }] }
+        ]
+    },
+    "2026-06-10": {
+        fullDate: "06/10",
+        weekday: "周三",
+        summary: '美联储维持利率不变暗示年内降息；OpenAI搜索产品问世挑战传统格局；台积电2nm工艺量产计划提前。市场与技术在博弈中前行。',
+        topics: [
+            { title: "国际局势与市场", items: [{ text: "美联储维持利率不变，暗示年内降息一次，美股三大指数集体收涨", source: "CNBC", url: "https://www.google.com/search?q=%E7%BE%8E%E8%81%94%E5%82%A8%E7%BB%B4%E6%8C%81%E5%88%A9%E7%8E%87%E4%B8%8D%E5%8F%98%EF%BC%8C%E6%9A%97%E7%A4%BA%E5%B9%B4%E5%86%85%E9%99%8D%E6%81%AF%E4%B8%80%E6%AC%A1%EF%BC%8C%E7%BE%8E%E8%82%A1%E4%B8%89%E5%A4%A7%E6%8C%87%E6%95%B0%E9%9B%86%E4%BD%93%E6%94%B6%E6%B6%A8" }] },
+            { title: "AI模型与应用", items: [{ text: "OpenAI推出SearchGPT智能搜索，整合实时信息与模型推理，直接挑战传统搜索引擎", source: "OpenAI博客", url: "https://www.google.com/search?q=OpenAI%E6%8E%A8%E5%87%BASearchGPT%E6%99%BA%E8%83%BD%E6%90%9C%E7%B4%A2%EF%BC%8C%E6%95%B4%E5%90%88%E5%AE%9E%E6%97%B6%E4%BF%A1%E6%81%AF%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%EF%BC%8C%E7%9B%B4%E6%8E%A5%E6%8C%91%E6%88%98%E4%BC%A0%E7%BB%9F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E" }, { text: "字节跳动发布Seed-TTS语音模型，支持情感迁移及零样本克隆", source: "AI科技评论", url: "https://www.google.com/search?q=%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E5%8F%91%E5%B8%83Seed-TTS%E8%AF%AD%E9%9F%B3%E6%A8%A1%E5%9E%8B%EF%BC%8C%E6%94%AF%E6%8C%81%E6%83%85%E6%84%9F%E8%BF%81%E7%A7%BB%E5%8F%8A%E9%9B%B6%E6%A0%B7%E6%9C%AC%E5%85%8B%E9%9A%86" }] },
+            { title: "产业观察", items: [{ text: "台积电宣布2nm工艺量产计划提前，预计2026年底试产，苹果、英伟达首批采用", source: "半导体行业观察", url: "https://www.google.com/search?q=%E5%8F%B0%E7%A7%AF%E7%94%B5%E5%AE%A3%E5%B8%832nm%E5%B7%A5%E8%89%BA%E9%87%8F%E4%BA%A7%E8%AE%A1%E5%88%92%E6%8F%90%E5%89%8D%EF%BC%8C%E9%A2%84%E8%AE%A12026%E5%B9%B4%E5%BA%95%E8%AF%95%E4%BA%A7%EF%BC%8C%E8%8B%B9%E6%9E%9C%E3%80%81%E8%8B%B1%E4%BC%9F%E8%BE%BE%E9%A6%96%E6%89%B9%E9%87%87%E7%94%A8" }] }
+        ]
+    },
+    "2026-06-11": {
+        fullDate: "06/11",
+        weekday: "周四",
+        summary: '今日国际局势趋紧——伊朗宣布关闭霍尔木兹海峡；国内安全生产巡查启动；AI领域Claude发布重大更新，小米超大杯模型亮相；舟山支老实验引发社会关注。',
+        topics: [
+            { title: "国际局势与市场", items: [{ text: "伊朗宣布全面关闭霍尔木兹海峡，任何违规通行者都将成为打击目标", source: "新华社-公众号", url: "https://www.google.com/search?q=%E4%BC%8A%E6%9C%97%E5%AE%A3%E5%B8%83%E5%85%A8%E9%9D%A2%E5%85%B3%E9%97%AD%E9%9C%8D%E5%B0%94%E6%9C%A8%E5%85%B9%E6%B5%B7%E5%B3%A1%EF%BC%8C%E4%BB%BB%E4%BD%95%E8%BF%9D%E8%A7%84%E9%80%9A%E8%A1%8C%E8%80%85%E9%83%BD%E5%B0%86%E6%88%90%E4%B8%BA%E6%89%93%E5%87%BB%E7%9B%AE%E6%A0%87" }] },
+            { title: "国内要闻", items: [{ text: "2026年度中央安全生产考核巡查工作启动，24个考核巡查组进驻31个省区市", source: "新华社-公众号", url: "https://www.google.com/search?q=2026%E5%B9%B4%E5%BA%A6%E4%B8%AD%E5%A4%AE%E5%AE%89%E5%85%A8%E7%94%9F%E4%BA%A7%E8%80%83%E6%A0%B8%E5%B7%A1%E6%9F%A5%E5%B7%A5%E4%BD%9C%E5%90%AF%E5%8A%A8%EF%BC%8C24%E4%B8%AA%E8%80%83%E6%A0%B8%E5%B7%A1%E6%9F%A5%E7%BB%84%E8%BF%9B%E9%A9%BB31%E4%B8%AA%E7%9C%81%E5%8C%BA%E5%B8%82" }] },
+            { title: "产业观察", items: [{ text: "SemiAnalysis拆解宇树G1机器人，中国供应链优势和高垂直整合能力是低价高毛利关键", source: "解码AI前沿突破", url: "https://www.google.com/search?q=SemiAnalysis%E6%8B%86%E8%A7%A3%E5%AE%87%E6%A0%91G1%E6%9C%BA%E5%99%A8%E4%BA%BA%EF%BC%8C%E4%B8%AD%E5%9B%BD%E4%BE%9B%E5%BA%94%E9%93%BE%E4%BC%98%E5%8A%BF%E5%92%8C%E9%AB%98%E5%9E%82%E7%9B%B4%E6%95%B4%E5%90%88%E8%83%BD%E5%8A%9B%E6%98%AF%E4%BD%8E%E4%BB%B7%E9%AB%98%E6%AF%9B%E5%88%A9%E5%85%B3%E9%94%AE" }] },
+            { title: "AI模型与应用", items: [{ text: "Anthropic发布Claude Fable 5和Mythos 5，一天内完成Stripe 5000万行代码库迁移", source: "解码AI前沿突破", url: "https://www.google.com/search?q=Anthropic%E5%8F%91%E5%B8%83Claude%20Fable%205%E5%92%8CMythos%205%EF%BC%8C%E4%B8%80%E5%A4%A9%E5%86%85%E5%AE%8C%E6%88%90Stripe%205000%E4%B8%87%E8%A1%8C%E4%BB%A3%E7%A0%81%E5%BA%93%E8%BF%81%E7%A7%BB" }, { text: "小米发布MiMo-V2.5-Pro-UltraSpeed大模型，1T总参数、1M上下文，推理速度达1000+ TPS", source: "解码AI技术突破", url: "https://www.google.com/search?q=%E5%B0%8F%E7%B1%B3%E5%8F%91%E5%B8%83MiMo-V2.5-Pro-UltraSpeed%E5%A4%A7%E6%A8%A1%E5%9E%8B%EF%BC%8C1T%E6%80%BB%E5%8F%82%E6%95%B0%E3%80%811M%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%8C%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6%E8%BE%BE1000%2B%20TPS" }] },
+            { title: "社会民生", items: [{ text: "舟山柴山岛进行政府引导的支老实验，用社会组织运营盘活海岛养老资源", source: "新闻", url: "https://www.google.com/search?q=%E8%88%9F%E5%B1%B1%E6%9F%B4%E5%B1%B1%E5%B2%9B%E8%BF%9B%E8%A1%8C%E6%94%BF%E5%BA%9C%E5%BC%95%E5%AF%BC%E7%9A%84%E6%94%AF%E8%80%81%E5%AE%9E%E9%AA%8C%EF%BC%8C%E7%94%A8%E7%A4%BE%E4%BC%9A%E7%BB%84%E7%BB%87%E8%BF%90%E8%90%A5%E7%9B%98%E6%B4%BB%E6%B5%B7%E5%B2%9B%E5%85%BB%E8%80%81%E8%B5%84%E6%BA%90" }] }
+        ]
+    },
+    "2026-06-12": {
+        fullDate: "06/12",
+        weekday: "周五",
+        summary: '本周五AI行业动态密集：欧盟对俄新制裁落地、国内AI产业扶持政策出台、DeepMind发布Gemini Ultra 2.0、人形机器人Optimus进厂测试。整体看，AI在产业端与政策端双线加速推进。',
+        topics: [
+            { title: "国际局势与市场", items: [{ text: "欧盟通过对俄新制裁方案，重点限制能源技术出口并扩大个人黑名单", source: "路透社", url: "https://www.google.com/search?q=%E6%AC%A7%E7%9B%9F%E9%80%9A%E8%BF%87%E5%AF%B9%E4%BF%84%E6%96%B0%E5%88%B6%E8%A3%81%E6%96%B9%E6%A1%88%EF%BC%8C%E9%87%8D%E7%82%B9%E9%99%90%E5%88%B6%E8%83%BD%E6%BA%90%E6%8A%80%E6%9C%AF%E5%87%BA%E5%8F%A3%E5%B9%B6%E6%89%A9%E5%A4%A7%E4%B8%AA%E4%BA%BA%E9%BB%91%E5%90%8D%E5%8D%95" }] },
+            { title: "国内要闻", items: [{ text: "发改委发布人工智能产业扶持计划，投入50亿引导基金支持AI芯片及大模型底层技术研发", source: "财联社", url: "https://www.google.com/search?q=%E5%8F%91%E6%94%B9%E5%A7%94%E5%8F%91%E5%B8%83%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E4%BA%A7%E4%B8%9A%E6%89%B6%E6%8C%81%E8%AE%A1%E5%88%92%EF%BC%8C%E6%8A%95%E5%85%A550%E4%BA%BF%E5%BC%95%E5%AF%BC%E5%9F%BA%E9%87%91%E6%94%AF%E6%8C%81AI%E8%8A%AF%E7%89%87%E5%8F%8A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%BA%95%E5%B1%82%E6%8A%80%E6%9C%AF%E7%A0%94%E5%8F%91" }] },
+            { title: "AI模型与应用", items: [{ text: "Google DeepMind推出Gemini Ultra 2.0，推理与多模态理解刷新多项基准，上下文突破200万token", source: "机器之心", url: "https://www.google.com/search?q=Google%20DeepMind%E6%8E%A8%E5%87%BAGemini%20Ultra%202.0%EF%BC%8C%E6%8E%A8%E7%90%86%E4%B8%8E%E5%A4%9A%E6%A8%A1%E6%80%81%E7%90%86%E8%A7%A3%E5%88%B7%E6%96%B0%E5%A4%9A%E9%A1%B9%E5%9F%BA%E5%87%86%EF%BC%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AA%81%E7%A0%B4200%E4%B8%87token" }, { text: "智谱AI发布CodeGeeX4全能版，支持192K上下文，代码生成速度提升34%", source: "智谱官方", url: "https://www.google.com/search?q=%E6%99%BA%E8%B0%B1AI%E5%8F%91%E5%B8%83CodeGeeX4%E5%85%A8%E8%83%BD%E7%89%88%EF%BC%8C%E6%94%AF%E6%8C%81192K%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%8C%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E9%80%9F%E5%BA%A6%E6%8F%90%E5%8D%8734%25" }] },
+            { title: "产业观察", items: [{ text: "人形机器人Optimus进入工厂测试，德州工厂执行物料搬运任务，效率接近人类80%", source: "36氪", url: "https://www.google.com/search?q=%E4%BA%BA%E5%BD%A2%E6%9C%BA%E5%99%A8%E4%BA%BAOptimus%E8%BF%9B%E5%85%A5%E5%B7%A5%E5%8E%82%E6%B5%8B%E8%AF%95%EF%BC%8C%E5%BE%B7%E5%B7%9E%E5%B7%A5%E5%8E%82%E6%89%A7%E8%A1%8C%E7%89%A9%E6%96%99%E6%90%AC%E8%BF%90%E4%BB%BB%E5%8A%A1%EF%BC%8C%E6%95%88%E7%8E%87%E6%8E%A5%E8%BF%91%E4%BA%BA%E7%B1%BB80%25" }] }
+        ]
+    },
+    "2026-07-01": {
+        fullDate: "07/01",
+        weekday: "周三",
+        summary: '七月开门红：世界人工智能大会WAIC在上海开幕、华为发布盘古大模型5.0、三部门联合发布AI安全治理白皮书。',
+        topics: [
+            { title: "国内要闻", items: [{ text: "2026世界人工智能大会WAIC在上海开幕，参展企业超千家，首发新品创历史新高", source: "澎湃新闻", url: "https://www.google.com/search?q=2026%E4%B8%96%E7%95%8C%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E5%A4%A7%E4%BC%9AWAIC%E5%9C%A8%E4%B8%8A%E6%B5%B7%E5%BC%80%E5%B9%95%EF%BC%8C%E5%8F%82%E5%B1%95%E4%BC%81%E4%B8%9A%E8%B6%85%E5%8D%83%E5%AE%B6%EF%BC%8C%E9%A6%96%E5%8F%91%E6%96%B0%E5%93%81%E5%88%9B%E5%8E%86%E5%8F%B2%E6%96%B0%E9%AB%98" }] },
+            { title: "AI模型与应用", items: [{ text: "华为发布盘古大模型5.0，参数规模突破10万亿，在工业、气象领域实现重大突破", source: "华为官方", url: "https://www.google.com/search?q=%E5%8D%8E%E4%B8%BA%E5%8F%91%E5%B8%83%E7%9B%98%E5%8F%A4%E5%A4%A7%E6%A8%A1%E5%9E%8B5.0%EF%BC%8C%E5%8F%82%E6%95%B0%E8%A7%84%E6%A8%A1%E7%AA%81%E7%A0%B410%E4%B8%87%E4%BA%BF%EF%BC%8C%E5%9C%A8%E5%B7%A5%E4%B8%9A%E3%80%81%E6%B0%94%E8%B1%A1%E9%A2%86%E5%9F%9F%E5%AE%9E%E7%8E%B0%E9%87%8D%E5%A4%A7%E7%AA%81%E7%A0%B4" }] },
+            { title: "产业观察", items: [{ text: "三部门联合发布AI安全治理白皮书，要求大模型企业建立安全监测预警机制", source: "经济日报", url: "https://www.google.com/search?q=%E4%B8%89%E9%83%A8%E9%97%A8%E8%81%94%E5%90%88%E5%8F%91%E5%B8%83AI%E5%AE%89%E5%85%A8%E6%B2%BB%E7%90%86%E7%99%BD%E7%9A%AE%E4%B9%A6%EF%BC%8C%E8%A6%81%E6%B1%82%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BC%81%E4%B8%9A%E5%BB%BA%E7%AB%8B%E5%AE%89%E5%85%A8%E7%9B%91%E6%B5%8B%E9%A2%84%E8%AD%A6%E6%9C%BA%E5%88%B6" }] }
+        ]
+    },
+    "2026-07-02": {
+        fullDate: "07/02",
+        weekday: "周四",
+        summary: 'WAIC大会亮点不断：特斯拉Optimus二代亮相、阿里通义千问升级多模态、多家AI公司发布重磅新品。',
+        topics: [
+            { title: "国际局势", items: [{ text: "特斯拉Optimus二代在WAIC首秀，行走速度提升30%，手指灵活度接近人手", source: "界面新闻", url: "https://www.google.com/search?q=%E7%89%B9%E6%96%AF%E6%8B%89Optimus%E4%BA%8C%E4%BB%A3%E5%9C%A8WAIC%E9%A6%96%E7%A7%80%EF%BC%8C%E8%A1%8C%E8%B5%B0%E9%80%9F%E5%BA%A6%E6%8F%90%E5%8D%8730%25%EF%BC%8C%E6%89%8B%E6%8C%87%E7%81%B5%E6%B4%BB%E5%BA%A6%E6%8E%A5%E8%BF%91%E4%BA%BA%E6%89%8B" }] },
+            { title: "AI模型与应用", items: [{ text: "阿里通义千问升级多模态版本，支持实时视频理解与语音交互", source: "阿里云", url: "https://www.google.com/search?q=%E9%98%BF%E9%87%8C%E9%80%9A%E4%B9%89%E5%8D%83%E9%97%AE%E5%8D%87%E7%BA%A7%E5%A4%9A%E6%A8%A1%E6%80%81%E7%89%88%E6%9C%AC%EF%BC%8C%E6%94%AF%E6%8C%81%E5%AE%9E%E6%97%B6%E8%A7%86%E9%A2%91%E7%90%86%E8%A7%A3%E4%B8%8E%E8%AF%AD%E9%9F%B3%E4%BA%A4%E4%BA%92" }] },
+            { title: "产业观察", items: [{ text: "WAIC首日签约金额突破500亿元，AI芯片、算力基础设施成为投资热点", sources: [{ source: "第一财经", url: "https://www.google.com/search?q=WAIC%E9%A6%96%E6%97%A5%E7%AD%BE%E7%BA%A6" }, { source: "21世纪经济报道", url: "https://www.google.com/search?q=WAIC%E9%A6%96%E6%97%A5%E7%AD%BE%E7%BA%A6+21%E4%B8%96%E7%BA%AA" }, { source: "澎湃新闻", url: "https://www.google.com/search?q=WAIC%E9%A6%96%E6%97%A5%E7%AD%BE%E7%BA%A6+%E6%BE%8E%E6%B9%83" }, { source: "证券时报", url: "https://www.google.com/search?q=WAIC%E9%A6%96%E6%97%A5%E7%AD%BE%E7%BA%A6+%E8%AF%81%E5%88%B8%E6%97%B6%E6%8A%A5" }] }] }
+        ]
+    }
+};
+
+var dateKeys = ["2026-07-02","2026-07-01","2026-06-12","2026-06-11","2026-06-10","2026-06-09","2026-06-08","2026-05-29","2026-05-28"];
+var activeDate = "2026-07-02";
+
+function getWeekdayByKey(key) {
+    var map = {
+        "2026-05-28":"周四","2026-05-29":"周五",
+        "2026-06-08":"周一","2026-06-09":"周二",
+        "2026-06-10":"周三","2026-06-11":"周四","2026-06-12":"周五",
+        "2026-07-01":"周三","2026-07-02":"周四"
+    };
+    return map[key] || "";
+}
+
+var monthGroupState = {};
+
+function getMonthLabel(key) {
+    var parts = key.split('-');
+    return parts[0] + '年' + parseInt(parts[1], 10) + '月';
+}
+
+function renderDateList() {
+    var container = document.getElementById("dateListContainer");
+    if(!container) return;
+    var html = '';
+    var todayKey = new Date().toISOString().slice(0, 10);
+
+    // 按月份分组
+    var groups = {};
+    dateKeys.forEach(function(key) {
+        var monthKey = key.slice(0, 7);
+        if (!groups[monthKey]) groups[monthKey] = [];
+        groups[monthKey].push(key);
+    });
+
+    var monthKeys = Object.keys(groups);
+    monthKeys.forEach(function(monthKey, idx) {
+        if (monthGroupState[monthKey] === undefined) {
+            monthGroupState[monthKey] = (idx === 0);
+        }
+        var isExpanded = monthGroupState[monthKey];
+        var collapsedClass = isExpanded ? '' : ' collapsed';
+        var activeMonth = activeDate.slice(0, 7);
+        var activeClass = (monthKey === activeMonth) ? ' active' : '';
+
+        html +=
+             '<div class="date-month-group" data-month="' + monthKey + '">' +
+                 '<div class="month-group-header' + collapsedClass + activeClass + '">' +
+                     '<span class="month-group-title-icon">' +
+                         '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#7a7b7b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+                         '<span class="month-group-title">' + getMonthLabel(groups[monthKey][0]) + '</span>' +
+                     '</span>' +
+                     '<div class="month-group-right">' +
+                         '<span class="month-group-count">' + groups[monthKey].length + '份</span>' +
+                         '<svg class="month-group-toggle" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>' +
+                     '</div>' +
+                 '</div>' +
+                 '<div class="month-group-body" style="max-height:' + (isExpanded ? 'none' : '0px') + '">';
+
+        groups[monthKey].forEach(function(key) {
+            var dateObj = reportsDB[key] || { fullDate: key.slice(5).replace('-','/'), weekday: getWeekdayByKey(key) };
+            var parts = key.split('-');
+            var displayDate = '每日晨报 ' + parseInt(parts[1], 10) + '/' + parseInt(parts[2], 10);
+            var weekStr = dateObj.weekday || "";
+            var isActive = (key === activeDate);
+            var isToday = (key === todayKey);
+            if (isActive) {
+                html +=
+                    '<div class="date-item active" data-date="' + key + '">' +
+                        '<svg class="date-item-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
+                        '<div class="date-num">' + displayDate + '</div>' +
+                        '<div class="date-week">' + weekStr + (isToday ? ' <span class="today-tag">今天</span>' : '') + '</div>' +
+                    '</div>';
+            } else {
+                html +=
+                    '<div class="date-item" data-date="' + key + '">' +
+                        '<svg class="date-item-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>' +
+                        '<div class="date-num">' + displayDate + '</div>' +
+                        '<div class="date-week">' + weekStr + (isToday ? ' <span class="today-tag">今天</span>' : '') + '</div>' +
+                    '</div>';
+            }
+        });
+
+        html +=
+                '</div>' +
+            '</div>';
+    });
+
+    container.innerHTML = html;
+
+    // 月份分组头点击展开/收起
+     container.querySelectorAll('.month-group-header').forEach(function(header) {
+         header.addEventListener('click', function(e) {
+             var group = header.closest('.date-month-group');
+             var monthKey = group.getAttribute('data-month');
+             var body = group.querySelector('.month-group-body');
+             var isCollapsed = body.style.maxHeight === '0px' || body.style.maxHeight === '0';
+             if (isCollapsed) {
+                 body.style.maxHeight = body.scrollHeight + 'px';
+                 header.classList.remove('collapsed');
+                 monthGroupState[monthKey] = true;
+             } else {
+                 body.style.maxHeight = body.scrollHeight + 'px';
+                 requestAnimationFrame(function() {
+                     body.style.maxHeight = '0px';
+                     header.classList.add('collapsed');
+                     monthGroupState[monthKey] = false;
+                 });
+             }
+         });
+     });
+
+    // 日期项点击
+    container.querySelectorAll('.date-item').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            var dateVal = el.getAttribute('data-date');
+            if(dateVal && reportsDB[dateVal]) {
+                activeDate = dateVal;
+                renderDateList();
+                renderDailyContent(activeDate);
+            }
+        });
+    });
+
+    // 展开后调整 max-height 适配内容（仅对刚展开且非 none 的）
+     container.querySelectorAll('.month-group-body').forEach(function(body) {
+         if (body.style.maxHeight !== '0px' && body.style.maxHeight !== '0' && body.style.maxHeight !== 'none') {
+             body.style.maxHeight = body.scrollHeight + 'px';
+         }
+     });
+}
+
+function getSourcesHtml(item) {
+    var sources = item.sources;
+    if (!sources) {
+        if (item.source) {
+            sources = [{ source: item.source, url: item.url || '' }];
+        } else {
+            return '';
+        }
+    }
+    var html = '';
+    var maxShow = 3;
+    for (var i = 0; i < sources.length && i < maxShow; i++) {
+        var s = sources[i];
+        html += '<a class="brief-topic-source" href="' + (s.url || '') + '" target="_blank" rel="noopener">' + s.source + '</a>';
+    }
+    if (sources.length > maxShow) {
+        html += '<span class="brief-topic-source-more">+' + (sources.length - maxShow) + '</span>';
+    }
+    return html;
+}
+
+function renderDailyContent(dateKey) {
+    var report = reportsDB[dateKey];
+    if(!report) {
+        document.getElementById("dailyContentArea").innerHTML = '<div class="daily-inner"><div style="text-align:center; padding:60px; color:#999;">暂无日报数据</div></div>';
+        return;
+    }
+    var topics = report.topics || [];
+    var topicsHtml = '';
+    topics.forEach(function(topic) {
+        var itemsHtml = '';
+        topic.items.forEach(function(item) {
+            itemsHtml +=
+                '<div class="brief-topic-item">' +
+                    '<span class="brief-topic-bullet"></span>' +
+                    '<span class="brief-topic-text">' + item.text + '</span>' +
+                    '<span class="brief-topic-sources">' + getSourcesHtml(item) + '</span>' +
+                '</div>';
+        });
+        topicsHtml +=
+            '<div class="brief-topic-section">' +
+                '<div class="brief-topic-title">' + topic.title + '</div>' +
+                itemsHtml +
+            '</div>';
+    });
+    var finalHtml =
+        '<div class="daily-inner">' +
+            '<div class="brief-title-area">' +
+                 '<div class="brief-title-left">' +
+                      '<span class="brief-update-time">' + dateKey.slice(0,4) + '年' + parseInt(dateKey.slice(5,7), 10) + '月' + parseInt(dateKey.slice(8,10), 10) + '日</span>' +
+                      '<span class="brief-title-tag">每日晨报</span>' +
+                      '<div class="brief-title-divider">' +
+                          '<span></span>' +
+                          '<span></span>' +
+                      '</div>' +
+                      '<span class="brief-desc-line">过去24小时动态 · AI自动聚合 · 每日8时推送</span>' +
+                  '</div>' +
+                '<div class="brief-title-actions">' +
+                    '<button class="brief-action-btn" title="下载">' +
+                        '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
+                    '</button>' +
+                    '<button class="brief-action-btn" title="分享">' +
+                        '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
+                    '</button>' +
+                '</div>' +
+            '</div>' +
+            '<div class="brief-summary-block">' +
+                '<p class="brief-summary-text">' + report.summary + '</p>' +
+            '</div>' +
+            topicsHtml +
+        '</div>';
+    document.getElementById("dailyContentArea").innerHTML = finalHtml;
+}
+
+function toggleDailyPanel() {
+    var panel = document.querySelector('.daily-left-panel');
+    var toolbar = document.querySelector('.collapsed-toolbar');
+    if (!panel) return;
+    var isCollapsed = panel.classList.toggle('collapsed');
+    if (toolbar) {
+        toolbar.classList.toggle('show', isCollapsed);
+    }
+    var mainArea = document.querySelector('.daily-main-area');
+    if (mainArea) {
+        mainArea.style.width = isCollapsed ? '100%' : '';
+    }
+}
+
+function init() {
+    renderDateList();
+    renderDailyContent(activeDate);
+}
+
+// ===== 用户资料弹出菜单（仿 chat.html） =====
+(function() {
+    var trigger = document.getElementById('userProfileTrigger');
+    if (!trigger) return;
+
+    var popup = document.createElement('div');
+    popup.style.cssText = 'position:absolute;bottom:calc(100% + 4px);left:12px;right:12px;background:#fff;border:1px solid #e8e8e8;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.1);display:none;z-index:100;overflow:hidden;';
+    popup.innerHTML =
+        '<div class="user-profile-popup-item" onclick="alert(\'个人信息设置\')" style="display:flex;align-items:center;padding:10px 14px;cursor:pointer;font-size:14px;color:#333;gap:10px;">' +
+            '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#666" stroke-width="2" style="flex-shrink:0;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>个人设置</span>' +
+        '</div>' +
+        '<div style="height:1px;background:#e8e8e8;margin:0;"></div>' +
+        '<div class="user-profile-popup-item" onclick="alert(\'退出登录\')" style="display:flex;align-items:center;padding:10px 14px;cursor:pointer;font-size:14px;color:#e74c3c;gap:10px;">' +
+            '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#e74c3c" stroke-width="2" style="flex-shrink:0;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>退出登录</span>' +
+        '</div>';
+    trigger.style.position = 'relative';
+    trigger.appendChild(popup);
+
+    trigger.onclick = function(e) {
+        e.stopPropagation();
+        var isShow = popup.style.display === 'block';
+        popup.style.display = isShow ? 'none' : 'block';
+    };
+    trigger.addEventListener('mouseenter', function() {
+        this.style.background = '#f3f2fd';
+    });
+    trigger.addEventListener('mouseleave', function() {
+        this.style.background = '#ffffff';
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.daily-user-section')) {
+            popup.style.display = 'none';
+        }
+    });
+})();
+
+// 启动
+init();
+</script>
+</body>
+</html>
