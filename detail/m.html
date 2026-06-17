@@ -740,7 +740,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     flex: 1;
     background: #fff;
     overflow-y: auto;
-    padding: 16px 20px 20px 24px;
+    padding: 0px 20px 20px 24px;
     /* 预留滚动条宽度，避免 hover 时内容闪烁 */
     scrollbar-gutter: stable;
     /* Firefox: 默认隐藏，hover 后 300ms 显示 */
@@ -784,7 +784,14 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
+    padding: 14px 0;
+    margin-bottom: 0;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #fff;
+    border-bottom: 0px solid #f0f0f0;
 }
 /* 标题标签 */
 .brief-title-tag {
@@ -801,9 +808,14 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     letter-spacing: 0.5px;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0px), calc(100% - 0px) 100%, 0 100%);
 }
+.brief-title-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 .brief-title-actions {
     display: flex;
-    gap: 8px;
+    gap: 4px;
 }
 .brief-action-btn {
     display: inline-flex;
@@ -814,7 +826,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     border: none;
     border-radius: 8px;
     background: transparent;
-    color: #666;
+    color: #96969c;
     cursor: pointer;
     transition: all 0.2s;
     font-family: inherit;
@@ -831,13 +843,8 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     margin-bottom: 20px;
     border-left: 3px solid #605CE5;
 }
-.brief-update-row {
-    display: flex;
-    align-items: center;
-    margin: -6px 0 14px 0;
-}
 .brief-update-time {
-    display: block;
+    display: inline;
     font-family: 'Noto Serif SC', serif;
     font-size: 11px;
     color: #666;
@@ -2133,7 +2140,9 @@ img.max-w-243px.h-39px {
       btn.innerHTML = item.svg + '<span>' + item.text + '</span>';
       // 点击时转发到原始的 Vue 按钮（保持原有行为）
       btn.addEventListener('click', function(e) {
-        if (item.orig) { item.orig.click(); }
+        if (item.text === '专题库') {
+          window.location.href = './topic-db.html';
+        } else if (item.orig) { item.orig.click(); }
         else { alert('MossLib Claw'); }
       });
       newNavContainer.appendChild(btn);
@@ -2317,7 +2326,10 @@ img.max-w-243px.h-39px {
         var finalHtml =
             '<div class="daily-inner">' +
                 '<div class="brief-title-row">' +
-                    '<span class="brief-title-tag">' + report.fullDate + ' 每日晨报</span>' +
+                    '<div class="brief-title-left">' +
+                        '<span class="brief-title-tag">' + report.fullDate + ' 每日晨报</span>' +
+                        '<span class="brief-update-time">过去24小时动态 · AI自动聚合 · 每日8时推送</span>' +
+                    '</div>' +
                     '<div class="brief-title-actions">' +
                         '<button class="brief-action-btn" title="下载">' +
                             '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>' +
@@ -2326,9 +2338,6 @@ img.max-w-243px.h-39px {
                             '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>' +
                         '</button>' +
                     '</div>' +
-                '</div>' +
-                '<div class="brief-update-row">' +
-                    '<span class="brief-update-time">过去24小时动态 · AI自动聚合 · 每日8时推送</span>' +
                 '</div>' +
                 '<div class="brief-summary-block">' +
                     '<p class="brief-summary-text">' + report.summary + '</p>' +
