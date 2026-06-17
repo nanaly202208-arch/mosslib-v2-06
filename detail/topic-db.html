@@ -756,6 +756,31 @@ line-height:1.5;
 }
 .td-clue-summary-tag i { font-size: 12px; }
 .td-clue-summary-tag-view { background: #eef2ff; color: #6366f1; }
+/* 线索详情标签页（仅在抽屉中使用） */
+.td-clue-tabs {
+  display: flex; align-items: center; gap: 16px;
+  padding: 6px 0 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.td-clue-tab {
+  font-size: 12px; color: #94a3b8; background: none;
+  border: none; padding: 4px 0 6px; cursor: pointer;
+  position: relative; font-family: inherit;
+  transition: color 0.15s;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.td-clue-tab.active { color: #605CE5; font-weight: 600; }
+.td-clue-tab.active::after {
+  content: ''; position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 2px; background: #605CE5; border-radius: 1px 1px 0 0;
+}
+.td-clue-tab-badge {
+  font-size: 11px; color: #94a3b8; font-weight: 400;
+  font-family: Arial, 'Microsoft YaHei', '微软雅黑', -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+}
+.td-clue-tab.active .td-clue-tab-badge { color: #605CE5; }
+.td-clue-tab-pane { display: none; }
+.td-clue-tab-pane.active { display: block; }
 .td-clue-topics-list { padding-top: 8px; }
 .td-clue-topic-row {
   display: grid; grid-template-columns: 1fr auto auto auto auto;
@@ -890,7 +915,7 @@ line-height:1.5;
 .td-clue-drawer-body .td-clue-original { display: block; -webkit-line-clamp: unset; overflow: visible; }
 .td-clue-drawer-body .td-clue-expand-btn { display: none; }
 .td-clue-drawer-body .td-clue-meta-grid { border-bottom: none; }
-.td-clue-drawer-body .td-clue-topics-list { display: block !important; }
+.td-clue-drawer-body .td-clue-tab-pane.active { display: block; }
 /* 文献抽屉关联线索区域：保持完整文本，隐藏展开按钮 */
 .td-drawer-tab-content .td-clue-original { display: block; -webkit-line-clamp: unset; overflow: visible; }
 .td-drawer-tab-content .td-clue-expand-btn { display: none; }
@@ -1723,8 +1748,91 @@ function tdOpenClueDrawer(id) {
   var mask = document.getElementById('td-clue-drawer-mask');
   drawer.classList.add('open');
   mask.classList.add('open');
-  document.getElementById('td-clue-drawer-body').innerHTML = tdBuildClueCard(c, true);
-  requestAnimationFrame(function() { tdCheckClueTruncation(document.getElementById('td-clue-drawer-body')); });
+  // 构建关联主题列表HTML
+  var topicsListHtml = '';
+  c.topics.forEach(function(t) {
+    var evidenceClass = t.evidence === '高' ? 'high' : (t.evidence === '低' ? 'low' : (t.evidence === '中高' ? 'mid-high' : 'mid'));
+    var stanceClass = t.stance === '支持' ? 'support' : (t.stance === '质疑' ? 'oppose' : 'neutral');
+    var scoreClass = t.score >= 85 ? 'high' : (t.score >= 60 ? 'mid' : 'low');
+    topicsListHtml +=
+       '<div class="td-clue-topic-row expanded">' +
+         '<div class="td-clue-meta-item">' +
+           '<span class="td-clue-meta-label">关联主题</span>' +
+           '<span class="td-clue-topic">' + t.name + '</span>' +
+         '</div>' +
+         '<div class="td-clue-meta-item">' +
+           '<span class="td-clue-meta-label">证据强度</span>' +
+           '<span class="td-clue-badge ' + evidenceClass + '">' + t.evidence + '</span>' +
+         '</div>' +
+         '<div class="td-clue-meta-item">' +
+           '<span class="td-clue-meta-label">立场</span>' +
+           '<span class="td-clue-badge ' + stanceClass + '">' + t.stance + '</span>' +
+         '</div>' +
+         '<div class="td-clue-meta-item">' +
+           '<span class="td-clue-meta-label">综合评分</span>' +
+           '<span class="td-clue-score ' + scoreClass + '">' + t.score + '</span>' +
+         '</div>' +
+       '</div>' +
+       ((c.reason || c.warning) ?
+         '<div class="td-clue-topic-details">' +
+           (c.reason ? '<div class="td-clue-reason"><i class="ri-checkbox-circle-line"></i> ' + c.reason + '</div>' : '') +
+           (c.warning ? '<div class="td-clue-warning"><i class="ri-error-warning-line"></i> ' + c.warning + '</div>' : '') +
+         '</div>' : '');
+  });
+  // 构建关联观点列表HTML
+  var relatedViews = tdViews.filter(function(v) { return v.relatedClueIds && v.relatedClueIds.indexOf(c.id) !== -1; });
+  var viewsListHtml = relatedViews.map(function(v) {
+    return '<div class="td-view-card" style="margin:6px 0 0;padding:10px 12px;">' +
+      '<div class="td-view-header" style="padding:8px 10px;">' +
+        '<div class="td-view-title" style="font-size:13px;">' + v.title + '</div>' +
+      '</div>' +
+      '<div class="td-view-desc" style="font-size:12px;">' + v.desc + '</div>' +
+      '<div class="td-view-meta" style="font-size:11px;">' +
+        '<span class="td-view-meta-label">线索数量：</span>' +
+        '<span class="td-view-clue-count">' + v.clueCount + '</span>' +
+        '<span class="td-clue-time" style="margin-left:auto;">' + v.time + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  var udid = 'cd_' + c.id;
+  var authorsArr = c.authors ? c.authors.split(/,\s*/) : [];
+  var authorsHtml = '';
+  if (authorsArr.length <= 3) {
+    authorsHtml = c.authors;
+  } else {
+    var shown = authorsArr.slice(0, 2).join(', ');
+    var rest = authorsArr.slice(2).join(', ');
+    authorsHtml = shown + '<span class="td-authors-more" data-authors="' + rest.replace(/"/g, '&quot;') + '">+' + (authorsArr.length - 2) + '</span>';
+  }
+  var html =
+    '<div class="td-clue-card">' +
+      '<div class="td-clue-original">' + c.text + '</div>' +
+      '<div class="td-clue-source">' +
+        '<span class="td-clue-year">' + c.year + '</span>' +
+        '<span class="td-clue-authors">' + authorsHtml + '</span>' +
+        '<span class="td-clue-paper">' + c.paper + '</span>' +
+        '<span class="td-clue-time">' + c.time + '</span>' +
+      '</div>' +
+      '<div class="td-clue-meta-grid">' +
+        '<div class="td-clue-topics-summary">' +
+          '<div class="td-clue-summary-left">' +
+            '<i class="ri-calendar-line td-clue-meta-icon"></i>' +
+            '<span class="td-clue-time-text">' + c.time + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="td-clue-tabs">' +
+          '<button class="td-clue-tab active" onclick="document.querySelector(\'#' + udid + '-topics\').classList.add(\'active\');document.querySelector(\'#' + udid + '-views\').classList.remove(\'active\');this.parentElement.querySelectorAll(\'.td-clue-tab\').forEach(function(b){b.classList.remove(\'active\')});this.classList.add(\'active\')">关联主题<span class="td-clue-tab-badge">' + c.topics.length + '</span></button>' +
+          '<button class="td-clue-tab" onclick="document.querySelector(\'#' + udid + '-views\').classList.add(\'active\');document.querySelector(\'#' + udid + '-topics\').classList.remove(\'active\');this.parentElement.querySelectorAll(\'.td-clue-tab\').forEach(function(b){b.classList.remove(\'active\')});this.classList.add(\'active\')">关联观点<span class="td-clue-tab-badge">' + relatedViews.length + '</span></button>' +
+        '</div>' +
+        '<div class="td-clue-tab-pane active" id="' + udid + '-topics">' +
+          '<div class="td-clue-topics-list">' + topicsListHtml + '</div>' +
+        '</div>' +
+        '<div class="td-clue-tab-pane" id="' + udid + '-views">' +
+          (viewsListHtml || '<div style="text-align:center;padding:16px 0;color:#94a3b8;font-size:12px;">暂无关联观点</div>') +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  document.getElementById('td-clue-drawer-body').innerHTML = html;
 }
 
 function tdCloseClueDrawer() {
@@ -1795,8 +1903,7 @@ function tdRenderDocDrawer(tab) {
             '<span class="td-clue-summary-tag"><i class="ri-links-line td-clue-meta-icon"></i>主题 ' + c.topics.length + '</span>' +
             '<span class="td-clue-summary-tag td-clue-summary-tag-view"><i class="ri-flashlight-line"></i>观点 ' + clueViewCountDrawer + '</span>' +
           '</div>' +
-        '</div>' +
-        '<div class="td-clue-topics-list">' + topicsListHtml + '</div>';
+        '</div>';
       html +=
         '<div class="td-clue-card" style="margin-bottom:10px;">' +
           '<div class="td-clue-original">' + c.text + '</div>' +
@@ -1863,7 +1970,7 @@ function uploadDoc() {
   tdRenderDocs();
 }
 
-function tdBuildClueCard(c, showTopics) {
+function tdBuildClueCard(c) {
   var topicsListHtml = '';
   c.topics.forEach(function(t) {
     var evidenceClass = t.evidence === '高' ? 'high' : (t.evidence === '低' ? 'low' : (t.evidence === '中高' ? 'mid-high' : 'mid'));
@@ -1915,8 +2022,7 @@ function tdBuildClueCard(c, showTopics) {
         '<span class="td-clue-summary-tag"><i class="ri-links-line td-clue-meta-icon"></i>主题 ' + c.topics.length + '</span>' +
         '<span class="td-clue-summary-tag td-clue-summary-tag-view"><i class="ri-flashlight-line"></i>观点 ' + clueViewCount + '</span>' +
       '</div>' +
-    '</div>' +
-    (showTopics ? '<div class="td-clue-topics-list">' + topicsListHtml + '</div>' : '');
+    '</div>';
   return '<div class="td-clue-card" data-clue-id="' + c.id + '" onclick="tdOnClueCardClick(event, ' + c.id + ')">' +
     '<div class="td-clue-text-row">' +
       '<div class="td-clue-original">' + c.text + '<span class="td-clue-expand-btn" onclick="event.stopPropagation(); this.closest(\'.td-clue-card\').classList.toggle(\'expanded\')"><i class="ri-arrow-down-s-line"></i></span></div>' +
