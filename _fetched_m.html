@@ -472,15 +472,10 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   display: none !important;
 }
 
-/* 删除推荐标签下的动态数据内容 */
-.main-view > .w {
-  display: none !important;
-}
-
 /* 新的按钮容器样式 */
 .nav-buttons-container {
   width: 760px !important;
-  margin: 20px auto 40px !important;
+  margin: 30px auto 60px !important;
   display: flex !important;
   justify-content: center !important;
   gap: 16px !important;
@@ -526,11 +521,10 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   margin: 0;
 }
 
-/* ===== AI日报模块 ===== */
+/* ===== AI日报模块 (从 日报.html 完全复刻) ===== */
 .ai-daily-module {
-  width: 1180px;
-  max-width: 100%;
-  min-height: 560px;
+  width: 1000px;
+  height: 380px;
   background: #fafafa;
   border-radius: 20px;
   box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -539,36 +533,14 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   color: #2d2d2d;
   transition: all 0.2s;
   margin: 0 auto 40px;
-  display: flex;
-  gap: 16px;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-/* 外层容器，左右并列 */
-.ai-daily-inner {
-  display: flex;
-  width: 100%;
-  gap: 16px;
 }
 
 /* 左右 flex 布局，高度严格继承 */
 .daily-module-layout {
-  flex: 0 0 69%;
-  max-width: 69%;
-  display: flex;
-  background: #fafafa;
-  border-radius: 20px;
-  box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-}
-
-/* 左侧原日报模块 */
-.daily-main-area {
-  flex: 1;
-  display: flex;
-  background: #fafafa;
-  min-width: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background: #fafafa;
 }
 
 /* ========= 左侧日期导航栏 ========= */
@@ -594,7 +566,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 }
 
 .date-card-month {
-    padding: 14px 14px 4px 14px;
+    padding: 10px 14px 4px 14px;
     display: flex;
     align-items: baseline;
     gap: 8px;
@@ -617,7 +589,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 6px 0 24px;
+    padding: 6px 0 20px;
 }
 .day-number {
     font-family: 'Times New Roman', 'Times', serif;
@@ -666,7 +638,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     gap: 10px;
     cursor: pointer;
     border-radius: 14px;
-    padding: 12px 12px;
+    padding: 11px 12px;
     transition: all 0.2s ease;
     position: relative;
     border: 1px solid transparent;
@@ -802,246 +774,10 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 .daily-content::-webkit-scrollbar-track {
     background: transparent;
 }
-/* 数据面板列表滚动条样式，与日报内容区完全一致 */
-.stats-list::-webkit-scrollbar {
-    width: 2px;
-    background: transparent;
-}
-.stats-list::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 2px;
-    transition: background 0s 0.3s;
-}
-.stats-list:hover::-webkit-scrollbar-thumb,
-.stats-list.scrolling::-webkit-scrollbar-thumb {
-    background: #e5e5e5;
-    transition: background 0s 0s;
-}
-.stats-list::-webkit-scrollbar-track {
-    background: transparent;
-}
 
 .daily-inner {
     max-width: 100%;
 }
-
-/* ========= 右侧数据量统计展示区（35%，方案 B：浅色清新风） ========= */
-.daily-stats-panel {
-    flex: 0 0 30%;
-    max-width: 30%;
-    display: flex;
-    flex-direction: column;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    overflow: hidden;
-    position: relative;
-    min-width: 0;
-    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);
-}
-.daily-stats-panel .stats-top-bar {
-    height: 4px;
-    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
-    flex-shrink: 0;
-}
-.daily-stats-panel .stats-header {
-    padding: 16px 20px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-}
-.daily-stats-panel .stats-header-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.daily-stats-panel .stats-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: #eff6ff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #3b82f6;
-    font-size: 15px;
-}
-.daily-stats-panel .stats-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: #323232;
-}
-.daily-stats-panel .stats-live {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    background: #ecfdf5;
-    border-radius: 999px;
-}
-.daily-stats-panel .stats-live .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #10b981;
-}
-.daily-stats-panel .stats-live span {
-    font-size: 10px;
-    color: #059669;
-    font-weight: 500;
-}
-.daily-stats-panel .stats-summary {
-    padding: 4px 20px 10px;
-    flex-shrink: 0;
-}
-.daily-stats-panel .stats-summary-row {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-.daily-stats-panel .stats-summary-label {
-    font-size: 11px;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0;
-}
-.daily-stats-panel .stats-summary-value {
-    font-size: 28px;
-    font-weight: 700;
-    color: #0f172a;
-    line-height: 1.1;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
-}
-.daily-stats-panel .stats-spark {
-    margin:10px 20px 6px 20px;
-    height: 32px;
-}
-.daily-stats-panel .stats-divider {
-    margin: 0 40px;
-    height: 1px;
-    background: #f1f5f9;
-    flex-shrink: 0;
-}
-.daily-stats-panel .stats-trio {
-    padding: 8px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-}
-.daily-stats-panel .stats-trio-item {
-    flex: 1;
-    text-align: center;
-}
-.daily-stats-panel .stats-trio-item + .stats-trio-item {
-    border-left: 1px solid #f1f5f9;
-}
-.daily-stats-panel .stats-trio-label {
-    font-size: 10px;
-    color: #94a3b8;
-    margin-bottom: 2px;
-}
-.daily-stats-panel .stats-trio-value {
-    font-size: 14px;
-    font-weight: 500;
-    color: #1e293b;
-    font-variant-numeric: tabular-nums;
-}
-.daily-stats-panel .stats-trio-value.is-accent {
-    color: #1e293b;
-}
-.daily-stats-panel .stats-list-wrap {
-    flex: 1;
-    padding: 14px 20px 18px;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
-}
-.daily-stats-panel .stats-list-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-.daily-stats-panel .stats-list-head .lbl {
-    font-size: 11px;
-    color: #64748b;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-}
-.daily-stats-panel .stats-list-head .sub {
-    font-size: 10px;
-    color: #94a3b8;
-}
-.daily-stats-panel .stats-list {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-height: 0;
-}
-.daily-stats-panel .stats-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 12px;
-    background: #f8fafc;
-    border: 1px solid #f1f5f9;
-    transition: all 0.2s;
-    cursor: pointer;
-}
-.daily-stats-panel .stats-item:hover {
-    background: #eff6ff;
-    border-color: #bfdbfe;
-}
-.daily-stats-panel .stats-item-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 14px;
-}
-.daily-stats-panel .stats-item-icon.tone-emerald { background: #d1fae5; color: #059669; }
-.daily-stats-panel .stats-item-icon.tone-blue    { background: #dbeafe; color: #2563eb; }
-.daily-stats-panel .stats-item-icon.tone-violet  { background: #ede9fe; color: #7c3aed; }
-.daily-stats-panel .stats-item-icon.tone-amber   { background: #fef3c7; color: #d97706; }
-.daily-stats-panel .stats-item-icon.tone-rose    { background: #ffe4e6; color: #e11d48; }
-.daily-stats-panel .stats-item-body { flex: 1; min-width: 0; }
-.daily-stats-panel .stats-item-title {
-    font-size: 12px;
-    color: #334155;
-    font-weight: 500;
-    line-height: 1.4;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: color 0.2s;
-}
-.daily-stats-panel .stats-item:hover .stats-item-title { color: #2563eb; }
-.daily-stats-panel .stats-item-meta {
-    font-size: 10px;
-    color: #94a3b8;
-    margin-top: 2px;
-}
-.daily-stats-panel .stats-item-badge {
-    font-size: 9px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 500;
-    flex-shrink: 0;
-}
-.daily-stats-panel .stats-item-badge.badge-new    { background: #d1fae5; color: #059669; }
-.daily-stats-panel .stats-item-badge.badge-doing  { background: #fef3c7; color: #d97706; }
 
 /* 日报新标题行 */
 .brief-title-row {
@@ -1835,7 +1571,7 @@ img.max-w-243px.h-39px {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  margin: 0 auto 16px;
+  margin: 0 auto 42px;
 }
 
 /* 文献数量统计纵向列表 - 位于输入框上方，与 MossLib 图片同行 */
@@ -1942,408 +1678,6 @@ img.max-w-243px.h-39px {
 /* 标签栏本身z-index高于背景层 */
 .sticky-menu-view {
   z-index: 2 !important;
-}
-
-/* 隐藏Vue渲染的分类标签栏 */
-.sticky-menu-view .cate-bar-view {
-  display: none !important;
-}
-
-/* 静态分类标签栏 */
-.static-cate-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  background: #efeffc;
-  width: 100%;
-  gap: 0;
-}
-
-.static-cate-bar .static-cate-item {
-  padding: 0 24px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: #1F1D3B;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-weight: 400;
-}
-
-.static-cate-bar .static-cate-item:hover {
-  color: #605CE5;
-}
-
-.static-cate-bar .static-cate-item.active {
-  color: #605CE5;
-  font-weight: 700;
-}
-
-/* ===== 精准荐读样式 ===== */
-.recommend-wrapper {
-  width: 100%;
-  max-width: 1100px;
-  margin: 40px auto 0 auto;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
-
-.recommend-header {
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.recommend-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: #2d2d2d;
-}
-
-.recommend-subtitle {
-  font-size: 13px;
-  color: #999;
-  margin-top: 4px;
-}
-
-.subscription-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.subscription-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  flex: 1;
-  justify-content: center;
-}
-
-.sub-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 20px;
-  font-size: 13px;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.sub-tag:hover {
-  border-color: #605CE5;
-  color: #605CE5;
-}
-
-.sub-tag.active {
-  background: #605CE5;
-  border-color: #605CE5;
-  color: #fff;
-}
-
-.sub-tag.active .sub-avatar-icon i {
-  color: #fff;
-}
-
-.sub-avatar-icon {
-  font-size: 14px;
-}
-
-.sub-avatar-icon i {
-  color: #605CE5;
-}
-
-.sub-title {
-  font-weight: 500;
-}
-
-.sub-badge {
-  background: #FF6B6B;
-  color: #fff;
-  font-size: 10px;
-  padding: 1px 6px;
-  border-radius: 10px;
-  font-weight: 600;
-}
-
-.subscription-manage {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #999;
-  cursor: pointer;
-  font-weight: 500;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: color 0.2s;
-  height: 32px;
-  padding: 0 8px;
-  line-height: 1;
-}
-
-.subscription-manage:hover {
-  color: #605CE5;
-}
-
-.subscription-manage i {
-  font-size: 14px;
-}
-
-.more-dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.more-dropdown .sub-tag {
-  background: #EEEDFC;
-  color: #605CE5;
-}
-
-.dropdown-content {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  padding: 8px;
-  z-index: 100;
-  display: none;
-  min-width: 200px;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.dropdown-content.show {
-  display: flex;
-}
-
-.dropdown-content .sub-tag {
-  margin: 0;
-}
-
-.card-grid {
-  column-count: 2;
-  column-gap: 26px;
-}
-
-.recommend-card-item {
-  break-inside: avoid;
-  margin-bottom: 20px;
-  display: inline-block;
-  width: 100%;
-  background: #fff;
-  border: 1px solid #e8e8e8;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  overflow: hidden;
-  transition: all 0.2s;
-}
-
-.recommend-card-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-  border-color: #605CE5;
-}
-
-.card-image {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  background: #EEEDFC;
-  display: block;
-}
-
-.card-content {
-  padding: 20px 26px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.card-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  font-size: 12px;
-  color: #999;
-  border-bottom: 1px dashed #e8e8e8;
-  padding-bottom: 8px;
-  margin-bottom: 4px;
-}
-
-.card-meta i {
-  color: #999;
-  font-size: 12px;
-  margin-right: 4px;
-  vertical-align: middle;
-}
-
-.card-meta span {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.card-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: #2d2d2d;
-  line-height: 1.4;
-  margin: 0 0 4px 0;
-}
-
-.card-title a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.card-title a:hover {
-  color: #605CE5;
-}
-
-.card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 4px 0;
-}
-
-.card-tag {
-  background: #EEEDFC;
-  color: #605CE5;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.card-abstract {
-  font-size: 13px;
-  color: #666;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-top: 6px;
-}
-
-.card-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 12px;
-  font-size: 12px;
-  color: #999;
-  border-top: 1px solid #f0f0f0;
-}
-
-.card-actions {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
-
-.card-actions i {
-  font-size: 18px;
-  color: #999;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.card-actions i:hover {
-  color: #605CE5;
-}
-
-.card-sub-badge {
-  background: #EEEDFC;
-  color: #605CE5;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  width: fit-content;
-  cursor: pointer;
-  transition: 0.1s;
-}
-
-.card-sub-badge:hover {
-  background: #605CE5;
-  color: #fff;
-}
-
-.card-sub-badge i {
-  font-size: 12px;
-  margin-right: 4px;
-  vertical-align: middle;
-}
-
-.card-type-badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  white-space: nowrap;
-  color: #333;
-  border: 1px solid rgba(0,0,0,0.05);
-}
-
-.card-confidence-tag {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.confidence-high {
-  background: #E8F5E9;
-  color: #2E7D32;
-  border: 1px solid #A5D6A7;
-}
-
-.confidence-mid {
-  background: #FFF3E0;
-  color: #E65100;
-  border: 1px solid #FFCC80;
-}
-
-.confidence-low {
-  background: #FFEBEE;
-  color: #C62828;
-  border: 1px solid #EF9A9A;
-}
-
-.confidence-unknown {
-  background: #F5F5F5;
-  color: #757575;
-  border: 1px solid #E0E0E0;
-}
-
-@media (min-width: 768px) {
-  .card-grid { column-count: 2; }
-}
-@media (min-width: 992px) {
-  .card-grid { column-count: 3; }
 }
 
 /* 吸顶时显示的固定logo（与pinned-top-actions同级） */
@@ -2993,7 +2327,7 @@ img.max-w-243px.h-39px {
             '<div class="daily-inner">' +
                 '<div class="brief-title-row">' +
                     '<div class="brief-title-left">' +
-                        '<span class="brief-title-tag">' + '每日晨报 '+ report.fullDate + ' </span>' +
+                        '<span class="brief-title-tag">' + report.fullDate + ' 每日晨报</span>' +
                         '<span class="brief-update-time">过去24小时动态 · AI自动聚合 · 每日8时推送</span>' +
                     '</div>' +
                     '<div class="brief-title-actions">' +
@@ -3034,117 +2368,27 @@ img.max-w-243px.h-39px {
     // 构建 AI 日报模块 DOM
     var moduleHtml =
       '<div class="daily-module-layout">' +
-        '<div class="daily-main-area">' +
-          '<div class="date-sidebar">' +
-            '<div class="date-list" id="dateListContainer"></div>' +
-            '<div class="sidebar-header">' +
-              '<div class="read-stats">' +
-                '<div class="stat-value">' +
-                  '<a class="expand-more-btn" id="expandMoreBtn" href="./daily-report.html">查看更多' +
-                    '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3 L5 7 L9 3" stroke="currentColor" fill="none" stroke-linecap="round"/></svg>' +
-                  '</a>' +
-                '</div>' +
+        '<div class="date-sidebar">' +
+          '<div class="date-list" id="dateListContainer"></div>' +
+          '<div class="sidebar-header">' +
+            '<div class="read-stats">' +
+              '<div class="stat-value">' +
+                '<a class="expand-more-btn" id="expandMoreBtn" href="./daily-report.html">查看更多' +
+                  '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3 L5 7 L9 3" stroke="currentColor" fill="none" stroke-linecap="round"/></svg>' +
+                '</a>' +
               '</div>' +
-            '</div>' +
-          '</div>' +
-          '<div class="daily-content" id="dailyContentArea">' +
-            '<div class="daily-inner">' +
-              '<div style="text-align:center; padding:40px;">加载日报中...</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
-      '</div>' +
-      '<div class="daily-stats-panel" id="dailyStatsPanel">' +
-        '<div class="stats-header">' +
-          '<div class="stats-header-left">' +
-            '<div class="stats-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 11v6c0 1.66 4 3 9 3s9-1.34 9-3v-6"/></svg></div>' +
-            '<span class="stats-title">MossLib 内容库</span>' +
-          '</div>' +
-          '<div class="stats-live"><span class="dot"></span><span>实时</span></div>' +
-        '</div>' +
-        '<div class="stats-summary">' +
-          '<div class="stats-summary-row">' +
-            '<div class="stats-summary-value">128,492</div>'  +
-            '<div class="stats-summary-label">总收录</div>'  +
-          '</div>' +
-          '<div class="stats-spark">' +
-            '<svg viewBox="0 0 280 32" preserveAspectRatio="none" style="width:100%;height:100%">' +
-              '<defs>' +
-                '<linearGradient id="daily-stats-grad" x1="0" y1="0" x2="0" y2="1">' +
-                  '<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.18"/>' +
-                  '<stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>' +
-                '</linearGradient>' +
-              '</defs>' +
-              '<path d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2 L280,32 L0,32 Z" fill="url(#daily-stats-grad)"/>' +
-              '<path d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/>' +
-            '</svg>' +
-          '</div>' +
-        '</div>' +
-        '<div class="stats-divider"></div>' +
-        '<div class="stats-trio">' +
-          '<div class="stats-trio-item">' +
-            '<div class="stats-trio-label">今日</div>' +
-            '<div class="stats-trio-value">+1,247</div>' +
-          '</div>' +
-          '<div class="stats-trio-item">' +
-            '<div class="stats-trio-label">本周</div>' +
-            '<div class="stats-trio-value">+8,932</div>' +
-          '</div>' +
-          '<div class="stats-trio-item">' +
-            '<div class="stats-trio-label">数据源</div>' +
-            '<div class="stats-trio-value is-accent">42</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="stats-divider"></div>' +
-        '<div class="stats-list-wrap">' +
-          '<div class="stats-list-head">' +
-            '<span class="lbl">最新</span>' +
-            '<span class="sub">过去 1 小时</span>' +
-          '</div>' +
-          '<div class="stats-list" id="dailyStatsList">' +
-            '<div class="stats-item">' +
-              '<div class="stats-item-icon tone-emerald"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg></div>' +
-              '<div class="stats-item-body">' +
-                '<div class="stats-item-title">AI 技术趋势报告 2024</div>' +
-                '<div class="stats-item-meta">2 分钟前 · 文章</div>' +
-              '</div>' +
-              '<span class="stats-item-badge badge-new">NEW</span>' +
-            '</div>' +
-            '<div class="stats-item">' +
-              '<div class="stats-item-icon tone-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 11v6c0 1.66 4 3 9 3s9-1.34 9-3v-6"/></svg></div>' +
-              '<div class="stats-item-body">' +
-                '<div class="stats-item-title">用户行为分析日志 v2</div>' +
-                '<div class="stats-item-meta">8 分钟前 · 数据集</div>' +
-              '</div>' +
-            '</div>' +
-            '<div class="stats-item">' +
-              '<div class="stats-item-icon tone-violet"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>' +
-              '<div class="stats-item-body">' +
-                '<div class="stats-item-title">产品发布会现场视频</div>' +
-                '<div class="stats-item-meta">15 分钟前 · 视频</div>' +
-              '</div>' +
-            '</div>' +
-            '<div class="stats-item">' +
-              '<div class="stats-item-icon tone-amber"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>' +
-              '<div class="stats-item-body">' +
-                '<div class="stats-item-title">图片资源批量上传</div>' +
-                '<div class="stats-item-meta">22 分钟前 · 媒体</div>' +
-              '</div>' +
-              '<span class="stats-item-badge badge-doing">处理中</span>' +
-            '</div>' +
-            '<div class="stats-item">' +
-              '<div class="stats-item-icon tone-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg></div>' +
-              '<div class="stats-item-body">' +
-                '<div class="stats-item-title">季度财报解读文章</div>' +
-                '<div class="stats-item-meta">35 分钟前 · 文章</div>' +
-              '</div>' +
-            '</div>' +
+        '<div class="daily-content" id="dailyContentArea">' +
+          '<div class="daily-inner">' +
+            '<div style="text-align:center; padding:40px;">加载日报中...</div>' +
           '</div>' +
         '</div>' +
       '</div>';
 
     var moduleWrapper = document.createElement('div');
-    moduleWrapper.style.cssText = 'width:1200px;max-width:100%;height:420px;display:flex;gap:6px;margin:0 auto 40px;';
+    moduleWrapper.className = 'ai-daily-module';
     moduleWrapper.innerHTML = moduleHtml;
 
     // 插入到 nav-buttons-container 之后
@@ -3157,79 +2401,6 @@ img.max-w-243px.h-39px {
 
     // 调用 init 渲染最新日报
     init();
-    
-    // 数据面板 - 数字滚动动画
-    (function() {
-      // 数字滚动计数动画（从 0 滚到目标值）
-      function animateDailyCount(el, target, duration, prefix) {
-        if (!el) return;
-        prefix = prefix || '';
-        duration = duration || 1800;
-        const startVal = 0;
-        const startTime = performance.now();
-        function tick(now) {
-          const t = Math.min(1, (now - startTime) / duration);
-          const eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-          const current = Math.floor(startVal + (target - startVal) * eased);
-          el.textContent = prefix + current.toLocaleString('en-US');
-          if (t < 1) {
-            requestAnimationFrame(tick);
-          } else {
-            el.textContent = prefix + target.toLocaleString('en-US');
-          }
-        }
-        requestAnimationFrame(tick);
-      }
-      
-      // 获取数据面板元素
-      const statsPanel = document.getElementById('dailyStatsPanel');
-      if (statsPanel) {
-        // 数据面板列表：滚动时立即显示滚动条，停止300ms后隐藏
-        const statsListEl = statsPanel.querySelector('.stats-list');
-        if (statsListEl) {
-          let statsScrollTimer = null;
-          statsListEl.addEventListener('scroll', function() {
-            statsListEl.classList.add('scrolling');
-            clearTimeout(statsScrollTimer);
-            statsScrollTimer = setTimeout(function() {
-              statsListEl.classList.remove('scrolling');
-            }, 300);
-          });
-        }
-        
-        // 总收录数字
-        const totalEl = statsPanel.querySelector('.stats-summary-value');
-        if (totalEl) {
-          const original = totalEl.textContent.trim().replace(',', '');
-          const target = parseInt(original.replace(',', ''), 10);
-          if (!isNaN(target)) {
-            totalEl.textContent = '0';
-            setTimeout(() => animateDailyCount(totalEl, target, 1600), 200);
-          }
-        }
-        // 今日数字
-        const todayEl = statsPanel.querySelectorAll('.stats-trio-value')[0];
-        if (todayEl) {
-          const todayTarget = 1247;
-          todayEl.textContent = '0';
-          setTimeout(() => animateDailyCount(todayEl, todayTarget, 1400, '+'), 400);
-        }
-        // 本周数字
-        const weekEl = statsPanel.querySelectorAll('.stats-trio-value')[1];
-        if (weekEl) {
-          const weekTarget = 8932;
-          weekEl.textContent = '0';
-          setTimeout(() => animateDailyCount(weekEl, weekTarget, 1400, '+'), 600);
-        }
-        // 数据源数字
-        const sourceEl = statsPanel.querySelectorAll('.stats-trio-value')[2];
-        if (sourceEl) {
-          const sourceTarget = 42;
-          sourceEl.textContent = '0';
-          setTimeout(() => animateDailyCount(sourceEl, sourceTarget, 1400), 800);
-        }
-      }
-    })();
   }
 
   // ========== 文献数量统计 - 数字滚动动画 ==========
@@ -3258,7 +2429,6 @@ img.max-w-243px.h-39px {
     requestAnimationFrame(tick);
   }
 
-/*
   function buildLitStatsPanel() {
     if (_litStatsPanel && document.body.contains(_litStatsPanel)) return _litStatsPanel;
     const panel = document.createElement('div');
@@ -3281,16 +2451,17 @@ img.max-w-243px.h-39px {
     _litStatsPanel = panel;
     return panel;
   }
-*/
 
   function initLitStatsPanel() {
     if (_litStatsStarted) return;
+    // 找到搜索输入框
     const searchContainer = document.querySelector('.search-entry-container');
     if (!searchContainer) return;
+    // 父容器：搜索视图或 home wrapper
     const parent = searchContainer.parentNode;
     if (!parent) return;
 
-    /*const panel = buildLitStatsPanel();*/
+    const panel = buildLitStatsPanel();
 
     // 找到 MossLib 图片
     let imgEl = null;
@@ -3950,36 +3121,6 @@ img.max-w-243px.h-39px {
     setTimeout(initLitStatsPanel, 400);
     setTimeout(initLitStatsPanel, 1200);
     setTimeout(initLitStatsPanel, 2500);
-    // 创建静态分类标签栏
-    setTimeout(createStaticCateBar, 500);
-    setTimeout(createStaticCateBar, 1500);
-  }
-
-  function createStaticCateBar() {
-    if (document.querySelector('.static-cate-bar')) return;
-    const stickyMenu = document.querySelector('.sticky-menu-view');
-    if (!stickyMenu) return;
-    
-    const cateBar = document.createElement('div');
-    cateBar.className = 'static-cate-bar';
-    cateBar.innerHTML = `
-      <div class="static-cate-item" data-cate="subscribe">订阅</div>
-      <div class="static-cate-item active" data-cate="recommend">推荐</div>
-      <div class="static-cate-item" data-cate="report">报告</div>
-      <div class="static-cate-item" data-cate="news">资讯</div>
-      <div class="static-cate-item" data-cate="paper">论文</div>
-      <div class="static-cate-item" data-cate="patent">专利</div>
-    `;
-    
-    stickyMenu.appendChild(cateBar);
-    
-    const items = cateBar.querySelectorAll('.static-cate-item');
-    items.forEach(function(item) {
-      item.addEventListener('click', function() {
-        items.forEach(function(i) { i.classList.remove('active'); });
-        item.classList.add('active');
-      });
-    });
   }
 
   // 标签页置顶时，在右侧显示搜索按钮和用户头像及下拉菜单
@@ -4396,6 +3537,371 @@ img.max-w-243px.h-39px {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
+  }
+})();
+
+// ========== 精准荐读（移植自 mosslib-trea-0521 工作台页面，原生结构 + 直接挂载到「推荐」li 对应的 el-tab-pane） ==========
+(function() {
+  if (window.__tdRecommendInjected) return;
+  window.__tdRecommendInjected = true;
+
+  // 注入源文件 mosslib-trea-0521 的 CSS 变量（命名空间 --tdr-*）
+  var tdrVars = document.createElement('style');
+  tdrVars.id = 'tdr-vars';
+  tdrVars.textContent = ':root{--tdr-primary:#ea4c89;--tdr-primary-light:#fdedf3;--tdr-primary-hover:#ec5e95;--tdr-bg-body:#f5f7fb;--tdr-bg-card:#ffffff;--tdr-text-primary:#0f172a;--tdr-text-secondary:#475569;--tdr-text-muted:#64748b;--tdr-border:#e2e8f0;--tdr-border-light:#eef0f4;--tdr-success:#10b981;--tdr-warning:#f59e0b;--tdr-danger:#ef4444;--tdr-shadow-sm:0 1px 3px rgba(15,23,42,.04);--tdr-shadow-md:0 8px 20px rgba(15,23,42,.08);--tdr-shadow-lg:0 8px 24px rgba(15,23,42,.12);--tdr-radius-sm:8px;--tdr-radius-md:12px;--tdr-radius-lg:16px;--tdr-radius-xl:20px;}';
+  document.head.appendChild(tdrVars);
+
+  // 注入 CSS（沿用源文件 mosslib-trea-0521/css/style.css 中精准荐读相关样式）
+  var cssText = [
+    // 精准荐读主结构（源文件 .recommend-wrapper / .recommend-header 原版）
+    '.recommend-wrapper{width:100%;max-width:1100px;margin:0 auto;}',
+    '.recommend-header{text-align:center;margin-bottom:16px;}',
+    '.recommend-title{font-size:22px;font-weight:800;color:var(--tdr-text-primary);}',
+    '.recommend-subtitle{font-size:13px;color:var(--tdr-text-muted);margin-top:6px;}',
+    // 订阅栏（源文件原版）
+    '.subscription-section{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px;}',
+    '.subscription-bar{display:flex;flex-wrap:wrap;gap:10px;flex:1;justify-content:center;}',
+    '.subscription-manage{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--tdr-text-muted);cursor:pointer;font-weight:500;white-space:nowrap;flex-shrink:0;transition:color .2s;height:32px;padding:0 8px;line-height:1;}',
+    '.subscription-manage:hover{color:var(--tdr-primary);}',
+    '.subscription-manage i{font-size:14px;}',
+    // 订阅标签（源文件 .sub-tag 原版）
+    '.sub-tag{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;background:#fff;border:1px solid var(--tdr-border);border-radius:var(--tdr-radius-md);font-size:13px;font-weight:600;color:var(--tdr-text-secondary);cursor:pointer;transition:all .2s;}',
+    '.sub-tag:hover{border-color:var(--tdr-primary);background:var(--tdr-primary-light);}',
+    '.sub-tag.active{background:var(--tdr-primary);border-color:var(--tdr-primary);color:#fff;}',
+    '.sub-tag .sub-icon{font-size:14px;}',
+    '.sub-tag .sub-avatar-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;}',
+    '.sub-tag .sub-badge{background:var(--tdr-primary-light);color:var(--tdr-primary);border-radius:20px;padding:0 6px;font-size:11px;font-weight:700;margin-left:2px;}',
+    '.sub-tag.active .sub-badge{background:#fff;color:var(--tdr-primary);}',
+    // 更多下拉（源文件原版）
+    '.more-dropdown{position:relative;display:inline-block;}',
+    '.more-dropdown .sub-tag{background:var(--tdr-primary-light);color:var(--tdr-primary);}',
+    '.dropdown-content{position:absolute;top:100%;right:0;background:#fff;border:1px solid var(--tdr-border);border-radius:var(--tdr-radius-md);box-shadow:var(--tdr-shadow-lg);padding:8px;z-index:100;display:none;min-width:220px;flex-direction:column;gap:6px;margin-top:6px;}',
+    '.dropdown-content.show{display:flex;}',
+    '.dropdown-content .sub-tag{margin:0;}',
+    // 卡片网格（源文件原版）
+    '.card-grid{column-count:1;column-gap:26px;}',
+    '@media(min-width:768px){.card-grid{column-count:2;}}',
+    '@media(min-width:1200px){.card-grid{column-count:3;}}',
+    '@media(min-width:1600px){.card-grid{column-count:4;}}',
+    // 推荐卡片（源文件 .recommend-card-item / .card-* 原版）
+    '.recommend-card-item{break-inside:avoid;margin-bottom:20px;display:inline-block;width:100%;background:#fff;border:1px solid var(--tdr-border);border-radius:var(--tdr-radius-md);box-shadow:var(--tdr-shadow-sm);overflow:hidden;transition:all .2s;}',
+    '.recommend-card-item:hover{transform:translateY(-4px);box-shadow:var(--tdr-shadow-md);border-color:var(--tdr-primary-light);}',
+    '.card-image{width:100%;height:140px;object-fit:cover;background:var(--tdr-primary-light);display:block;}',
+    '.card-image-placeholder{background:#f5f7fb;color:#94a3b8;font-size:28px;}',
+    '.card-content{padding:20px 26px;flex:1;display:flex;flex-direction:column;gap:8px;}',
+    '.card-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--tdr-text-muted);border-bottom:1px dashed var(--tdr-border);padding-bottom:8px;margin-bottom:4px;}',
+    '.card-meta i{color:var(--tdr-text-muted);font-size:12px;margin-right:4px;vertical-align:middle;}',
+    '.card-meta span{display:inline-flex;align-items:center;gap:4px;}',
+    '.card-title{font-size:15px;font-weight:700;color:var(--tdr-text-primary);line-height:1.4;margin:0 0 4px 0;}',
+    '.card-title a{color:inherit;text-decoration:none;}',
+    '.card-title a:hover{color:var(--tdr-primary);}',
+    '.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0;}',
+    '.card-tag{background:var(--tdr-primary-light);color:var(--tdr-primary);padding:2px 8px;border-radius:12px;font-size:11px;font-weight:500;}',
+    '.card-abstract{font-size:13px;color:var(--tdr-text-secondary);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin-top:6px;}',
+    '.card-type-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;color:#333;border:1px solid rgba(0,0,0,.05);}',
+    '.card-confidence-tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}',
+    '.confidence-high{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}',
+    '.confidence-mid{background:#fff3e0;color:#e65100;border:1px solid #ffcc80;}',
+    '.confidence-low{background:#ffebee;color:#c62828;border:1px solid #ef9a9a;}',
+    '.confidence-unknown{background:#f5f5f5;color:#757575;border:1px solid #e0e0e0;}',
+    '.card-stats .citations{color:var(--tdr-success);}',
+    '.card-sub-badge{background:var(--tdr-primary-light);color:var(--tdr-primary);padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px;width:fit-content;cursor:pointer;transition:.1s;}',
+    '.card-sub-badge:hover{background:var(--tdr-primary);color:#fff;}',
+    '.card-sub-badge i{font-size:12px;margin-right:4px;vertical-align:middle;}',
+    '.card-footer{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:12px;font-size:12px;color:var(--tdr-text-muted);border-top:1px solid var(--tdr-border);}',
+    '.card-actions{display:flex;gap:16px;align-items:center;}',
+    '.card-actions i{font-size:18px;color:var(--tdr-text-muted);cursor:pointer;transition:color .2s;}',
+    '.card-actions i:hover{color:var(--tdr-primary);}',
+    '.card-footer .read-more{color:var(--tdr-primary);font-weight:600;cursor:pointer;}',
+    '.recommend-empty{text-align:center;padding:60px 20px;color:var(--tdr-text-muted);font-size:14px;}'
+  ].join('');
+
+  var styleEl = document.createElement('style');
+  styleEl.id = 'tdr-styles';
+  styleEl.textContent = cssText;
+  document.head.appendChild(styleEl);
+
+  // 数据（源文件 mosslib-trea-0521/js/data.js 原版：5 个 subscriptions + 12 个 recommendItems）
+  const subscriptions = [
+    { id: 'sub1', title: '高超声速技术', avatarIcon: 'ri-rocket-line', keywords: ['高超声速', '热防护', '超燃冲压'], sources: ['AIAA', 'NASA'] },
+    { id: 'sub2', title: '低轨星座', avatarIcon: 'ri-satellite-line', keywords: ['Starlink', '频谱分配', '星座'], sources: ['SpaceX', 'ESA'] },
+    { id: 'sub3', title: '风能叶片', avatarIcon: 'ri-windy-line', keywords: ['风力涡轮机', '叶片优化', '气动'], sources: ['风能研究与开发'] },
+    { id: 'sub4', title: '遥感解译', avatarIcon: 'ri-radar-line', keywords: ['SAR', '目标检测', '遥感影像'], sources: ['Remote Sensing'] },
+    { id: 'sub5', title: '火箭推进', avatarIcon: 'ri-fire-line', keywords: ['喷管', '推力性能', '火箭发动机'], sources: ['Journal of Propulsion'] }
+  ];
+
+  const recommendItems = [
+    { id: 1, type: '论文', contentType: '论文', confidence: '高', image: null, title: 'Collaborative Optimization of Aerodynamics and Wind Turbine Blades', authors: 'HE Fu-shan, Xingsheng Zheng, Weilin Luo', date: '2025/01/16', country: '瑞士', citations: 66, journal: '风能研究与开发', tags: ['期刊论文', '开放获取', '叶轮机械性能与优化'], abstract: '本文探讨多学科设计优化方法在水平轴风力涡轮机叶片设计中的应用...', relatedSubIds: ['sub3'] },
+    { id: 2, type: '专家研判', contentType: '研判报告', confidence: '高', image: null, title: '低轨星座频谱竞争态势研判（2026 Q1）', authors: '张宇航， 王思远', date: '2026/05/18', country: '中国', citations: null, journal: 'MossLib 航天战略研究室', tags: ['专家报告', '频谱分配', '战略分析'], abstract: '结合最新ITU申报数据和各国星座部署进度，研判未来三年频谱资源争夺关键节点...', relatedSubIds: ['sub2'] },
+    { id: 3, type: '专利', contentType: '专利', confidence: '高', image: null, title: '一种基于深度学习的遥感图像目标检测方法及系统', authors: '李华， 陈明', date: '2026/04/10', country: '中国', citations: null, journal: 'CN2026XXXXXX', tags: ['发明专利', '遥感智能解译'], abstract: '本发明公开了一种基于改进YOLOv8的遥感目标检测方法，针对小目标检测准确率低的问题...', relatedSubIds: ['sub4'] },
+    { id: 4, type: '专题合集', contentType: '专题', confidence: '高', image: 'https://picsum.photos/id/20/400/200', title: '高超声速武器防御技术进展合集', authors: 'MossLib 研究中心', date: '2026/05/01', country: '多国', citations: 24, journal: '专题策展', tags: ['专题', '防御技术', '高超声速'], abstract: '本合集收录近半年全球高超声速武器防御领域关键技术文献、试验报告及专家观点...', relatedSubIds: ['sub1'] },
+    { id: 5, type: '论文', contentType: '论文', confidence: '中', image: null, title: 'How do differences in airline passengers\u2019 satisfaction with connection modes affect last-mile travel choice?', authors: 'JiangBo Yu, Jiancheng Weng, Tian Wang', date: '2025/01/15', country: '英国', citations: 66, journal: '交通规划与优化', tags: ['期刊论文', '城市交通与可达性'], abstract: '基于随机后悔最小化模型，研究乘客对连接模式的满意度差异如何影响最后一公里出行选择...', relatedSubIds: [] },
+    { id: 6, type: '资讯', contentType: '资讯', confidence: '中', image: 'https://picsum.photos/id/3/400/200', title: 'SpaceX 星舰第4次试飞取得关键突破', authors: '路透社', date: '2026/05/19', country: '美国', citations: null, journal: '航天动态', tags: ['资讯', '星舰', '试飞'], abstract: '星舰S29完成轨道级飞行测试，一级超重助推器成功软着陆...', relatedSubIds: ['sub1'] },
+    { id: 7, type: '论文', contentType: '论文', confidence: '高', image: 'https://picsum.photos/id/104/400/200', title: 'Parametric study on configuration geometry effect on thrust performance of annular expansion deflection nozzle', authors: 'Ge Wang, Jun Zou, Lei Chen', date: '2025/01/15', country: '中国', citations: 66, journal: '计算流体力学与空气动力学', tags: ['期刊论文', '开放获取', '火箭与推进系统'], abstract: '通过数值模拟研究几何参数对环形膨胀偏转喷管推力性能的影响规律...', relatedSubIds: ['sub5'] },
+    { id: 8, type: '研究报告', contentType: '研究报告', confidence: '高', image: 'https://picsum.photos/id/26/400/200', title: 'AGM-183A ARRW高超音速导弹最新试射评估', authors: '美国空军研究实验室', date: '2026/05/10', country: '美国', citations: null, journal: '导弹技术动态', tags: ['高超音速', '空射快速响应武器', '试验评估'], abstract: '分析ARRW第5次全备弹飞行试验数据，重点评估助推器性能、滑翔体热防护及末端精度，相较前次试射，射程提升12%...', relatedSubIds: ['sub1'] },
+    { id: 9, type: '技术图谱', contentType: '技术图谱', confidence: '高', image: 'https://picsum.photos/id/105/400/200', title: 'X-47B 舰载无人机关键技术演进图谱', authors: '海军航空系统司令部', date: '2026/04/22', country: '美国', citations: 32, journal: '无人机与自主系统', tags: ['舰载无人机', '自主着舰', '隐身技术'], abstract: '梳理X-47B从2005年概念验证到2015年航母弹射/拦阻试验的技术路线，衍生出MQ-25黄貂鱼加油机及CCA协同作战飞机...', relatedSubIds: [] },
+    { id: 10, type: '资讯', contentType: '资讯', confidence: '低', image: 'https://picsum.photos/id/0/400/200', title: '俄"锆石"高超声速反舰导弹进入战斗值班', authors: '塔斯社', date: '2026/05/18', country: '俄罗斯', citations: null, journal: '防务新闻', tags: ['高超声速', '反舰导弹', '3M22'], abstract: '俄国防部宣布"锆石"正式部署于"戈尔什科夫海军元帅"号护卫舰，射程超1000公里，速度马赫9，可打击水面和地面目标...', relatedSubIds: ['sub1', 'sub5'] },
+    { id: 11, type: '型号图谱', contentType: '型号图谱', confidence: '高', image: 'https://picsum.photos/id/46/400/200', title: '萨德（THAAD）反导系统部署与拦截记录全览', authors: '导弹防御局', date: '2026/03/15', country: '美国', citations: 18, journal: '防空反导年鉴', tags: ['末段高空防御', '动能拦截器', '实战拦截'], abstract: '汇总2010年至今全球萨德系统部署地点、拦截试验成功率（92%）及实战案例（沙特拦截胡塞武装弹道导弹）...', relatedSubIds: [] },
+    { id: 12, type: '论证报告', contentType: '论证报告', confidence: '中', image: 'https://picsum.photos/id/34/400/200', title: '下一代电子战支援系统（ES-5000）能力框架论证', authors: '洛克希德·马丁', date: '2026/02/28', country: '美国', citations: null, journal: '电子战与信号情报', tags: ['电子攻击', '电子支援', '认知电子战'], abstract: '提出基于AI的威胁信号识别与自适应干扰调制技术，覆盖0.5-40GHz频段，可集成于F-35、无人机及舰载平台...', relatedSubIds: [] }
+  ];
+
+  // 将精准荐读原生结构挂载到「推荐」li 对应的 el-tab-pane 内容区
+  function mountRecommendToPane() {
+    var recommendLi = null;
+    document.querySelectorAll('li.el-menu-item').forEach(function(li) {
+      if (li.textContent.trim() === '推荐') recommendLi = li;
+    });
+    if (!recommendLi) return false;
+
+    // 1) 通过 aria-controls 找到对应 el-tab-pane
+    var pane = null;
+    var controlsId = recommendLi.getAttribute('aria-controls');
+    if (controlsId) pane = document.getElementById(controlsId);
+
+    // 2) 退路：找当前可见的 el-tab-pane（且与"推荐" li 同级 el-tabs）
+    if (!pane) {
+      var panes = document.querySelectorAll('.el-tabs__content .el-tab-pane');
+      for (var i = 0; i < panes.length; i++) {
+        if (panes[i].offsetParent !== null) { pane = panes[i]; break; }
+      }
+    }
+    if (!pane) return false;
+    if (pane.__tdrMounted) return true;
+
+    pane.innerHTML =
+      '<div class="recommend-wrapper">' +
+        '<div class="recommend-header">' +
+          '<div class="recommend-title">精准荐读</div>' +
+          '<div class="recommend-subtitle">基于您的订阅与研究行为</div>' +
+        '</div>' +
+        '<div class="subscription-section">' +
+          '<div class="subscription-bar" id="subscriptionBar"></div>' +
+          '<div class="subscription-manage" id="moreSubscriptionBtn">' +
+            '<i class="ri-settings-3-line"></i> 订阅管理' +
+          '</div>' +
+        '</div>' +
+        '<div class="card-grid" id="recommendGrid"></div>' +
+      '</div>';
+    pane.__tdrMounted = true;
+
+    var manageBtn = document.getElementById('moreSubscriptionBtn');
+    if (manageBtn) {
+      manageBtn.addEventListener('click', function() {
+        alert('订阅管理功能开发中：可在此处配置信源、关键词、主题、类型。');
+      });
+    }
+
+    renderSubscriptionBar();
+    renderRecommendGrid();
+    return true;
+  }
+
+  // 追踪"推荐" li 的激活态：成为 is-active 时挂载精准荐读到对应 pane
+  function watchRecommendActivation() {
+    var recommendLi = null;
+    document.querySelectorAll('li.el-menu-item').forEach(function(li) {
+      if (li.textContent.trim() === '推荐') recommendLi = li;
+    });
+    if (!recommendLi) return false;
+    if (recommendLi.__tdrWatchBound) return true;
+    recommendLi.__tdrWatchBound = true;
+
+    var tryMount = function() {
+      if (!recommendLi.classList.contains('is-active')) return;
+      if (mountRecommendToPane()) return;
+      // pane 还没渲染：等一帧再试（最多 2s）
+      var tries = 0;
+      var iv = setInterval(function() {
+        tries++;
+        if (mountRecommendToPane() || tries > 40) clearInterval(iv);
+      }, 50);
+    };
+
+    var mo = new MutationObserver(tryMount);
+    mo.observe(recommendLi, { attributes: true, attributeFilter: ['class'] });
+
+    // 兜底：首次主动尝试一次（处理"打开页面时推荐 li 已是激活态"的情况）
+    tryMount();
+    return true;
+  }
+
+  function startWatch() {
+    if (watchRecommendActivation()) return;
+    var tries = 0;
+    var iv = setInterval(function() {
+      tries++;
+      if (watchRecommendActivation() || tries > 60) clearInterval(iv);
+    }, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startWatch);
+  } else {
+    setTimeout(startWatch, 100);
+  }
+
+  // 状态（沿用源文件 initRecommend 中的全局状态）
+  let activeSubIds = [];
+
+  // 渲染订阅栏（源文件 renderSubscriptionBar 原版）
+  function renderSubscriptionBar() {
+    const bar = document.getElementById('subscriptionBar');
+    if (!bar) return;
+    bar.innerHTML = '';
+
+    const total = subscriptions.length;
+    const showCount = 5;
+    const subsToShow = subscriptions.slice(0, showCount);
+    const hasMore = total > showCount;
+
+    subsToShow.forEach(sub => bar.appendChild(createSubTagElement(sub)));
+
+    if (hasMore) {
+      const moreWrapper = document.createElement('div');
+      moreWrapper.className = 'more-dropdown';
+      moreWrapper.innerHTML =
+        '<div class="sub-tag" id="moreSubTrigger">' +
+          '<span class="sub-icon">📋</span> 更多 <span style="font-size:10px;">▼</span>' +
+        '</div>' +
+        '<div class="dropdown-content" id="moreDropdownContent"></div>';
+      bar.appendChild(moreWrapper);
+
+      const dropdownContent = moreWrapper.querySelector('#moreDropdownContent');
+      subscriptions.slice(showCount).forEach(sub => dropdownContent.appendChild(createSubTagElement(sub)));
+
+      const trigger = moreWrapper.querySelector('#moreSubTrigger');
+      trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownContent.classList.toggle('show');
+      });
+      document.addEventListener('click', (e) => {
+        if (!moreWrapper.contains(e.target)) dropdownContent.classList.remove('show');
+      });
+    }
+  }
+
+  // 创建订阅标签元素（源文件 createSubTagElement 原版）
+  function createSubTagElement(sub) {
+    const tag = document.createElement('div');
+    tag.className = 'sub-tag';
+    if (activeSubIds.includes(sub.id)) tag.classList.add('active');
+
+    const unreadCount = recommendItems.filter(item =>
+      item.relatedSubIds && item.relatedSubIds.includes(sub.id)
+    ).length;
+
+    tag.innerHTML =
+      '<span class="sub-avatar-icon"><i class="' + sub.avatarIcon + '"></i></span>' +
+      '<span class="sub-title">' + sub.title + '</span>' +
+      (unreadCount > 0 ? '<span class="sub-badge">' + unreadCount + '</span>' : '');
+
+    tag.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeSubIds.includes(sub.id)) {
+        activeSubIds = activeSubIds.filter(id => id !== sub.id);
+      } else {
+        activeSubIds.push(sub.id);
+      }
+      renderSubscriptionBar();
+      renderRecommendGrid();
+    });
+    return tag;
+  }
+
+  // 渲染推荐卡片网格（源文件 renderRecommendGrid 原版）
+  function renderRecommendGrid() {
+    const grid = document.getElementById('recommendGrid');
+    if (!grid) return;
+
+    let filteredItems = recommendItems;
+    if (activeSubIds.length > 0) {
+      filteredItems = recommendItems.filter(item =>
+        item.relatedSubIds && item.relatedSubIds.some(subId => activeSubIds.includes(subId))
+      );
+    }
+
+    if (filteredItems.length === 0) {
+      grid.innerHTML = '<div class="recommend-empty">📭 暂无相关推荐，试试其他订阅标签~</div>';
+      return;
+    }
+
+    const contentTypeColors = {
+      '资讯': '#FFF7E6', '论文': '#E6F7FF', '专利': '#F6FFED',
+      '专题': '#F9F0FF', '研究报告': '#FFF0F5', '论证报告': '#E8F8F5',
+      '人物图谱': '#E6F9EC', '型号图谱': '#FEF2E8', '技术图谱': '#E8F0FE'
+    };
+    const confidenceClassMap = {
+      '高': 'confidence-high', '中': 'confidence-mid', '低': 'confidence-low', '未知': 'confidence-unknown'
+    };
+
+    grid.innerHTML = filteredItems.map(item => {
+      const hasImage = item.image && item.image.trim() !== '';
+      const imageHtml = hasImage
+        ? '<img class="card-image" src="' + item.image + '" alt="预览图" loading="lazy" onerror="this.style.display=\'none\'">'
+        : '';
+
+      const citationHtml = item.citations
+        ? '<span class="citations"><i class="ri-double-quotes-l"></i> ' + item.citations + ' 引用</span>'
+        : '';
+
+      let authorText = item.authors;
+      if (authorText && authorText.length > 60) authorText = authorText.slice(0, 57) + '...';
+
+      let subBadgesHtml = '';
+      if (item.relatedSubIds && item.relatedSubIds.length > 0) {
+        const relatedSubs = subscriptions.filter(sub => item.relatedSubIds.includes(sub.id));
+        subBadgesHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">' +
+          relatedSubs.map(sub => '<span class="card-sub-badge" data-sub-id="' + sub.id + '"><i class="' + sub.avatarIcon + '"></i> ' + sub.title + '</span>').join('') +
+          '</div>';
+      }
+      const typeBadgeHtml = '<span class="card-type-badge" style="background:' + (contentTypeColors[item.contentType] || '#F0F0F0') + ';">' + (item.contentType || '其他') + '</span>';
+      const confidenceClass = confidenceClassMap[item.confidence] || 'confidence-mid';
+      const confidenceHtml = '<span class="card-confidence-tag ' + confidenceClass + '">' + (item.confidence || '未知') + '</span>';
+
+      return '' +
+        '<div class="recommend-card-item">' +
+          imageHtml +
+          '<div class="card-content">' +
+            '<div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">' +
+              typeBadgeHtml +
+              confidenceHtml +
+            '</div>' +
+            '<div class="card-title"><a href="#">' + item.title + '</a></div>' +
+            '<div class="card-meta">' +
+              '<span><i class="ri-calendar-line"></i> ' + item.date + '</span>' +
+              '<span><i class="ri-map-pin-line"></i> ' + item.country + '</span>' +
+              '<span><i class="ri-user-line"></i> ' + authorText + '</span>' +
+              (citationHtml ? '<span>' + citationHtml + '</span>' : '') +
+            '</div>' +
+            '<div class="card-tags">' +
+              item.tags.map(tag => '<span class="card-tag">' + tag + '</span>').join('') +
+            '</div>' +
+            '<div class="card-abstract">' + item.abstract + '</div>' +
+            subBadgesHtml +
+            '<div class="card-footer">' +
+              '<span>📖 ' + item.journal + '</span>' +
+              '<div class="card-actions">' +
+                '<i class="ri-bookmark-line" title="收藏" onclick="event.stopPropagation()"></i>' +
+                '<i class="ri-message-3-line" title="AI阅读" onclick="event.stopPropagation()"></i>' +
+                '<i class="ri-more-2-fill" title="更多" onclick="event.stopPropagation()"></i>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+
+    // 卡片内订阅徽章点击 → 加入筛选（源文件原版逻辑）
+    grid.querySelectorAll('.card-sub-badge').forEach(badge => {
+      badge.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const subId = badge.getAttribute('data-sub-id');
+        if (subId && !activeSubIds.includes(subId)) {
+          activeSubIds.push(subId);
+          renderSubscriptionBar();
+          renderRecommendGrid();
+        }
+      });
+    });
   }
 })();
 </script>
@@ -7921,438 +7427,8 @@ html {
 </style><div id="mount" style="display: block;"><div hidden="" id="immersive-translate-popup-overlay" class="immersive-translate-popup-overlay" style="z-index: 2147483647; background-color: rgba(0, 0, 0, 0.5);"><div class="immersive-translate-popup-wrapper" style="position: fixed; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%);"></div></div></div></template></div>
 <script>
 (function() {
-  var recommendItems = [
-    {
-      id: 1,
-      type: '论文',
-      contentType: '论文',
-      confidence: '高',
-      image: null,
-      title: 'Collaborative Optimization of Aerodynamics and Wind Turbine Blades',
-      authors: 'HE Fu-shan, Xingsheng Zheng, Weilin Luo',
-      date: '2025/01/16',
-      country: '瑞士',
-      citations: 66,
-      journal: '风能研究与开发',
-      tags: ['期刊论文', '开放获取', '叶轮机械性能与优化'],
-      abstract: '本文探讨多学科设计优化方法在水平轴风力涡轮机叶片设计中的应用...',
-      relatedSubIds: ['sub3']
-    },
-    {
-      id: 2,
-      type: '专家研判',
-      contentType: '研判报告',
-      confidence: '高',
-      image: null,
-      title: '低轨星座频谱竞争态势研判（2026 Q1）',
-      authors: '张宇航， 王思远',
-      date: '2026/05/18',
-      country: '中国',
-      citations: null,
-      journal: 'MossLib 航天战略研究室',
-      tags: ['专家报告', '频谱分配', '战略分析'],
-      abstract: '结合最新ITU申报数据和各国星座部署进度，研判未来三年频谱资源争夺关键节点...',
-      relatedSubIds: ['sub2']
-    },
-    {
-      id: 3,
-      type: '专利',
-      contentType: '专利',
-      confidence: '高',
-      image: null,
-      title: '一种基于深度学习的遥感图像目标检测方法及系统',
-      authors: '李华， 陈明',
-      date: '2026/04/10',
-      country: '中国',
-      citations: null,
-      journal: 'CN2026XXXXXX',
-      tags: ['发明专利', '遥感智能解译'],
-      abstract: '本发明公开了一种基于改进YOLOv8的遥感目标检测方法，针对小目标检测准确率低的问题...',
-      relatedSubIds: ['sub4']
-    },
-    {
-      id: 4,
-      type: '专题合集',
-      contentType: '专题',
-      confidence: '高',
-      image: 'https://picsum.photos/id/20/400/200',
-      title: '高超声速武器防御技术进展合集',
-      authors: 'MossLib 研究中心',
-      date: '2026/05/01',
-      country: '多国',
-      citations: 24,
-      journal: '专题策展',
-      tags: ['专题', '防御技术', '高超声速'],
-      abstract: '本合集收录近半年全球高超声速武器防御领域关键技术文献、试验报告及专家观点...',
-      relatedSubIds: ['sub1']
-    },
-    {
-      id: 5,
-      type: '论文',
-      contentType: '论文',
-      confidence: '中',
-      image: null,
-      title: 'How do differences in airline passengers satisfaction with connection modes affect last-mile travel choice?',
-      authors: 'JiangBo Yu, Jiancheng Weng, Tian Wang',
-      date: '2025/01/15',
-      country: '英国',
-      citations: 66,
-      journal: '交通规划与优化',
-      tags: ['期刊论文', '城市交通与可达性'],
-      abstract: '基于随机后悔最小化模型，研究乘客对连接模式的满意度差异如何影响最后一公里出行选择...',
-      relatedSubIds: []
-    },
-    {
-      id: 6,
-      type: '资讯',
-      contentType: '资讯',
-      confidence: '中',
-      image: 'https://picsum.photos/id/3/400/200',
-      title: 'SpaceX 星舰第4次试飞取得关键突破',
-      authors: '路透社',
-      date: '2026/05/19',
-      country: '美国',
-      citations: null,
-      journal: '航天动态',
-      tags: ['资讯', '星舰', '试飞'],
-      abstract: '星舰S29完成轨道级飞行测试，一级超重助推器成功软着陆...',
-      relatedSubIds: ['sub1']
-    },
-    {
-      id: 7,
-      type: '论文',
-      contentType: '论文',
-      confidence: '高',
-      image: 'https://picsum.photos/id/104/400/200',
-      title: 'Parametric study on configuration geometry effect on thrust performance of annular expansion deflection nozzle',
-      authors: 'Ge Wang, Jun Zou, Lei Chen',
-      date: '2025/01/15',
-      country: '中国',
-      citations: 66,
-      journal: '计算流体力学与空气动力学',
-      tags: ['期刊论文', '开放获取', '火箭与推进系统'],
-      abstract: '通过数值模拟研究几何参数对环形膨胀偏转喷管推力性能的影响规律...',
-      relatedSubIds: ['sub5']
-    },
-    {
-      id: 8,
-      type: '研究报告',
-      contentType: '研究报告',
-      confidence: '高',
-      image: 'https://picsum.photos/id/26/400/200',
-      title: 'AGM-183A ARRW高超音速导弹最新试射评估',
-      authors: '美国空军研究实验室',
-      date: '2026/05/10',
-      country: '美国',
-      citations: null,
-      journal: '导弹技术动态',
-      tags: ['高超音速', '空射快速响应武器', '试验评估'],
-      abstract: '分析ARRW第5次全备弹飞行试验数据，重点评估助推器性能、滑翔体热防护及末端精度，相较前次试射，射程提升12%...',
-      relatedSubIds: ['sub1']
-    },
-    {
-      id: 9,
-      type: '技术图谱',
-      contentType: '技术图谱',
-      confidence: '高',
-      image: 'https://picsum.photos/id/105/400/200',
-      title: 'X-47B 舰载无人机关键技术演进图谱',
-      authors: '海军航空系统司令部',
-      date: '2026/04/22',
-      country: '美国',
-      citations: 32,
-      journal: '无人机与自主系统',
-      tags: ['舰载无人机', '自主着舰', '隐身技术'],
-      abstract: '梳理X-47B从2005年概念验证到2015年航母弹射/拦阻试验的技术路线，衍生出MQ-25黄貂鱼加油机及CCA协同作战飞机...',
-      relatedSubIds: []
-    },
-    {
-      id: 10,
-      type: '资讯',
-      contentType: '资讯',
-      confidence: '低',
-      image: 'https://picsum.photos/id/0/400/200',
-      title: '俄"锆石"高超声速反舰导弹进入战斗值班',
-      authors: '塔斯社',
-      date: '2026/05/18',
-      country: '俄罗斯',
-      citations: null,
-      journal: '防务新闻',
-      tags: ['高超声速', '反舰导弹', '3M22'],
-      abstract: '俄国防部宣布"锆石"正式部署于"戈尔什科夫海军元帅"号护卫舰，射程超1000公里，速度马赫9，可打击水面和地面目标...',
-      relatedSubIds: ['sub1', 'sub5']
-    },
-    {
-      id: 11,
-      type: '型号图谱',
-      contentType: '型号图谱',
-      confidence: '高',
-      image: 'https://picsum.photos/id/46/400/200',
-      title: '萨德（THAAD）反导系统部署与拦截记录全览',
-      authors: '导弹防御局',
-      date: '2026/03/15',
-      country: '美国',
-      citations: 18,
-      journal: '防空反导年鉴',
-      tags: ['末段高空防御', '动能拦截器', '实战拦截'],
-      abstract: '汇总2010年至今全球萨德系统部署地点、拦截试验成功率（92%）及实战案例（沙特拦截胡塞武装弹道导弹）...',
-      relatedSubIds: []
-    },
-    {
-      id: 12,
-      type: '论证报告',
-      contentType: '论证报告',
-      confidence: '中',
-      image: 'https://picsum.photos/id/34/400/200',
-      title: '下一代电子战支援系统（ES-5000）能力框架论证',
-      authors: '洛克希德·马丁',
-      date: '2026/02/28',
-      country: '美国',
-      citations: null,
-      journal: '电子战与信号情报',
-      tags: ['电子攻击', '电子支援', '认知电子战'],
-      abstract: '基于认知电子战架构，论证下一代ES-5000系统的信号截获、分析与干扰能力框架...',
-      relatedSubIds: []
-    }
-  ];
-
-  var subscriptions = [
-    { id: 'sub1', title: '高超声速技术', avatarIcon: '', keywords: ['高超声速', '热防护', '超燃冲压'], sources: ['AIAA', 'NASA'] },
-    { id: 'sub2', title: '低轨星座', avatarIcon: '', keywords: ['Starlink', '频谱分配', '星座'], sources: ['SpaceX', 'ESA'] },
-    { id: 'sub3', title: '风能叶片', avatarIcon: '', keywords: ['风力涡轮机', '叶片优化', '气动'], sources: ['风能研究与开发'] },
-    { id: 'sub4', title: '遥感解译', avatarIcon: '', keywords: ['SAR', '目标检测', '遥感影像'], sources: ['Remote Sensing'] },
-    { id: 'sub5', title: '火箭推进', avatarIcon: '', keywords: ['喷管', '推力性能', '火箭发动机'], sources: ['Journal of Propulsion'] }
-  ];
-
-  var activeSubIds = [];
-  var allItems = recommendItems;
-  var allSubscriptions = subscriptions;
-
-  function createRecommendWrapper() {
-    var existingWrapper = document.querySelector('.recommend-wrapper');
-    if (existingWrapper) {
-      existingWrapper.remove();
-    }
-
-    var stickyMenu = document.querySelector('.sticky-menu-view');
-    if (!stickyMenu) return;
-
-    var wrapper = document.createElement('div');
-    wrapper.className = 'recommend-wrapper';
-    wrapper.innerHTML = `
-      <div class="card-grid" id="recommendGrid"></div>
-    `;
-
-    stickyMenu.parentNode.insertBefore(wrapper, stickyMenu.nextSibling);
-
-    renderRecommendGrid();
-  }
-
-  function renderSubscriptionBar() {
-    var bar = document.getElementById('subscriptionBar');
-    if (!bar) return;
-    bar.innerHTML = '';
-
-    var total = allSubscriptions.length;
-    var showCount = 5;
-    var subsToShow = allSubscriptions.slice(0, showCount);
-    var hasMore = total > showCount;
-
-    subsToShow.forEach(function(sub) {
-      var tag = createSubTagElement(sub);
-      bar.appendChild(tag);
-    });
-
-    if (hasMore) {
-      var moreWrapper = document.createElement('div');
-      moreWrapper.className = 'more-dropdown';
-      moreWrapper.innerHTML = `
-        <div class="sub-tag" id="moreSubTrigger">
-          <span class="sub-icon">📋</span> 更多 <span style="font-size: 10px;">▼</span>
-        </div>
-        <div class="dropdown-content" id="moreDropdownContent"></div>
-      `;
-      var dropdownContent = moreWrapper.querySelector('#moreDropdownContent');
-      var remainingSubs = allSubscriptions.slice(showCount);
-      remainingSubs.forEach(function(sub) {
-        var tag = createSubTagElement(sub);
-        dropdownContent.appendChild(tag);
-      });
-      bar.appendChild(moreWrapper);
-
-      var trigger = moreWrapper.querySelector('#moreSubTrigger');
-      trigger.addEventListener('click', function(e) {
-        e.stopPropagation();
-        dropdownContent.classList.toggle('show');
-      });
-      document.addEventListener('click', function(e) {
-        if (!moreWrapper.contains(e.target)) {
-          dropdownContent.classList.remove('show');
-        }
-      });
-    }
-  }
-
-  function createSubTagElement(sub) {
-    var tag = document.createElement('div');
-    tag.className = 'sub-tag';
-    if (activeSubIds.includes(sub.id)) tag.classList.add('active');
-
-    var unreadCount = allItems.filter(function(item) {
-      return item.relatedSubIds && item.relatedSubIds.includes(sub.id);
-    }).length;
-
-    tag.innerHTML = `
-      <span class="sub-avatar-icon"><i class="${sub.avatarIcon}"></i></span>
-      <span class="sub-title">${sub.title}</span>
-      ${unreadCount > 0 ? '<span class="sub-badge">' + unreadCount + '</span>' : ''}
-    `;
-    tag.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (activeSubIds.includes(sub.id)) {
-        activeSubIds = activeSubIds.filter(function(id) { return id !== sub.id; });
-      } else {
-        activeSubIds.push(sub.id);
-      }
-      renderSubscriptionBar();
-      renderRecommendGrid();
-    });
-    return tag;
-  }
-
-  function renderRecommendGrid() {
-    var grid = document.getElementById('recommendGrid');
-    if (!grid) return;
-
-    var filteredItems = allItems;
-    if (activeSubIds.length > 0) {
-      filteredItems = allItems.filter(function(item) {
-        return item.relatedSubIds && item.relatedSubIds.some(function(subId) {
-          return activeSubIds.includes(subId);
-        });
-      });
-    }
-
-    if (filteredItems.length === 0) {
-      grid.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">📭 暂无相关推荐，试试其他订阅标签~</div>';
-      return;
-    }
-
-    var contentTypeColors = {
-      '资讯': '#FFF7E6', '论文': '#E6F7FF', '专利': '#F6FFED',
-      '专题': '#F9F0FF', '研究报告': '#FFF0F5', '论证报告': '#E8F8F5',
-      '人物图谱': '#E6F9EC', '型号图谱': '#FEF2E8', '技术图谱': '#E8F0FE',
-      '研判报告': '#F3E5F5'
-    };
-    var confidenceClassMap = {
-      '高': 'confidence-high', '中': 'confidence-mid', '低': 'confidence-low', '未知': 'confidence-unknown'
-    };
-
-    grid.innerHTML = filteredItems.map(function(item) {
-      var hasImage = item.image && item.image.trim() !== '';
-      var imageHtml = hasImage
-        ? '<img class="card-image" src="' + item.image + '" alt="预览图" loading="lazy" onerror="this.src=\'https://placehold.co/400x200?text=No+Image\'">'
-        : '';
-
-      var citationHtml = item.citations
-        ? '<span class="citations"><i></i> ' + item.citations + ' 引用</span>'
-        : '';
-
-      var authorText = item.authors;
-      if (authorText && authorText.length > 60) authorText = authorText.slice(0, 57) + '...';
-
-      var subBadgesHtml = '';
-      if (item.relatedSubIds && item.relatedSubIds.length > 0) {
-        var relatedSubs = allSubscriptions.filter(function(sub) {
-          return item.relatedSubIds.includes(sub.id);
-        });
-        subBadgesHtml = '<div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;">' +
-          relatedSubs.map(function(sub) {
-            return '<span class="card-sub-badge" data-sub-id="' + sub.id + '"><i class="' + sub.avatarIcon + '"></i> ' + sub.title + '</span>';
-          }).join('') +
-          '</div>';
-      }
-      var typeBadgeHtml = '<span class="card-type-badge" style="background: ' + (contentTypeColors[item.contentType] || '#F0F0F0') + ';">' + (item.contentType || '其他') + '</span>';
-      var confidenceClass = confidenceClassMap[item.confidence] || 'confidence-mid';
-      var confidenceHtml = '<span class="card-confidence-tag ' + confidenceClass + '">' + (item.confidence || '未知') + '</span>';
-
-      return `
-        <div class="recommend-card-item">
-          ${imageHtml}
-          <div class="card-content">
-            <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
-              ${typeBadgeHtml}
-              ${confidenceHtml}
-            </div>
-            <div class="card-title">
-              <a href="#">${item.title}</a>
-            </div>
-            <div class="card-meta">
-              <span><i></i> ${item.date}</span>
-              <span><i></i> ${item.country}</span>
-              <span><i></i> ${authorText}</span>
-              ${citationHtml ? '<span>' + citationHtml + '</span>' : ''}
-            </div>
-            <div class="card-tags">
-              ${item.tags.map(function(tag) { return '<span class="card-tag">' + tag + '</span>'; }).join('')}
-            </div>
-            <div class="card-abstract">
-              ${item.abstract}
-            </div>
-            ${subBadgesHtml}
-            <div class="card-footer">
-              <span>📖 ${item.journal}</span>
-              <div class="card-actions">
-                <i title="收藏" onclick="handleCollect(event, '${item.id}')"></i>
-                <i title="AI阅读" onclick="handleAIRead(event, '${item.id}', '${item.title}')"></i>
-                <i title="更多" onclick="handleMore(event, '${item.id}')"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    document.querySelectorAll('.card-sub-badge').forEach(function(badge) {
-      badge.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var subId = badge.getAttribute('data-sub-id');
-        if (subId && !activeSubIds.includes(subId)) {
-          activeSubIds.push(subId);
-          renderSubscriptionBar();
-          renderRecommendGrid();
-        }
-      });
-    });
-  }
-
-  function handleCollect(e, id) {
-    e.stopPropagation();
-    alert('收藏功能开发中，ID: ' + id);
-  }
-
-  function handleAIRead(e, id, title) {
-    e.stopPropagation();
-    alert('AI阅读功能开发中，标题: ' + title);
-  }
-
-  function handleMore(e, id) {
-    e.stopPropagation();
-    alert('更多操作开发中，ID: ' + id);
-  }
-
-  function removeRecommendContent() {
-    var wDiv = document.querySelector('.main-view > .w');
-    if (wDiv) {
-      wDiv.remove();
-    }
-    var perItems = document.querySelectorAll('.per-s-item-view');
-    perItems.forEach(function(el) {
-      el.remove();
-    });
-  }
-
   function initArticleClick() {
+    // 推荐页文章点击跳转到 detail.html
     var articles = document.querySelectorAll('.per-s-item-view');
     articles.forEach(function(el) {
       el.style.cursor = 'pointer';
@@ -8363,17 +7439,10 @@ html {
     });
   }
   
-  function init() {
-    removeRecommendContent();
-    createRecommendWrapper();
-    initArticleClick();
-    setInterval(removeRecommendContent, 500);
-  }
-  
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', initArticleClick);
   } else {
-    init();
+    initArticleClick();
   }
 })();
 </script>

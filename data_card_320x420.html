@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据入库展示 - 320x420</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    background: #f1f5f9;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 40px;
+    flex-wrap: wrap;
+}
+
+.data-card {
+    width: 320px;
+    height: 420px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.data-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 72px rgba(0,0,0,0.15), 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.card-dark {
+    background: linear-gradient(165deg, #0f172a 0%, #1e293b 40%, #0f172a 100%);
+}
+.card-dark::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 70% 20%, rgba(59,130,246,0.08) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.card-light {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+}
+
+.card-glass {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+.card-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(236,72,153,0.05) 100%);
+    border-radius: 20px;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float-particle linear infinite;
+}
+@keyframes float-particle {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-420px) translateX(20px); opacity: 0; }
+}
+
+.counter {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+}
+
+.ingress-item {
+    animation: slideIn 0.4s ease-out forwards;
+    opacity: 0;
+    transform: translateX(-12px);
+}
+@keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.pulse-dot {
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+}
+
+.live-indicator::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid rgba(16,185,129,0.3);
+    animation: live-ring 2s ease-out infinite;
+}
+@keyframes live-ring {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+.sparkline {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: draw-line 1.5s ease-out forwards;
+}
+@keyframes draw-line {
+    to { stroke-dashoffset: 0; }
+}
+
+.new-badge {
+    animation: new-pulse 2s ease-in-out infinite;
+}
+@keyframes new-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+    50% { box-shadow: 0 0 0 4px rgba(16,185,129,0); }
+}
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+<body>
+
+<!-- ========== 方案 A：深色科技风 ========== -->
+<div class="data-card card-dark text-white flex flex-col relative">
+    <div class="absolute inset-0 overflow-hidden" id="particles-a"></div>
+
+    <div class="relative z-10 px-5 pt-5 pb-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                </svg>
+            </div>
+            <span class="text-sm font-semibold text-slate-200">内容库</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 live-indicator relative"></div>
+            <span class="text-[10px] text-emerald-400 font-medium tracking-wide">LIVE</span>
+        </div>
+    </div>
+
+    <div class="relative z-10 px-5 pb-4">
+        <div class="text-[11px] text-slate-400 mb-1 tracking-wide uppercase">总收录</div>
+        <div class="flex items-baseline gap-2">
+            <span class="text-4xl font-bold counter text-white" id="total-a">128,492</span>
+        </div>
+        <div class="mt-3 h-8">
+            <svg class="w-full h-full" viewBox="0 0 280 32" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="grad-a" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"/>
+                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <path d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2 L280,32 L0,32 Z" fill="url(#grad-a)"/>
+                <path class="sparkline" d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="relative z-10 mx-5 h-px bg-gradient-to-r from-transparent via-slate-600/50 to-transparent"></div>
+
+    <!-- 今日 / 本周 / 数据源 -->
+    <div class="relative z-10 px-5 py-3 flex items-center justify-between">
+        <div class="text-center flex-1">
+            <div class="text-[10px] text-slate-400 mb-0.5">今日更新</div>
+            <div class="text-lg font-semibold text-white">+1,247</div>
+        </div>
+        <div class="w-px h-8 bg-slate-600/30"></div>
+        <div class="text-center flex-1">
+            <div class="text-[10px] text-slate-400 mb-0.5">本周更新</div>
+            <div class="text-lg font-semibold text-white">+8,932</div>
+        </div>
+        <div class="w-px h-8 bg-slate-600/30"></div>
+        <div class="text-center flex-1">
+            <div class="text-[10px] text-slate-400 mb-0.5">数据源</div>
+            <div class="text-lg font-semibold text-blue-400">42</div>
+        </div>
+    </div>
+
+    <div class="relative z-10 mx-5 h-px bg-gradient-to-r from-transparent via-slate-600/50 to-transparent"></div>
+
+    <div class="relative z-10 flex-1 px-5 pt-3 pb-5 flex flex-col min-h-0">
+        <div class="flex items-center justify-between mb-2.5">
+            <span class="text-[11px] text-slate-400 font-medium tracking-wide">最新入库</span>
+            <span class="text-[10px] text-slate-500">过去1小时</span>
+        </div>
+        <div class="flex-1 overflow-y-auto hide-scrollbar space-y-2" id="list-a">
+            <div class="ingress-item flex items-center gap-2.5 p-2 rounded-lg bg-slate-800/50 border border-slate-700/30 hover:bg-slate-800/80 transition cursor-pointer group" style="animation-delay:0.1s">
+                <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-200 truncate group-hover:text-white transition">AI技术趋势报告2024</div>
+                    <div class="text-[10px] text-slate-500">2分钟前 · 文章</div>
+                </div>
+                <span class="new-badge px-1.5 py-0.5 bg-emerald-500/20 text-emerald-400 text-[9px] rounded font-medium flex-shrink-0">NEW</span>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2 rounded-lg bg-slate-800/30 border border-slate-700/20 hover:bg-slate-800/60 transition cursor-pointer group" style="animation-delay:0.2s">
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-300 truncate group-hover:text-white transition">用户行为分析日志_v2</div>
+                    <div class="text-[10px] text-slate-500">8分钟前 · 数据集</div>
+                </div>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2 rounded-lg bg-slate-800/30 border border-slate-700/20 hover:bg-slate-800/60 transition cursor-pointer group" style="animation-delay:0.3s">
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-300 truncate group-hover:text-white transition">产品发布会现场视频</div>
+                    <div class="text-[10px] text-slate-500">15分钟前 · 视频</div>
+                </div>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2 rounded-lg bg-slate-800/30 border border-slate-700/20 hover:bg-slate-800/60 transition cursor-pointer group" style="animation-delay:0.4s">
+                <div class="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-300 truncate group-hover:text-white transition">图片资源批量上传</div>
+                    <div class="text-[10px] text-slate-500">22分钟前 · 媒体</div>
+                </div>
+                <span class="px-1.5 py-0.5 bg-amber-500/20 text-amber-400 text-[9px] rounded font-medium flex-shrink-0">处理中</span>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2 rounded-lg bg-slate-800/30 border border-slate-700/20 hover:bg-slate-800/60 transition cursor-pointer group" style="animation-delay:0.5s">
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0"></div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-300 truncate group-hover:text-white transition">季度财报解读文章</div>
+                    <div class="text-[10px] text-slate-500">35分钟前 · 文章</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ========== 方案 B：浅色清新风 ========== -->
+<div class="data-card card-light text-slate-800 flex flex-col relative">
+    <div class="h-1 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500"></div>
+
+    <div class="px-5 pt-4 pb-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
+                <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                </svg>
+            </div>
+            <span class="text-sm font-semibold text-slate-700">内容库</span>
+        </div>
+        <div class="flex items-center gap-1.5 px-2 py-1 bg-emerald-50 rounded-full">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+            <span class="text-[10px] text-emerald-600 font-medium">实时</span>
+        </div>
+    </div>
+
+    <div class="px-5 pb-4">
+        <div class="text-[11px] text-slate-400 mb-1 tracking-wide uppercase">总收录</div>
+        <div class="flex items-baseline gap-2">
+            <span class="text-4xl font-bold counter text-slate-900" id="total-b">128,492</span>
+        </div>
+        <div class="mt-3 h-8">
+            <svg class="w-full h-full" viewBox="0 0 280 32" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="grad-b" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.15"/>
+                        <stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <path d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2 L280,32 L0,32 Z" fill="url(#grad-b)"/>
+                <path class="sparkline" d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="mx-5 h-px bg-slate-100"></div>
+
+    <!-- 今日 / 本周 / 数据源 -->
+    <div class="px-5 py-3 flex items-center justify-between">
+        <div class="text-center flex-1">
+            <div class="text-[10px] text-slate-400 mb-0.5">今日更新</div>
+            <div class="text-lg font-semibold text-slate-800">+1,247</div>
+        </div>
+        <div class="w-px h-8 bg-slate-100"></div>
+        <div class="text-center flex-1">
+            <div class="text-[10px] text-slate-400 mb-0.5">本周更新</div>
+            <div class="text-lg font-semibold text-slate-800">+8,932</div>
+        </div>
+        <div class="w-px h-8 bg-slate-100"></div>
+        <div class="text-center flex-1">
+            <div class="text-[10px] text-slate-400 mb-0.5">数据源</div>
+            <div class="text-lg font-semibold text-blue-600">42</div>
+        </div>
+    </div>
+
+    <div class="mx-5 h-px bg-slate-100"></div>
+
+    <div class="flex-1 px-5 pt-3 pb-5 flex flex-col min-h-0">
+        <div class="flex items-center justify-between mb-2.5">
+            <span class="text-[11px] text-slate-500 font-medium tracking-wide">最新入库</span>
+            <span class="text-[10px] text-slate-400">过去1小时</span>
+        </div>
+        <div class="flex-1 overflow-y-auto hide-scrollbar space-y-2" id="list-b">
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100 hover:bg-blue-50 hover:border-blue-200 transition cursor-pointer group" style="animation-delay:0.1s">
+                <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-blue-600 transition">AI技术趋势报告2024</div>
+                    <div class="text-[10px] text-slate-400">2分钟前</div>
+                </div>
+                <span class="new-badge px-1.5 py-0.5 bg-emerald-100 text-emerald-600 text-[9px] rounded font-medium flex-shrink-0">NEW</span>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100 hover:bg-blue-50 hover:border-blue-200 transition cursor-pointer group" style="animation-delay:0.2s">
+                <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-blue-600 transition">用户行为分析日志_v2</div>
+                    <div class="text-[10px] text-slate-400">8分钟前</div>
+                </div>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100 hover:bg-blue-50 hover:border-blue-200 transition cursor-pointer group" style="animation-delay:0.3s">
+                <div class="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-blue-600 transition">产品发布会现场视频</div>
+                    <div class="text-[10px] text-slate-400">15分钟前</div>
+                </div>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100 hover:bg-blue-50 hover:border-blue-200 transition cursor-pointer group" style="animation-delay:0.4s">
+                <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-blue-600 transition">图片资源批量上传</div>
+                    <div class="text-[10px] text-slate-400">22分钟前</div>
+                </div>
+                <span class="px-1.5 py-0.5 bg-amber-100 text-amber-600 text-[9px] rounded font-medium flex-shrink-0">处理中</span>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-100 hover:bg-blue-50 hover:border-blue-200 transition cursor-pointer group" style="animation-delay:0.5s">
+                <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-blue-600 transition">季度财报解读文章</div>
+                    <div class="text-[10px] text-slate-400">35分钟前</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- ========== 方案 C：毛玻璃风 ========== -->
+<div class="data-card card-glass text-slate-800 flex flex-col relative">
+    <div class="relative z-10 px-5 pt-5 pb-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-white/60 shadow-sm flex items-center justify-center backdrop-blur">
+                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                </svg>
+            </div>
+            <span class="text-sm font-semibold text-slate-700">内容库</span>
+        </div>
+        <div class="flex items-center gap-1.5 px-2 py-1 bg-white/50 rounded-full backdrop-blur border border-white/60">
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+            <span class="text-[10px] text-emerald-600 font-medium">实时</span>
+        </div>
+    </div>
+
+    <div class="relative z-10 px-5 pb-4">
+        <div class="text-[11px] text-slate-400 mb-1 tracking-wide uppercase">总收录</div>
+        <div class="flex items-baseline gap-2">
+            <span class="text-4xl font-bold counter text-slate-900" id="total-c">128,492</span>
+        </div>
+        <div class="mt-3 h-8">
+            <svg class="w-full h-full" viewBox="0 0 280 32" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="grad-c" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#6366f1" stop-opacity="0.2"/>
+                        <stop offset="100%" stop-color="#6366f1" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
+                <path d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2 L280,32 L0,32 Z" fill="url(#grad-c)"/>
+                <path class="sparkline" d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="relative z-10 mx-5 h-px bg-white/60"></div>
+
+    <!-- 今日 / 本周 / 数据源 -->
+    <div class="relative z-10 px-5 py-3 flex items-center justify-between">
+        <div class="text-center flex-1">
+            <div class="text-[10px] text-slate-400 mb-0.5">今日更新</div>
+            <div class="text-lg font-semibold text-slate-800">+1,247</div>
+        </div>
+        <div class="w-px h-8 bg-white/60"></div>
+        <div class="text-center flex-1">
+            <div class="text-[10px] text-slate-400 mb-0.5">本周更新</div>
+            <div class="text-lg font-semibold text-slate-800">+8,932</div>
+        </div>
+        <div class="w-px h-8 bg-white/60"></div>
+        <div class="text-center flex-1">
+            <div class="text-[10px] text-slate-400 mb-0.5">数据源</div>
+            <div class="text-lg font-semibold text-indigo-600">42</div>
+        </div>
+    </div>
+
+    <div class="relative z-10 mx-5 h-px bg-white/60"></div>
+
+    <div class="relative z-10 flex-1 px-5 pt-3 pb-5 flex flex-col min-h-0">
+        <div class="flex items-center justify-between mb-2.5">
+            <span class="text-[11px] text-slate-500 font-medium tracking-wide">最新入库</span>
+            <span class="text-[10px] text-slate-400">过去1小时</span>
+        </div>
+        <div class="flex-1 overflow-y-auto hide-scrollbar space-y-2" id="list-c">
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-white/60 backdrop-blur border border-white/80 hover:bg-white/90 transition cursor-pointer group shadow-sm" style="animation-delay:0.1s">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-indigo-600 transition">AI技术趋势报告2024</div>
+                    <div class="text-[10px] text-slate-400">2分钟前</div>
+                </div>
+                <span class="new-badge px-1.5 py-0.5 bg-emerald-100 text-emerald-600 text-[9px] rounded font-medium flex-shrink-0">NEW</span>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-white/60 backdrop-blur border border-white/80 hover:bg-white/90 transition cursor-pointer group shadow-sm" style="animation-delay:0.2s">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-indigo-600 transition">用户行为分析日志_v2</div>
+                    <div class="text-[10px] text-slate-400">8分钟前</div>
+                </div>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-white/60 backdrop-blur border border-white/80 hover:bg-white/90 transition cursor-pointer group shadow-sm" style="animation-delay:0.3s">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-400 to-purple-500 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-indigo-600 transition">产品发布会现场视频</div>
+                    <div class="text-[10px] text-slate-400">15分钟前</div>
+                </div>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-white/60 backdrop-blur border border-white/80 hover:bg-white/90 transition cursor-pointer group shadow-sm" style="animation-delay:0.4s">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-indigo-600 transition">图片资源批量上传</div>
+                    <div class="text-[10px] text-slate-400">22分钟前</div>
+                </div>
+                <span class="px-1.5 py-0.5 bg-amber-100 text-amber-600 text-[9px] rounded font-medium flex-shrink-0">处理中</span>
+            </div>
+            <div class="ingress-item flex items-center gap-2.5 p-2.5 rounded-xl bg-white/60 backdrop-blur border border-white/80 hover:bg-white/90 transition cursor-pointer group shadow-sm" style="animation-delay:0.5s">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="text-xs text-slate-700 font-medium truncate group-hover:text-indigo-600 transition">季度财报解读文章</div>
+                    <div class="text-[10px] text-slate-400">35分钟前</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+function createParticles() {
+    const container = document.getElementById('particles-a');
+    if (!container) return;
+    const colors = ['rgba(59,130,246,0.3)', 'rgba(16,185,129,0.2)', 'rgba(99,102,241,0.2)', 'rgba(236,72,153,0.15)'];
+    for (let i = 0; i < 15; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'particle';
+        const size = Math.random() * 3 + 1;
+        dot.style.width = size + 'px';
+        dot.style.height = size + 'px';
+        dot.style.background = colors[Math.floor(Math.random() * colors.length)];
+        dot.style.left = Math.random() * 100 + '%';
+        dot.style.top = '100%';
+        dot.style.animationDuration = (Math.random() * 4 + 6) + 's';
+        dot.style.animationDelay = Math.random() * 5 + 's';
+        container.appendChild(dot);
+    }
+}
+createParticles();
+
+setInterval(() => {
+    ['total-a', 'total-b', 'total-c'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            const current = parseInt(el.textContent.replace(/,/g, ''));
+            el.textContent = (current + Math.floor(Math.random() * 3)).toLocaleString();
+        }
+    });
+}, 8000);
+</script>
+</body>
+</html>
