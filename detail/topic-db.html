@@ -493,12 +493,12 @@ body {
 .td-doc-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 .td-doc-clue-count {
   display: inline-flex; align-items: center; gap: 3px;
-  font-size: 12px; color: #6366f1; cursor: pointer;
-  padding: 2px 6px; border-radius: 4px;
+  font-size: 12px; color: #6366f1; font-weight: 500; cursor: pointer;
+  background: #eef2ff; padding: 5px 10px; border-radius: 6px;
   font-family: Arial, 'Microsoft YaHei', '微软雅黑', -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
   transition: all 0.15s;
 }
-.td-doc-clue-count:hover { background: #eef2ff; }
+.td-doc-clue-count:hover { background: #e0e7ff; }
 .td-doc-clue-count i { font-size: 12px; }
 .td-doc-action-btn {
   width: 22px; height: 22px; border: none; background: transparent;
@@ -759,12 +759,12 @@ line-height:1.5;
 /* 线索详情标签页（仅在抽屉中使用） */
 .td-clue-tabs {
   display: flex; align-items: center; gap: 16px;
-  padding: 6px 0 0;
+  padding: 16px 0px 6px;
   border-bottom: 1px solid #f1f5f9;
 }
 .td-clue-tab {
-  font-size: 12px; color: #94a3b8; background: none;
-  border: none; padding: 4px 0 6px; cursor: pointer;
+  font-size: 14px; color: #94a3b8; background: none;
+  border: none; padding: 4px 0 10px; cursor: pointer;
   position: relative; font-family: inherit;
   transition: color 0.15s;
   display: inline-flex; align-items: center; gap: 4px;
@@ -1635,7 +1635,7 @@ function tdRenderDocs() {
             '<span class="td-doc-collector-name">' + doc.collector + '</span>' +
             '<span class="td-doc-collect-time">添加于 ' + doc.collectTime + '</span>' +
             '<div class="td-doc-actions">' +
-              '<span class="td-doc-clue-count" onclick="event.stopPropagation(); tdViewClues(' + doc.id + ')"><i class="ri-lightbulb-line"></i> ' + (doc.clueCount || 0) + '</span>' +
+              '<span class="td-doc-clue-count" onclick="event.stopPropagation(); tdViewClues(' + doc.id + ')"><i class="ri-lightbulb-line"></i> 线索 ' + (doc.clueCount || 0) + '</span>' +
               '<button class="td-doc-action-btn" onclick="event.stopPropagation(); tdOpenAiRead(' + doc.id + ')" title="智能阅读"><i class="ri-magic-line"></i></button>' +
               '<div class="td-doc-more-wrap">' +
                 '<button class="td-doc-action-btn" onclick="event.stopPropagation(); toggleDocMore(this)" title="更多"><i class="ri-more-2-fill"></i></button>' +

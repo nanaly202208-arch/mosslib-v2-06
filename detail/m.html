@@ -475,7 +475,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 /* 新的按钮容器样式 */
 .nav-buttons-container {
   width: 760px !important;
-  margin: 30px auto 60px !important;
+  margin: 20px auto 40px !important;
   display: flex !important;
   justify-content: center !important;
   gap: 16px !important;
@@ -521,10 +521,11 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   margin: 0;
 }
 
-/* ===== AI日报模块 (从 日报.html 完全复刻) ===== */
+/* ===== AI日报模块 ===== */
 .ai-daily-module {
-  width: 1000px;
-  height: 380px;
+  width: 1180px;
+  max-width: 100%;
+  min-height: 560px;
   background: #fafafa;
   border-radius: 20px;
   box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -533,14 +534,36 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   color: #2d2d2d;
   transition: all 0.2s;
   margin: 0 auto 40px;
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* 外层容器，左右并列 */
+.ai-daily-inner {
+  display: flex;
+  width: 100%;
+  gap: 16px;
 }
 
 /* 左右 flex 布局，高度严格继承 */
 .daily-module-layout {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    background: #fafafa;
+  flex: 0 0 70%;
+  max-width: 70%;
+  display: flex;
+  background: #fafafa;
+  border-radius: 20px;
+  box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* 左侧原日报模块 */
+.daily-main-area {
+  flex: 1;
+  display: flex;
+  background: #fafafa;
+  min-width: 0;
 }
 
 /* ========= 左侧日期导航栏 ========= */
@@ -566,7 +589,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 }
 
 .date-card-month {
-    padding: 10px 14px 4px 14px;
+    padding: 14px 14px 4px 14px;
     display: flex;
     align-items: baseline;
     gap: 8px;
@@ -589,7 +612,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 6px 0 20px;
+    padding: 6px 0 24px;
 }
 .day-number {
     font-family: 'Times New Roman', 'Times', serif;
@@ -638,7 +661,7 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
     gap: 10px;
     cursor: pointer;
     border-radius: 14px;
-    padding: 11px 12px;
+    padding: 12px 12px;
     transition: all 0.2s ease;
     position: relative;
     border: 1px solid transparent;
@@ -774,10 +797,246 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 .daily-content::-webkit-scrollbar-track {
     background: transparent;
 }
+/* 数据面板列表滚动条样式，与日报内容区完全一致 */
+.stats-list::-webkit-scrollbar {
+    width: 2px;
+    background: transparent;
+}
+.stats-list::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 2px;
+    transition: background 0s 0.3s;
+}
+.stats-list:hover::-webkit-scrollbar-thumb,
+.stats-list.scrolling::-webkit-scrollbar-thumb {
+    background: #e5e5e5;
+    transition: background 0s 0s;
+}
+.stats-list::-webkit-scrollbar-track {
+    background: transparent;
+}
 
 .daily-inner {
     max-width: 100%;
 }
+
+/* ========= 右侧数据量统计展示区（35%，方案 B：浅色清新风） ========= */
+.daily-stats-panel {
+    flex: 0 0 30%;
+    max-width: 30%;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    min-width: 0;
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);
+}
+.daily-stats-panel .stats-top-bar {
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+    flex-shrink: 0;
+}
+.daily-stats-panel .stats-header {
+    padding: 16px 20px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+.daily-stats-panel .stats-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.daily-stats-panel .stats-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #eff6ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b82f6;
+    font-size: 15px;
+}
+.daily-stats-panel .stats-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #323232;
+}
+.daily-stats-panel .stats-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #ecfdf5;
+    border-radius: 999px;
+}
+.daily-stats-panel .stats-live .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+}
+.daily-stats-panel .stats-live span {
+    font-size: 10px;
+    color: #059669;
+    font-weight: 500;
+}
+.daily-stats-panel .stats-summary {
+    padding: 4px 20px 10px;
+    flex-shrink: 0;
+}
+.daily-stats-panel .stats-summary-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.daily-stats-panel .stats-summary-label {
+    font-size: 11px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0;
+}
+.daily-stats-panel .stats-summary-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+}
+.daily-stats-panel .stats-spark {
+    margin:10px 20px 6px 20px;
+    height: 32px;
+}
+.daily-stats-panel .stats-divider {
+    margin: 0 40px;
+    height: 1px;
+    background: #f1f5f9;
+    flex-shrink: 0;
+}
+.daily-stats-panel .stats-trio {
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+.daily-stats-panel .stats-trio-item {
+    flex: 1;
+    text-align: center;
+}
+.daily-stats-panel .stats-trio-item + .stats-trio-item {
+    border-left: 1px solid #f1f5f9;
+}
+.daily-stats-panel .stats-trio-label {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-bottom: 2px;
+}
+.daily-stats-panel .stats-trio-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    font-variant-numeric: tabular-nums;
+}
+.daily-stats-panel .stats-trio-value.is-accent {
+    color: #1e293b;
+}
+.daily-stats-panel .stats-list-wrap {
+    flex: 1;
+    padding: 14px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+.daily-stats-panel .stats-list-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.daily-stats-panel .stats-list-head .lbl {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+.daily-stats-panel .stats-list-head .sub {
+    font-size: 10px;
+    color: #94a3b8;
+}
+.daily-stats-panel .stats-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 0;
+}
+.daily-stats-panel .stats-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.daily-stats-panel .stats-item:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+.daily-stats-panel .stats-item-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+}
+.daily-stats-panel .stats-item-icon.tone-emerald { background: #d1fae5; color: #059669; }
+.daily-stats-panel .stats-item-icon.tone-blue    { background: #dbeafe; color: #2563eb; }
+.daily-stats-panel .stats-item-icon.tone-violet  { background: #ede9fe; color: #7c3aed; }
+.daily-stats-panel .stats-item-icon.tone-amber   { background: #fef3c7; color: #d97706; }
+.daily-stats-panel .stats-item-icon.tone-rose    { background: #ffe4e6; color: #e11d48; }
+.daily-stats-panel .stats-item-body { flex: 1; min-width: 0; }
+.daily-stats-panel .stats-item-title {
+    font-size: 12px;
+    color: #334155;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s;
+}
+.daily-stats-panel .stats-item:hover .stats-item-title { color: #2563eb; }
+.daily-stats-panel .stats-item-meta {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+.daily-stats-panel .stats-item-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+.daily-stats-panel .stats-item-badge.badge-new    { background: #d1fae5; color: #059669; }
+.daily-stats-panel .stats-item-badge.badge-doing  { background: #fef3c7; color: #d97706; }
 
 /* 日报新标题行 */
 .brief-title-row {
@@ -1571,7 +1830,7 @@ img.max-w-243px.h-39px {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  margin: 0 auto 42px;
+  margin: 0 auto 16px;
 }
 
 /* 文献数量统计纵向列表 - 位于输入框上方，与 MossLib 图片同行 */
@@ -2327,7 +2586,7 @@ img.max-w-243px.h-39px {
             '<div class="daily-inner">' +
                 '<div class="brief-title-row">' +
                     '<div class="brief-title-left">' +
-                        '<span class="brief-title-tag">' + report.fullDate + ' 每日晨报</span>' +
+                        '<span class="brief-title-tag">' + '每日晨报 '+ report.fullDate + ' </span>' +
                         '<span class="brief-update-time">过去24小时动态 · AI自动聚合 · 每日8时推送</span>' +
                     '</div>' +
                     '<div class="brief-title-actions">' +
@@ -2368,27 +2627,117 @@ img.max-w-243px.h-39px {
     // 构建 AI 日报模块 DOM
     var moduleHtml =
       '<div class="daily-module-layout">' +
-        '<div class="date-sidebar">' +
-          '<div class="date-list" id="dateListContainer"></div>' +
-          '<div class="sidebar-header">' +
-            '<div class="read-stats">' +
-              '<div class="stat-value">' +
-                '<a class="expand-more-btn" id="expandMoreBtn" href="./daily-report.html">查看更多' +
-                  '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3 L5 7 L9 3" stroke="currentColor" fill="none" stroke-linecap="round"/></svg>' +
-                '</a>' +
+        '<div class="daily-main-area">' +
+          '<div class="date-sidebar">' +
+            '<div class="date-list" id="dateListContainer"></div>' +
+            '<div class="sidebar-header">' +
+              '<div class="read-stats">' +
+                '<div class="stat-value">' +
+                  '<a class="expand-more-btn" id="expandMoreBtn" href="./daily-report.html">查看更多' +
+                    '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3 L5 7 L9 3" stroke="currentColor" fill="none" stroke-linecap="round"/></svg>' +
+                  '</a>' +
+                '</div>' +
               '</div>' +
             '</div>' +
           '</div>' +
+          '<div class="daily-content" id="dailyContentArea">' +
+            '<div class="daily-inner">' +
+              '<div style="text-align:center; padding:40px;">加载日报中...</div>' +
+            '</div>' +
+          '</div>' +
         '</div>' +
-        '<div class="daily-content" id="dailyContentArea">' +
-          '<div class="daily-inner">' +
-            '<div style="text-align:center; padding:40px;">加载日报中...</div>' +
+      '</div>' +
+      '<div class="daily-stats-panel" id="dailyStatsPanel">' +
+        '<div class="stats-header">' +
+          '<div class="stats-header-left">' +
+            '<div class="stats-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 11v6c0 1.66 4 3 9 3s9-1.34 9-3v-6"/></svg></div>' +
+            '<span class="stats-title">MossLib 内容库</span>' +
+          '</div>' +
+          '<div class="stats-live"><span class="dot"></span><span>实时</span></div>' +
+        '</div>' +
+        '<div class="stats-summary">' +
+          '<div class="stats-summary-row">' +
+            '<div class="stats-summary-value">128,492</div>'  +
+            '<div class="stats-summary-label">总收录</div>'  +
+          '</div>' +
+          '<div class="stats-spark">' +
+            '<svg viewBox="0 0 280 32" preserveAspectRatio="none" style="width:100%;height:100%">' +
+              '<defs>' +
+                '<linearGradient id="daily-stats-grad" x1="0" y1="0" x2="0" y2="1">' +
+                  '<stop offset="0%" stop-color="#3b82f6" stop-opacity="0.18"/>' +
+                  '<stop offset="100%" stop-color="#3b82f6" stop-opacity="0"/>' +
+                '</linearGradient>' +
+              '</defs>' +
+              '<path d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2 L280,32 L0,32 Z" fill="url(#daily-stats-grad)"/>' +
+              '<path d="M0,28 L20,26 L40,22 L60,24 L80,20 L100,18 L120,16 L140,14 L160,12 L180,10 L200,8 L220,6 L240,5 L260,4 L280,2" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/>' +
+            '</svg>' +
+          '</div>' +
+        '</div>' +
+        '<div class="stats-divider"></div>' +
+        '<div class="stats-trio">' +
+          '<div class="stats-trio-item">' +
+            '<div class="stats-trio-label">今日</div>' +
+            '<div class="stats-trio-value">+1,247</div>' +
+          '</div>' +
+          '<div class="stats-trio-item">' +
+            '<div class="stats-trio-label">本周</div>' +
+            '<div class="stats-trio-value">+8,932</div>' +
+          '</div>' +
+          '<div class="stats-trio-item">' +
+            '<div class="stats-trio-label">数据源</div>' +
+            '<div class="stats-trio-value is-accent">42</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="stats-divider"></div>' +
+        '<div class="stats-list-wrap">' +
+          '<div class="stats-list-head">' +
+            '<span class="lbl">最新</span>' +
+            '<span class="sub">过去 1 小时</span>' +
+          '</div>' +
+          '<div class="stats-list" id="dailyStatsList">' +
+            '<div class="stats-item">' +
+              '<div class="stats-item-icon tone-emerald"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg></div>' +
+              '<div class="stats-item-body">' +
+                '<div class="stats-item-title">AI 技术趋势报告 2024</div>' +
+                '<div class="stats-item-meta">2 分钟前 · 文章</div>' +
+              '</div>' +
+              '<span class="stats-item-badge badge-new">NEW</span>' +
+            '</div>' +
+            '<div class="stats-item">' +
+              '<div class="stats-item-icon tone-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 11v6c0 1.66 4 3 9 3s9-1.34 9-3v-6"/></svg></div>' +
+              '<div class="stats-item-body">' +
+                '<div class="stats-item-title">用户行为分析日志 v2</div>' +
+                '<div class="stats-item-meta">8 分钟前 · 数据集</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="stats-item">' +
+              '<div class="stats-item-icon tone-violet"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></div>' +
+              '<div class="stats-item-body">' +
+                '<div class="stats-item-title">产品发布会现场视频</div>' +
+                '<div class="stats-item-meta">15 分钟前 · 视频</div>' +
+              '</div>' +
+            '</div>' +
+            '<div class="stats-item">' +
+              '<div class="stats-item-icon tone-amber"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>' +
+              '<div class="stats-item-body">' +
+                '<div class="stats-item-title">图片资源批量上传</div>' +
+                '<div class="stats-item-meta">22 分钟前 · 媒体</div>' +
+              '</div>' +
+              '<span class="stats-item-badge badge-doing">处理中</span>' +
+            '</div>' +
+            '<div class="stats-item">' +
+              '<div class="stats-item-icon tone-blue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg></div>' +
+              '<div class="stats-item-body">' +
+                '<div class="stats-item-title">季度财报解读文章</div>' +
+                '<div class="stats-item-meta">35 分钟前 · 文章</div>' +
+              '</div>' +
+            '</div>' +
           '</div>' +
         '</div>' +
       '</div>';
 
     var moduleWrapper = document.createElement('div');
-    moduleWrapper.className = 'ai-daily-module';
+    moduleWrapper.style.cssText = 'width:1180px;max-width:100%;height:420px;display:flex;gap:16px;margin:0 auto 40px;';
     moduleWrapper.innerHTML = moduleHtml;
 
     // 插入到 nav-buttons-container 之后
@@ -2401,6 +2750,79 @@ img.max-w-243px.h-39px {
 
     // 调用 init 渲染最新日报
     init();
+    
+    // 数据面板 - 数字滚动动画
+    (function() {
+      // 数字滚动计数动画（从 0 滚到目标值）
+      function animateDailyCount(el, target, duration, prefix) {
+        if (!el) return;
+        prefix = prefix || '';
+        duration = duration || 1800;
+        const startVal = 0;
+        const startTime = performance.now();
+        function tick(now) {
+          const t = Math.min(1, (now - startTime) / duration);
+          const eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+          const current = Math.floor(startVal + (target - startVal) * eased);
+          el.textContent = prefix + current.toLocaleString('en-US');
+          if (t < 1) {
+            requestAnimationFrame(tick);
+          } else {
+            el.textContent = prefix + target.toLocaleString('en-US');
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+      
+      // 获取数据面板元素
+      const statsPanel = document.getElementById('dailyStatsPanel');
+      if (statsPanel) {
+        // 数据面板列表：滚动时立即显示滚动条，停止300ms后隐藏
+        const statsListEl = statsPanel.querySelector('.stats-list');
+        if (statsListEl) {
+          let statsScrollTimer = null;
+          statsListEl.addEventListener('scroll', function() {
+            statsListEl.classList.add('scrolling');
+            clearTimeout(statsScrollTimer);
+            statsScrollTimer = setTimeout(function() {
+              statsListEl.classList.remove('scrolling');
+            }, 300);
+          });
+        }
+        
+        // 总收录数字
+        const totalEl = statsPanel.querySelector('.stats-summary-value');
+        if (totalEl) {
+          const original = totalEl.textContent.trim().replace(',', '');
+          const target = parseInt(original.replace(',', ''), 10);
+          if (!isNaN(target)) {
+            totalEl.textContent = '0';
+            setTimeout(() => animateDailyCount(totalEl, target, 1600), 200);
+          }
+        }
+        // 今日数字
+        const todayEl = statsPanel.querySelectorAll('.stats-trio-value')[0];
+        if (todayEl) {
+          const todayTarget = 1247;
+          todayEl.textContent = '0';
+          setTimeout(() => animateDailyCount(todayEl, todayTarget, 1400, '+'), 400);
+        }
+        // 本周数字
+        const weekEl = statsPanel.querySelectorAll('.stats-trio-value')[1];
+        if (weekEl) {
+          const weekTarget = 8932;
+          weekEl.textContent = '0';
+          setTimeout(() => animateDailyCount(weekEl, weekTarget, 1400, '+'), 600);
+        }
+        // 数据源数字
+        const sourceEl = statsPanel.querySelectorAll('.stats-trio-value')[2];
+        if (sourceEl) {
+          const sourceTarget = 42;
+          sourceEl.textContent = '0';
+          setTimeout(() => animateDailyCount(sourceEl, sourceTarget, 1400), 800);
+        }
+      }
+    })();
   }
 
   // ========== 文献数量统计 - 数字滚动动画 ==========
@@ -2429,6 +2851,7 @@ img.max-w-243px.h-39px {
     requestAnimationFrame(tick);
   }
 
+/*
   function buildLitStatsPanel() {
     if (_litStatsPanel && document.body.contains(_litStatsPanel)) return _litStatsPanel;
     const panel = document.createElement('div');
@@ -2451,6 +2874,7 @@ img.max-w-243px.h-39px {
     _litStatsPanel = panel;
     return panel;
   }
+*/
 
   function initLitStatsPanel() {
     if (_litStatsStarted) return;
@@ -2461,7 +2885,7 @@ img.max-w-243px.h-39px {
     const parent = searchContainer.parentNode;
     if (!parent) return;
 
-    const panel = buildLitStatsPanel();
+    /*const panel = buildLitStatsPanel();*/
 
     // 找到 MossLib 图片
     let imgEl = null;
