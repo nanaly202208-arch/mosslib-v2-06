@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html class=" " style="--el-color-primary: #605CE5; --el-color-primary-light-1: #6f6ce7; --el-color-primary-light-2: #7f7cea; --el-color-primary-light-3: #8f8cec; --el-color-primary-light-4: #9f9def; --el-color-primary-light-5: #afadf2; --el-color-primary-light-6: #bfbdf4; --el-color-primary-light-7: #cfcef7; --el-color-primary-light-8: #dfdef9; --el-color-primary-light-9: #efeefc; --el-color-primary-dark-1: #5652ce; --el-color-primary-dark-2: #4c49b7; --el-color-primary-dark-3: #4340a0; --el-color-primary-dark-4: #393789; --el-color-primary-dark-5: #302e72; --el-color-primary-dark-6: #26245b; --el-color-primary-dark-7: #1c1b44; --el-color-primary-dark-8: #13122d; --el-color-primary-dark-9: #090916; --navbar-height: var(--navbar-height-origin);">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link rel="icon" href="https://mosslib-v2.newtranx.com/favicon.ico">
+  <title>MossLib</title>
+
+  <!-- jQuery -->
+  <script src="./m_files/jquery-3.4.1.min.js.下载"></script>
+  <!-- Site Config -->
+  <script src="./m_files/SConfig.js.下载"></script>
+
+  <!-- MathJax -->
+  <script>
+    MathJax = {
+      tex: {
+        packages: {'[+]': ['amsmath']},
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="./m_files/mathjax@3_es5_tex-chtml.js.下载"></script>
+
+  <!-- Preloader Styles -->
+  <style>
+    #app, body, html { height: 100%; margin: 0; padding: 0; }
+    .chromeframe { margin: .2em 0; background: #ccc; color: #000; padding: .2em 0; }
+    #loader-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; }
+    #loader { display: block; position: relative; left: 50%; top: 50%; width: 42px; height: 42px; margin: -21px 0 0 -21px; border-radius: 50%; border: 2px solid #409eff; border-top-color: #fff; animation: spin 2s linear infinite; z-index: 1001; }
+    @keyframes spin { 0% { transform: rotate(0); } 100% { transform: rotate(360deg); } }
+    #loader-wrapper .loader-section { position: fixed; top: 0; width: 51%; height: 100%; background: transparent; z-index: 1000; }
+    #loader-wrapper .loader-section.section-left { left: 0; }
+    #loader-wrapper .loader-section.section-right { right: 0; }
+    .loaded #loader-wrapper .loader-section.section-left { transform: translateX(-100%); transition: all .7s .3s cubic-bezier(.645, .045, .355, 1); }
+    .loaded #loader-wrapper .loader-section.section-right { transform: translateX(100%); transition: all .7s .3s cubic-bezier(.645, .045, .355, 1); }
+    .loaded #loader { opacity: 1; transition: all .3s ease-out; }
+    .loaded #loader-wrapper { visibility: hidden; transform: translateY(-100%); transition: all .3s 1s ease-out; }
+    .no-js #loader-wrapper { display: none; }
+    .no-js h1 { color: #222; }
+    #loader-wrapper .load_title { font-family: 'Open Sans'; color: #409eff; font-size: 16px; width: 100%; text-align: center; z-index: 9999999999999; position: absolute; top: 60%; opacity: .9; line-height: 30px; }
+    #loader-wrapper .load_title span { font-weight: 400; font-style: italic; font-size: 13px; color: #999; opacity: 1; }
+  </style>
+
+  <!-- MathJax Context Menu Styles -->
+  <style>
+    .CtxtMenu_InfoContent { overflow: auto; text-align: left; font-size: 80%; padding: .4em .6em; border: 1px inset; margin: 1em 0; max-height: 20em; max-width: 30em; background-color: #EEE; white-space: normal; }
+    .CtxtMenu_Info.CtxtMenu_MousePost { outline: none; }
+    .CtxtMenu_Info { position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDD; color: #000; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; box-shadow: 0 10px 20px #808080; }
+    .CtxtMenu_MenuClose { position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; font-family: "Courier New", Courier; font-size: 24px; color: #F0F0F0; }
+    .CtxtMenu_MenuClose span { display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; line-height: 0; padding: 8px 0 6px; }
+    .CtxtMenu_MenuClose:hover { color: #fff !important; border: 2px solid #CCC !important; }
+    .CtxtMenu_MenuClose:hover span { background-color: #CCC !important; }
+    .CtxtMenu_MenuClose:hover:focus { outline: none; }
+    .CtxtMenu_Menu { position: absolute; background-color: #fff; color: #000; width: auto; padding: 5px 0; border: 1px solid #CCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; box-shadow: 0 10px 20px #808080; }
+    .CtxtMenu_MenuItem { padding: 1px 2em; background: transparent; }
+    .CtxtMenu_MenuArrow { position: absolute; right: .5em; padding-top: .25em; color: #666; font-size: .75em; }
+    .CtxtMenu_MenuActive .CtxtMenu_MenuArrow { color: #fff; }
+    .CtxtMenu_MenuArrow.CtxtMenu_RTL { left: .5em; right: auto; }
+    .CtxtMenu_MenuCheck { position: absolute; left: .7em; }
+    .CtxtMenu_MenuCheck.CtxtMenu_RTL { right: .7em; left: auto; }
+    .CtxtMenu_MenuRadioCheck { position: absolute; left: .7em; }
+    .CtxtMenu_MenuRadioCheck.CtxtMenu_RTL { right: .7em; left: auto; }
+    .CtxtMenu_MenuInputBox { padding-left: 1em; right: .5em; color: #666; }
+    .CtxtMenu_MenuComboBox { left: .1em; padding-bottom: .5em; }
+    .CtxtMenu_MenuSlider { left: .1em; }
+    .CtxtMenu_SliderValue { position: absolute; right: .1em; padding-top: .25em; color: #333; font-size: .75em; }
+    .CtxtMenu_SliderBar { outline: none; background: #d3d3d3; }
+    .CtxtMenu_MenuLabel { padding: 1px 2em 3px 1.33em; font-style: italic; }
+    .CtxtMenu_MenuRule { border-top: 1px solid #DDD; margin: 4px 3px; }
+    .CtxtMenu_MenuDisabled { color: GrayText; }
+    .CtxtMenu_MenuActive { background-color: #606872; color: #fff; }
+    .CtxtMenu_MenuDisabled:focus { background-color: #E8E8E8; }
+    .CtxtMenu_MenuLabel:focus { background-color: #E8E8E8; }
+    .CtxtMenu_ContextMenu:focus { outline: none; }
+    .CtxtMenu_ContextMenu .CtxtMenu_MenuItem:focus { outline: none; }
+    .CtxtMenu_SelectionMenu { position: relative; float: left; border-bottom: none; -webkit-box-shadow: none; border-radius: 0; }
+    .CtxtMenu_SelectionItem { padding-right: 1em; }
+    .CtxtMenu_Selection { right: 40%; width: 50%; }
+    .CtxtMenu_SelectionBox { padding: 0; max-height: 20em; max-width: none; background-color: #FFF; }
+    .CtxtMenu_SelectionDivider { clear: both; border-top: 2px solid #000; }
+    .CtxtMenu_Menu .CtxtMenu_MenuClose { top: -10px; left: -10px; }
+  </style>
+
+  <!-- MathJax CHTML Styles -->
+  <style id="MJX-CHTML-styles">
+    mjx-container[jax="CHTML"] { line-height: 0; }
+    mjx-container [space="1"] { margin-left: .111em; }
+    mjx-container [space="2"] { margin-left: .167em; }
+    mjx-container [space="3"] { margin-left: .222em; }
+    mjx-container [space="4"] { margin-left: .278em; }
+    mjx-container [space="5"] { margin-left: .333em; }
+    mjx-container [rspace="1"] { margin-right: .111em; }
+    mjx-container [rspace="2"] { margin-right: .167em; }
+    mjx-container [rspace="3"] { margin-right: .222em; }
+    mjx-container [rspace="4"] { margin-right: .278em; }
+    mjx-container [rspace="5"] { margin-right: .333em; }
+    mjx-container [size="s"] { font-size: 70.7%; }
+    mjx-container [size="ss"] { font-size: 50%; }
+    mjx-container [size="Tn"] { font-size: 60%; }
+    mjx-container [size="sm"] { font-size: 85%; }
+    mjx-container [size="lg"] { font-size: 120%; }
+    mjx-container [size="Lg"] { font-size: 144%; }
+    mjx-container [size="LG"] { font-size: 173%; }
+    mjx-container [size="hg"] { font-size: 207%; }
+    mjx-container [size="HG"] { font-size: 249%; }
+    mjx-container[width="full"] { width: 100%; }
+    mjx-box { display: inline-block; }
+    mjx-block { display: block; }
+    mjx-itable { display: inline-table; }
+    mjx-row { display: table-row; }
+    mjx-row > * { display: table-cell; }
+    mjx-mtext { display: inline-block; }
+    mjx-mstyle { display: inline-block; }
+    mjx-merror { display: inline-block; color: red; background-color: yellow; }
+    mjx-mphantom { visibility: hidden; }
+    _::-webkit-full-page-media, _:future, :root mjx-container { will-change: opacity; }
+    mjx-assistive-mml { position: absolute !important; top: 0; left: 0; clip: rect(1px,1px,1px,1px); padding: 1px 0 0 0 !important; border: 0 !important; display: block !important; width: auto !important; overflow: hidden !important; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+    mjx-assistive-mml[display="block"] { width: 100% !important; }
+    mjx-c::before { display: block; width: 0; }
+    .MJX-TEX { font-family: MJXZERO, MJXTEX; }
+    .TEX-B { font-family: MJXZERO, MJXTEX-B; }
+    .TEX-I { font-family: MJXZERO, MJXTEX-I; }
+    .TEX-MI { font-family: MJXZERO, MJXTEX-MI; }
+    .TEX-BI { font-family: MJXZERO, MJXTEX-BI; }
+    .TEX-S1 { font-family: MJXZERO, MJXTEX-S1; }
+    .TEX-S2 { font-family: MJXZERO, MJXTEX-S2; }
+    .TEX-S3 { font-family: MJXZERO, MJXTEX-S3; }
+    .TEX-S4 { font-family: MJXZERO, MJXTEX-S4; }
+    .TEX-A { font-family: MJXZERO, MJXTEX-A; }
+    .TEX-C { font-family: MJXZERO, MJXTEX-C; }
+    .TEX-CB { font-family: MJXZERO, MJXTEX-CB; }
+    .TEX-FR { font-family: MJXZERO, MJXTEX-FR; }
+    .TEX-FRB { font-family: MJXZERO, MJXTEX-FRB; }
+    .TEX-SS { font-family: MJXZERO, MJXTEX-SS; }
+    .TEX-SSB { font-family: MJXZERO, MJXTEX-SSB; }
+    .TEX-SSI { font-family: MJXZERO, MJXTEX-SSI; }
+    .TEX-SC { font-family: MJXZERO, MJXTEX-SC; }
+    .TEX-T { font-family: MJXZERO, MJXTEX-T; }
+    .TEX-V { font-family: MJXZERO, MJXTEX-V; }
+    .TEX-VB { font-family: MJXZERO, MJXTEX-VB; }
+    mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c { font-family: MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A !important; }
+
+    @font-face { font-family: MJXZERO; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Zero.woff") format("woff"); }
+    @font-face { font-family: MJXTEX; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Main-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-B; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Main-Bold.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-I; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Math-Italic.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-MI; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Main-Italic.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-BI; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Math-BoldItalic.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-S1; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Size1-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-S2; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Size2-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-S3; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Size3-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-S4; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Size4-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-A; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_AMS-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-C; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-CB; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Calligraphic-Bold.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-FR; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Fraktur-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-FRB; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Fraktur-Bold.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-SS; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_SansSerif-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-SSB; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_SansSerif-Bold.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-SSI; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_SansSerif-Italic.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-SC; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Script-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-T; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Typewriter-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-V; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Vector-Regular.woff") format("woff"); }
+    @font-face { font-family: MJXTEX-VB; src: url("https://mosslib-v2.newtranx.com/js/output/chtml/fonts/woff-v2/MathJax_Vector-Bold.woff") format("woff"); }
+  </style>
+
+  <!-- Module Preloads -->
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/index--lexzEnv.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/searchEntry-COV6OTgF.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/ai-search-tools-Nly7Oed3.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/cateBar-Dk1xEmqa.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/element-resize-detector-DrJ0j5ni.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/recommentSet-BoIhC-7d.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/emptyData-AQXpzPkr.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/subscribeList-D7VJIGrl.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/sortDropdown-B8fS8-sB.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/perSubscribeItem-C1JBQklX.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/addSubscribeForm-Cz7sA_4o.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/paginationSourceSelect-BZHrT1kJ.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/paginationThemeSelect-D3v7_glu.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/allSubMoreInstructSelect-CB-QGn1V.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/moreDropdownSelect-BPSeS0Hi.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/joinPersonKbPanel-DCaVOCf8.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/perSearchItem-9gvJmF6w.js">
+  <link rel="modulepreload" as="script" crossorigin href="https://mosslib-v2.newtranx.com/assets/index-Ce23mvyQ.css">
+
+  <!-- Component CSS -->
+  <link rel="stylesheet" crossorigin href="./m_files/searchEntry-BXdp7sNB.css">
+  <link rel="stylesheet" crossorigin href="./m_files/cateBar-ZFLguNrX.css">
+  <link rel="stylesheet" crossorigin href="./m_files/recommentSet-CSBhpLdZ.css">
+  <link rel="stylesheet" crossorigin href="./m_files/sortDropdown-DUlkhOPa.css">
+  <link rel="stylesheet" crossorigin href="./m_files/perSubscribeItem-BywlN9V7.css">
+  <link rel="stylesheet" crossorigin href="./m_files/subscribeList-JawRCZiG.css">
+  <link rel="stylesheet" crossorigin href="./m_files/addSubscribeForm-C-Y1hBex.css">
+  <link rel="stylesheet" crossorigin href="./m_files/paginationSourceSelect-MWfKUOQP.css">
+  <link rel="stylesheet" crossorigin href="./m_files/paginationThemeSelect-nfVMNQ0L.css">
+  <link rel="stylesheet" crossorigin href="./m_files/allSubMoreInstructSelect-D6hMXDpi.css">
+  <link rel="stylesheet" crossorigin href="./m_files/moreDropdownSelect-BPkO4OvF.css">
+  <link rel="stylesheet" crossorigin href="./m_files/joinPersonKbPanel-B_p3CGRp.css">
+  <link rel="stylesheet" crossorigin href="./m_files/perSearchItem-BP3Tpozn.css">
+  <link rel="stylesheet" crossorigin href="./m_files/index-Ce23mvyQ.css">
+
+  <!-- UnoCSS Main Styles -->
+  <link rel="stylesheet" crossorigin href="./m_files/index-e_Hgphku.css">
+
+  <!-- CSS Variables & Base Styles -->
+  <style>
+    :root,
+    #mount[data-theme="light"],
+    #mount:not([data-theme="dark"]) {
+      --c-00: #000000;
+      --c-22: #222222;
+      --c-33: #333333;
+      --c-66: #666666;
+      --c-83: #838383;
+      --c-99: #999999;
+      --c-c7: #c7c7c7;
+      --c-cc: #cccccc;
+      --c-e6: #e6e6e6;
+      --c-f5: #f5f5f5;
+      --c-ff: #ffffff;
+      --p-main: #ea4c89;
+      --p-hover: #ec5e95;
+      --p-active: #e34a85;
+      --p-special: #ee71a2;
+      --p-disabled: #f4a5c4;
+      --p-text-disabled: #f9c9dc;
+      --p-weak: #fdedf3;
+      --s-1: #f3f5f6;
+      --s-1-hover: #f6f8f9;
+      --s-1-active: #edf1f2;
+      --s-1-weak: #fafbfb;
+      --input-bg-base: #fafbfc;
+      --input-border: #ecf0f7;
+      --input-border-strong: #e0e0e6;
+      --input-bg-strong: #fafdff;
+    }
+
+    :root[data-theme="dark"],
+    [data-theme="dark"] {
+      --c-00: #ffffff;
+      --c-22: #dbdbdb;
+      --c-33: #dbdbdb;
+      --c-66: #b3b3b3;
+      --c-83: #838383;
+      --c-99: #707070;
+      --c-c7: #666666;
+      --c-cc: #5c5c5c;
+      --c-e6: #3b3b3b;
+      --c-f5: #262626;
+      --c-ff: #222222;
+      --p-main: #e23c7c;
+      --p-hover: #ea4c89;
+      --p-active: #d5467d;
+      --p-special: #a93a65;
+      --p-disabled: #7e2f4d;
+      --p-text-disabled: #522335;
+      --p-weak: #26171d;
+      --s-1: #2d2e2f;
+      --s-1-hover: #323434;
+      --s-1-active: #202121;
+      --s-1-weak: #262627;
+      --input-bg-base: #2b2d30;
+      --input-border: #3e434b;
+      --input-border-strong: #43474b;
+      --input-bg-strong: #1f2123;
+    }
+
+    :root,
+    #mount [data-theme] {
+      --primary: var(--p-main);
+      --primary-hover: var(--p-hover);
+      --primary-inverse: #fff;
+      --modal-background: var(--s-1);
+      --modal-border: var(--input-border);
+      --modal-text: var(--c-22);
+      --modal-text-secondary: var(--c-66);
+      --modal-error: var(--p-main);
+      --modal-required: #f53f3f;
+      --modal-success: #68cd52;
+      --modal-button-background: var(--p-main);
+      --modal-button-text: var(--c-ff);
+      --modal-input-background: var(--input-bg-base);
+      --modal-check-color: var(--p-main);
+      --background-color: var(--c-ff);
+      --background-light-green: var(--s-1-weak, #f5f7f9);
+      --text-black-2: var(--c-22);
+      --text-gray-2: var(--c-22);
+      --text-gray-6: var(--c-66);
+      --text-gray-9: var(--c-99);
+      --text-gray-c2: var(--c-c7);
+      --switch-background-color: var(--c-c7, #c7c7c7);
+      --float-ball-more-button-border-color: var(--c-f5, #f6f6f6);
+      --float-ball-more-button-background-color: var(--c-ff);
+      --float-ball-more-button-hover-color: var(--p-weak);
+      --float-ball-more-button-svg-color: #6c6f73;
+      --service-bg-hover: var(--s-1-hover, #f7faff);
+      --service-bg: var(--s-1-weak, #fafbfb);
+    }
+
+    #mount {
+      --font-family: system-ui, -apple-system, "Segoe UI", "Roboto", "Ubuntu", "Cantarell", "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      --f-12: 12px;
+      --f-14: 14px;
+      --f-15: 15px;
+      --f-16: 16px;
+      --f-18: 18px;
+      --f-20: 20px;
+      --space-4: 4px;
+      --space-6: 6px;
+      --space-8: 8px;
+      --space-12: 12px;
+      --space-16: 16px;
+      --space-18: 18px;
+      --space-24: 24px;
+      --radius-8: 8px;
+      --radius-12: 12px;
+      --radius-16: 16px;
+      --control-height-lg: 44px;
+      --width-28: 28px;
+      --width-24: 24px;
+      --width-20: 20px;
+      --width-18: 18px;
+      --width-16: 16px;
+      --width-label-md: 56px;
+      --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --line-height: 1.5;
+      --font-weight: 400;
+      --font-size: 16px;
+      --border-radius: 4px;
+      --border-width: 2px;
+      --outline-width: 3px;
+      --spacing: 16px;
+      --typography-spacing-vertical: 24px;
+      --block-spacing-vertical: calc(var(--spacing) * 2);
+      --block-spacing-horizontal: var(--spacing);
+      --grid-spacing-vertical: 0;
+      --grid-spacing-horizontal: var(--spacing);
+      --form-element-spacing-vertical: 12px;
+      --form-element-spacing-horizontal: 16px;
+      --nav-element-spacing-vertical: 16px;
+      --nav-element-spacing-horizontal: 8px;
+      --nav-link-spacing-vertical: 8px;
+      --nav-link-spacing-horizontal: 8px;
+      --form-label-font-weight: var(--font-weight);
+      --transition: 0.2s ease-in-out;
+      --modal-overlay-backdrop-filter: blur(4px);
+      --switch-color: var(--primary-inverse);
+      --switch-checked-background-color: var(--primary);
+      --icon-xia: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9IkZyYW1lIj4KPHBhdGggaWQ9IlZlY3RvciIgZD0iTTguMDAyOTEgOS42Nzk4M0wzLjgzMzM5IDUuNTEyMjFMMy4wMjUzOSA2LjMxOTgzTDguMDAzMjkgMTEuMjk1MUwxMi45NzYyIDYuMzE5ODNMMTIuMTY3OSA1LjUxMjIxTDguMDAyOTEgOS42Nzk4M1oiIGZpbGw9IiM4MzgzODMiLz4KPC9nPgo8L3N2Zz4K");
+      line-height: var(--line-height);
+      font-family: var(--font-family);
+      font-size: var(--font-size);
+    }
+
+    @media (max-width: 480px) {
+      :root, #mount {
+        --f-12: 10px; --f-14: 12px; --f-15: 13px; --f-16: 14px; --f-18: 16px; --f-20: 18px;
+        --space-4: 4px; --space-6: 4px; --space-8: 6px; --space-12: 8px; --space-16: 12px; --space-18: 14px; --space-24: 18px;
+        --radius-8: 6px; --radius-12: 10px; --radius-16: 12px;
+        --control-height-lg: 38px;
+        --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.1);
+        --width-28: 24px; --width-24: 20px; --width-20: 16px; --width-18: 14px; --width-16: 12px; --width-label-md: 52px;
+      }
+    }
+
+    #mount * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    :where(#mount) a, :where(#mount) [role="link"] {
+      --color: var(--primary);
+      --background-color: transparent;
+      outline: none;
+      background-color: var(--background-color);
+      color: var(--color);
+      transition: background-color var(--transition), color var(--transition), text-decoration var(--transition), box-shadow var(--transition);
+    }
+    :where(#mount) a:is([aria-current], :hover, :active, :focus), :where(#mount) [role="link"]:is([aria-current], :hover, :active, :focus) {
+      --color: var(--primary-hover);
+      --text-decoration: underline;
+    }
+    :where(#mount) label { font-size: 13px; line-height: 1.3; color: var(--text-gray-2, #222); }
+    :where(#mount) button {
+      width: 100%;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.3;
+      min-height: 44px;
+      border-radius: 12px;
+      padding: 0 14px;
+      border: none;
+      background-color: var(--primary, #ea4c89);
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+    }
+    :where(#mount) button:hover { background-color: var(--primary-hover, #f082ac); }
+    :where(#mount) button:disabled { opacity: 0.6; cursor: not-allowed; }
+    :where(#mount) select, :where(#mount) input, :where(#mount) textarea { font-family: inherit; color: var(--text-gray-2, #222); }
+    :where(#mount) select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      font-family: inherit;
+      color: var(--text-gray-2, inherit);
+      font-size: 13px;
+      line-height: 1.3;
+      outline: none;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 12px;
+      background: var(--input-bg-base, #fafbfc);
+      border: 1px solid var(--input-border, #ecf0f7);
+      transition: border 0.2s ease;
+      min-width: 80px;
+      cursor: pointer;
+    }
+    :where(#mount) select:hover { border-color: var(--p-main, #ea4c89); }
+    :where(#mount) select:active, :where(#mount) select:focus { border-color: var(--p-main, #ea4c89); }
+    :where(#mount) input {
+      background-color: var(--input-bg-base, #fafbfc);
+      border: 1px solid var(--input-border, #ecf0f7);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 15px;
+      outline: none;
+      width: 100%;
+      transition: border 0.2s ease;
+    }
+    :where(#mount) input:hover { border-color: var(--p-special, #ee71a2); }
+    :where(#mount) input:focus { border-color: var(--p-main, #ea4c89); }
+    :where(#mount) textarea {
+      background-color: var(--input-bg-base, #fafbfc);
+      border: 1px solid var(--input-border, #ecf0f7);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 15px;
+      outline: none;
+      resize: vertical;
+      width: 100%;
+      transition: border 0.2s ease;
+    }
+    :where(#mount) textarea:hover { border-color: var(--p-special, #ee71a2); }
+    :where(#mount) textarea:focus { border-color: var(--p-main, #ea4c89); }
+  </style>
+
+  <!-- Main Vue App Script -->
+  <script type="module" crossorigin src="./m_files/index-B36DjKRR.js.下载"></script>
+
+  <!-- Immersive Translate Plugin Styles -->
+  <style>
+    .imt-fb-container { position: fixed; z-index: 2147483646; }
+    .imt-fb-btn { width: 36px; height: 36px; border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .imt-fb-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+    .imt-fb-logo-img { width: 20px; height: 20px; }
+    .imt-fb-power-user-card { position: absolute; bottom: calc(100% + 12px); left: calc(100% + 12px); background: #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.16); padding: 16px; width: 280px; }
+    .imt-fb-setting-wrapper { position: absolute; bottom: calc(100% + 12px); left: calc(100% + 12px); background: #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.16); padding: 16px; width: 320px; max-height: 80vh; overflow-y: auto; }
+    .imt-fb-setting-save-btn { width: 100%; padding: 10px; border-radius: 8px; background: #605CE5; color: #fff; border: none; font-size: 14px; cursor: pointer; }
+    .imt-fb-setting-save-btn:hover { opacity: 0.9; }
+    .imt-fb-setting-save-btn:active { opacity: 0.8; }
+  </style>
+</head>
+<body>
+  <!-- Vue Mount Point -->
+  <div id="mount" style="display: block;"></div>
+</body>
+</html>
