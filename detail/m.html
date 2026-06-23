@@ -3042,7 +3042,7 @@ margin-top:10px;
 }
 
 .main-content {
-  margin-left: 90px;
+  margin-left: 180px;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -8906,6 +8906,7 @@ html {
 
     var mainContent = document.createElement('div');
     mainContent.className = 'main-content';
+    mainContent.style.marginLeft = '180px';
     var appEl = document.querySelector('#app') || document.querySelector('.main-view');
     if (appEl) {
       appEl.parentNode.insertBefore(mainContent, appEl);
@@ -8921,6 +8922,7 @@ html {
   window.toggleSidebar = function() {
     var sidebar = document.getElementById('sidebar');
     var logo = document.getElementById('brandLogo');
+    var mainContent = document.querySelector('.main-content');
     if (sidebar) {
       var isCollapsed = sidebar.classList.toggle('collapsed');
       if (logo) {
@@ -8928,6 +8930,13 @@ html {
           logo.src = './m_files/logo_mosslib.png';
         } else {
           logo.src = 'https://nanaly.oss-cn-beijing.aliyuncs.com/mosslib-v2/img/logo_00.png';
+        }
+      }
+      if (mainContent) {
+        if (isCollapsed) {
+          mainContent.style.marginLeft = '60px';
+        } else {
+          mainContent.style.marginLeft = '180px';
         }
       }
     }
