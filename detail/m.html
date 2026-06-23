@@ -408,15 +408,39 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: flex-start !important;
+  gap: 30px !important;
 }
 
 /* 让logo图片与输入框垂直居中对齐 */
 .search-entry-view .flex-row.items-center img,
 .search-entry-view .flex-row img {
   display: block !important;
-  margin: 0 auto !important;
-  margin-bottom: 50px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 30px !important;
+}
+
+/* 针对特定logo图片的样式 - 确保水平居中 */
+.search-entry-view img[src="./m_files/logo_mosslib_long.png"],
+.search-entry-view img.border-rd-4px {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 30px !important;
+  text-align: center !important;
+}
+
+/* 强制设置logo图片下方间距 - 最高优先级 */
+.search-entry-view .flex-row img.border-rd-4px,
+.search-entry-view .flex-row.items-center img.mb-50px,
+.search-entry-view img[src="./m_files/logo_mosslib_long.png"].border-rd-4px {
+  margin-bottom: 30px !important;
+}
+
+/* 针对mb-50px类的强制覆盖 */
+.search-entry-view img.mb-50px {
+  margin-bottom: 30px !important;
 }
 
 .search-entry-view .el-input-group {
@@ -1832,7 +1856,7 @@ select.lang-select-small {
 
 /* MossLib 长图 - 由 flex wrapper 接管定位 */
 img.max-w-243px.h-39px {
-  margin-bottom: 0 !important;
+  margin-bottom: 30px !important;
   flex-shrink: 0;
   width: auto !important;
   height: 48px !important;
