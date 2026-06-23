@@ -2382,22 +2382,9 @@ img.max-w-243px.h-39px {
   .card-grid { column-count: 3; }
 }
 
-/* 吸顶时显示的固定logo（与pinned-top-actions同级） */
+/* 吸顶时显示的固定logo（已隐藏） */
 .pinned-logo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 170px;
-  display: none;
-  align-items: center;
-  z-index: 1000;
-  pointer-events: none;
-  padding-left: 50px;
-  box-sizing: border-box;
-}
-
-.pinned-logo.visible {
-  display: flex;
+  display: none !important;
 }
 
 .pinned-logo img {
@@ -9013,11 +9000,6 @@ html {
     }
   });
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createSidebar);
-  } else {
-    createSidebar();
-  }
 })();
 </script>
 <script>
