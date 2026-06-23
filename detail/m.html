@@ -2652,11 +2652,11 @@ img.max-w-243px.h-39px {
   height: 100vh;
   z-index: 100;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  padding-left: 0;
-  padding-right: 0;
   position: fixed;
   left: 0;
   top: 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .sidebar.collapsed {
@@ -3039,15 +3039,8 @@ img.max-w-243px.h-39px {
   font-weight: 600;
 }
 
-body {
-  overflow: hidden;
-}
-
 .main-content {
-  margin-left: 180px;
-  height: 100vh;
-  overflow-y: auto;
-  overflow-x: hidden;
+  margin-left: 90px;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -8906,10 +8899,15 @@ html {
     var mainContent = document.createElement('div');
     mainContent.className = 'main-content';
     var appEl = document.querySelector('#app') || document.querySelector('.main-view');
-    while (document.body.firstChild && !document.body.firstChild.classList.contains('sidebar')) {
-      mainContent.appendChild(document.body.firstChild);
+    if (appEl) {
+      appEl.parentNode.insertBefore(mainContent, appEl);
+      mainContent.appendChild(appEl);
+    } else {
+      while (document.body.firstChild && !document.body.firstChild.classList.contains('sidebar')) {
+        mainContent.appendChild(document.body.firstChild);
+      }
+      document.body.appendChild(mainContent);
     }
-    document.body.appendChild(mainContent);
   }
 
   window.toggleSidebar = function() {
@@ -9009,10 +9007,8 @@ window.addEventListener('load', function() {
     mainContent.className = 'main-content';
     var appEl = document.querySelector('#app') || document.querySelector('.main-view');
     if (appEl) {
-      while (document.body.firstChild && !document.body.firstChild.classList.contains('sidebar')) {
-        mainContent.appendChild(document.body.firstChild);
-      }
-      document.body.appendChild(mainContent);
+      appEl.parentNode.insertBefore(mainContent, appEl);
+      mainContent.appendChild(appEl);
     }
   }
 });
