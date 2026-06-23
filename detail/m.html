@@ -2652,11 +2652,9 @@ img.max-w-243px.h-39px {
   height: 100vh;
   z-index: 100;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: fixed;
-  left: 0;
-  top: 0;
   padding-left: 0;
   padding-right: 0;
+  position: static;
 }
 
 .sidebar.collapsed {
@@ -3039,13 +3037,21 @@ img.max-w-243px.h-39px {
   font-weight: 600;
 }
 
+body {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
 .main-content {
-  margin-left: 90px;
+  flex: 1;
+  min-width: 0;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 0 !important;
 }
 
 .sidebar.collapsed + .main-content {
-  margin-left: 60px;
+  margin-left: 0;
 }
 
 @media (max-width: 768px) {
@@ -8899,15 +8905,10 @@ html {
     var mainContent = document.createElement('div');
     mainContent.className = 'main-content';
     var appEl = document.querySelector('#app') || document.querySelector('.main-view');
-    if (appEl) {
-      appEl.parentNode.insertBefore(mainContent, appEl);
-      mainContent.appendChild(appEl);
-    } else {
-      while (document.body.firstChild && !document.body.firstChild.classList.contains('sidebar')) {
-        mainContent.appendChild(document.body.firstChild);
-      }
-      document.body.appendChild(mainContent);
+    while (document.body.firstChild && !document.body.firstChild.classList.contains('sidebar')) {
+      mainContent.appendChild(document.body.firstChild);
     }
+    document.body.appendChild(mainContent);
   }
 
   window.toggleSidebar = function() {
@@ -9007,8 +9008,10 @@ window.addEventListener('load', function() {
     mainContent.className = 'main-content';
     var appEl = document.querySelector('#app') || document.querySelector('.main-view');
     if (appEl) {
-      appEl.parentNode.insertBefore(mainContent, appEl);
-      mainContent.appendChild(appEl);
+      while (document.body.firstChild && !document.body.firstChild.classList.contains('sidebar')) {
+        mainContent.appendChild(document.body.firstChild);
+      }
+      document.body.appendChild(mainContent);
     }
   }
 });
