@@ -2895,7 +2895,7 @@ img.max-w-243px.h-39px {
 }
 
 .sidebar-footer {
-  padding: 12px;
+  padding: 0;
   border-top: 1px solid var(--border);
   background: var(--bg-sidebar);
   flex-shrink: 0;
@@ -2903,7 +2903,7 @@ img.max-w-243px.h-39px {
 }
 
 .sidebar.collapsed .sidebar-footer {
-  padding: 12px 10px;
+  padding: 0;
 }
 
 .profile-card {
@@ -2957,6 +2957,7 @@ img.max-w-243px.h-39px {
 }
 
 .profile-name {
+margin-top:10px;
   font-size: 13px;
   font-weight: 700;
   color: var(--text-primary);
@@ -3059,6 +3060,12 @@ img.max-w-243px.h-39px {
   .main-content {
     margin-left: 0;
   }
+}
+
+/* 隐藏页面原有的logo容器 */
+#global-left-top-logo,
+.sidebar-logo-container {
+  display: none !important;
 }
 </style>
 <script>
@@ -8913,8 +8920,16 @@ html {
 
   window.toggleSidebar = function() {
     var sidebar = document.getElementById('sidebar');
+    var logo = document.getElementById('brandLogo');
     if (sidebar) {
-      sidebar.classList.toggle('collapsed');
+      var isCollapsed = sidebar.classList.toggle('collapsed');
+      if (logo) {
+        if (isCollapsed) {
+          logo.src = './m_files/logo_mosslib.png';
+        } else {
+          logo.src = 'https://nanaly.oss-cn-beijing.aliyuncs.com/mosslib-v2/img/logo_00.png';
+        }
+      }
     }
   };
 
