@@ -2654,7 +2654,9 @@ img.max-w-243px.h-39px {
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   padding-left: 0;
   padding-right: 0;
-  position: static;
+  position: fixed;
+  left: 0;
+  top: 0;
 }
 
 .sidebar.collapsed {
@@ -3038,20 +3040,19 @@ img.max-w-243px.h-39px {
 }
 
 body {
-  display: flex;
-  flex-direction: row;
-  min-height: 100vh;
+  overflow: hidden;
 }
 
 .main-content {
-  flex: 1;
-  min-width: 0;
+  margin-left: 180px;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-left: 0 !important;
 }
 
 .sidebar.collapsed + .main-content {
-  margin-left: 0;
+  margin-left: 60px;
 }
 
 @media (max-width: 768px) {
